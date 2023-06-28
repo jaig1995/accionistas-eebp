@@ -7,6 +7,7 @@ import { map, Observable, ReplaySubject, tap } from 'rxjs';
 export class UserService
 {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    private base_url = 'http://localhost:3000';
 
     /**
      * Constructor
@@ -44,10 +45,11 @@ export class UserService
      */
     get(): Observable<User>
     {
-        return this._httpClient.get<User>('api/common/user').pipe(
+        return this._httpClient.get<User>(this.base_url + '/user/1087960237').pipe(
             tap((user) =>
             {
                 this._user.next(user);
+                console.log("Obteniendo informacion del usuario");
             }),
         );
     }
@@ -59,7 +61,7 @@ export class UserService
      */
     update(user: User): Observable<any>
     {
-        return this._httpClient.patch<User>('api/common/user', {user}).pipe(
+        return this._httpClient.patch<User>('/user/1087960237', {user}).pipe(
             map((response) =>
             {
                 this._user.next(response);
