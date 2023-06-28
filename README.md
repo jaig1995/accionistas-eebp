@@ -1,5 +1,4 @@
-## Sistema de accionistas EEBP
-## ==============================
+# Sistema de accionistas EEBP
 
 ## Development server
 
