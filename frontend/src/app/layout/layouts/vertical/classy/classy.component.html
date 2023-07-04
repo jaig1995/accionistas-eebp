@@ -30,7 +30,7 @@
                     {{user.name}}
                 </div>
                 <div class="w-full whitespace-nowrap text-ellipsis overflow-hidden text-center leading-normal font-medium">
-                    ADMINISTRADOR
+                    {{user.profile}}
                 </div>
                 <div class="w-full mt-0.5 whitespace-nowrap text-ellipsis overflow-hidden text-center text-md leading-normal font-medium text-secondary">
                     {{user.email}}
@@ -63,6 +63,7 @@
         <div class="text-2xl font-bold text-primary ml-5">SISTEMA DE ACCIONISTAS</div>
         <!-- Components -->
         <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+            <div class="text-primary font-bold"><a href="/sign-out">CERRAR SESIÓN</a></div>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
         </div>
     </div>

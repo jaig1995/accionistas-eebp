@@ -8,7 +8,6 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 export class AuthService
 {
     private _authenticated: boolean = false;
-    private base_url = 'http://localhost:3000'
 
     /**
      * Constructor
@@ -74,7 +73,7 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post(this.base_url + '/api/auth/sign-in', credentials).pipe(
+        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
             switchMap((response: any) =>
             {
                 // Store the access token in the local storage

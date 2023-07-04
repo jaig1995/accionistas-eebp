@@ -49,7 +49,6 @@ export class UserService
             tap((user) =>
             {
                 this._user.next(user);
-                console.log("Obteniendo informacion del usuario");
             }),
         );
     }

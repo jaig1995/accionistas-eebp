@@ -108,6 +108,20 @@
                         [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>
             </form>
+            <button
+                class="fuse-mat-button-large w-full mt-6"
+                mat-flat-button
+                [color]="'accent'"
+                [disabled]="signInForm.disabled"
+                (click)="signInWithFingerprint()">
+                    <span *ngIf="!signInForm.disabled">
+                        Iniciar sesión con huella
+                    </span>
+                <mat-progress-spinner
+                    *ngIf="signInForm.disabled"
+                    [diameter]="24"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
         </div>
     </div>
     <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">

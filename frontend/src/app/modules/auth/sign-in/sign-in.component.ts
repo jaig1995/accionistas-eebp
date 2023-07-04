@@ -115,4 +115,18 @@ export class AuthSignInComponent implements OnInit
                 },
             );
     }
+
+    /**
+     * Sign in with fingerprint
+     */
+    signInWithFingerprint(): void
+    {
+        this.alert = {
+            type   : 'error',
+            message: 'No fue posible conectarse con el dispostivo biométrico.',
+        };
+
+        // Show the alert
+        this.showAlert = true;
+    }
 }
