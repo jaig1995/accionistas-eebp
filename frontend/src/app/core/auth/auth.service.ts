@@ -8,6 +8,7 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 export class AuthService
 {
     private _authenticated: boolean = false;
+    private _baseUrl: string = 'http://34.125.194.115';
 
     /**
      * Constructor
@@ -65,7 +66,7 @@ export class AuthService
      *
      * @param credentials
      */
-    signIn(credentials: { email: string; password: string }): Observable<any>
+    signIn(credentials: { codUsuario: string; password: string }): Observable<any>
     {
         // Throw error, if the user is already logged in
         if ( this._authenticated )
@@ -73,7 +74,7 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
+        return this._httpClient.post(this._baseUrl + '/api/auth/sign-in', credentials).pipe(
             switchMap((response: any) =>
             {
                 // Store the access token in the local storage
@@ -97,7 +98,7 @@ export class AuthService
     signInUsingToken(): Observable<any>
     {
         // Sign in using the token
-        return this._httpClient.post('api/auth/sign-in-with-token', {
+        return this._httpClient.post(this._baseUrl + '/api/auth/sign-in-with-token', {
             accessToken: this.accessToken,
         }).pipe(
             catchError(() =>

@@ -39,13 +39,13 @@
                 <mat-form-field class="w-full">
                     <mat-label>Correo</mat-label>
                     <input
-                        id="email"
+                        id="codUsuario"
                         matInput
-                        [formControlName]="'email'">
-                    <mat-error *ngIf="signInForm.get('email').hasError('required')">
+                        [formControlName]="'codUsuario'">
+                    <mat-error *ngIf="signInForm.get('codUsuario').hasError('required')">
                         El campo correo es requerido
                     </mat-error>
-                    <mat-error *ngIf="signInForm.get('email').hasError('email')">
+                    <mat-error *ngIf="signInForm.get('codUsuario').hasError('codUsuario')">
                         Por favor ingrese un correo válido
                     </mat-error>
                 </mat-form-field>
