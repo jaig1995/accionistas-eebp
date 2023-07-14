@@ -10,14 +10,14 @@ import { LayoutComponent } from 'app/layout/layout.component';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/example'
-    {path: '', pathMatch : 'full', redirectTo: 'example'},
+    {path: '', pathMatch : 'full', redirectTo: '/inicio'},
 
     // Redirect signed-in user to the '/example'
     //
     // After the user signs in, the sign-in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'example'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: '/inicio'},
 
     // Auth routes for guests
     {
@@ -74,7 +74,12 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            {path: 'example', loadChildren: () => import('app/modules/admin/example/example.routes')},
+            {path: 'inicio', loadChildren: () => import('app/modules/admin/inicio/inicio.routes')},
+            {path: 'seguridad/usuarios', loadChildren: () => import('app/modules/admin/seguridad/users.routes')},
+            {path: 'seguridad/usuarios/agregar', loadChildren: () => import('app/modules/admin/seguridad/addusuario/addusuario.routes')},
+            {path: 'seguridad/usuarios/detalles', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
+            {path: 'control-accionistas/accionistas', loadChildren: () => import('app/modules/admin/control-accionistas/accionistas.routes')},
+            {path: 'control-accionistas/accionistas/agregaraccionista', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista/addaccionista.routes')},
         ]
     }
 ];

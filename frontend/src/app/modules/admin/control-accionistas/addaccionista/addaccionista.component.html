@@ -1,0 +1,228 @@
+<div class="flex flex-colflex-auto min-w-0">
+
+  <!-- Main -->
+  <div class="flex-auto p-6 sm:p-10">
+    
+    <div class="text-4xl font-extrabold tracking-tight leading-none">Registro de accionistas</div>
+      <div class="ml-0.5 font-medium text-secondary">Control de accionistas</div><br>
+
+          <!-- Filters -->
+          <div class="max-h-400">
+              <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" (submit)="onSubmit()">
+
+                <p class="text-lg font-extrabold">Datos personales</p>
+                <mat-divider class="mt-6 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Primer nombre:</mat-label>
+                  <input matInput id="nom_pri" [(ngModel)]="nom_pri" required>
+              </mat-form-field>
+    
+              <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Segundo nombre:</mat-label>
+                <input matInput id="nom_seg" [(ngModel)]="nom_seg" required>
+              </mat-form-field>
+    
+              <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Primer apellido:</mat-label>
+                <input matInput id="ape_pri" [(ngModel)]="ape_pri" required>
+              </mat-form-field>
+    
+              <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Segundo apellido:</mat-label>
+                <input matInput id="ape_seg" [(ngModel)]="ape_seg" required>
+              </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Documento:</mat-label>
+                  <mat-select [formControl]="animalControl" required>
+                    <mat-option *ngFor="let animal of animals" [value]="animal">
+                      {{animal.tipo_id_per}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="animalControl.hasError('required')">Por favor selecciona una opcion</mat-error>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero:</mat-label>
+                  <input matInput id="identificacion" [(ngModel)]="identificacion" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Expedida en el municipio de:</mat-label>
+                  <input matInput id="div_exp_ide" [(ngModel)]="div_exp_ide" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento:</mat-label>
+                  <input matInput id="nom_dep" [(ngModel)]="nom_dep" placeholder="Indique municipio y departamento" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Fecha de nacimiento:</mat-label>
+                  <input id="fec_nac" [(ngModel)]="fec_nac" matInput [matDatepicker]="picker">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Lugar de nacimiento:</mat-label>
+                  <input matInput id="lug_nac" [(ngModel)]="lug_nac" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Sexo:</mat-label>
+                  <mat-select [formControl]="sexoControl" required>
+                    <mat-option *ngFor="let sexo of sexo" [value]="sexo">
+                      {{sexo.gen_per}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-60 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Estado civil:</mat-label>
+                  <input matInput id="est_civ_per" [(ngModel)]="est_civ_per" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero de celular:</mat-label>
+                  <input matInput id="cel_per" [(ngModel)]="cel_per" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-60 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Profesion:</mat-label>
+                  <input matInput id="prof_per" [(ngModel)]="prof_per" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-52 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Actividad economica:</mat-label>
+                  <input matInput id="act_eco_per" [(ngModel)]="act_eco_per" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Correo electronico:</mat-label>
+                  <input matInput id="correo_per" [(ngModel)]="correo_per" required>
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                <p class="text-lg font-extrabold mt-6 ">Datos de domicilio</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Direccion:</mat-label>
+                  <input matInput id="dir_per_dom" [(ngModel)]="dir_per_dom" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio:</mat-label>
+                  <input matInput id="barrio" [(ngModel)]="barrio" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio:</mat-label>
+                  <input matInput id="municipio" [(ngModel)]="municipio" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento:</mat-label>
+                  <input matInput id="nom_dep" [(ngModel)]="nom_dep" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Pais:</mat-label>
+                  <input matInput id="pais" [(ngModel)]="pais"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Telefono:</mat-label>
+                  <input matInput id="telf_dom" [(ngModel)]="telf_dom"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Indicativo:</mat-label>
+                  <input matInput id="ind_tel_dom" [(ngModel)]="ind_tel_dom"  required>
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">Datos laborales</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Empresa para la cual labora:</mat-label>
+                  <input matInput id="nom_empre" [(ngModel)]="nom_empre"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Direccion:</mat-label>
+                  <input matInput id="dir_lab" [(ngModel)]="dir_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio:</mat-label>
+                  <input matInput id="bar_lab" [(ngModel)]="bar_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio:</mat-label>
+                  <input matInput id="mun_lab" [(ngModel)]="mun_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departameto:</mat-label>
+                  <input matInput id="dep_lab" [(ngModel)]="dep_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Pais:</mat-label>
+                  <input matInput id="pais_lab" [(ngModel)]="pais_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Telefono:</mat-label>
+                  <input matInput id="telf_lab" [(ngModel)]="telf_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Extension:</mat-label>
+                  <input matInput id="ext_lab" [(ngModel)]="ext_lab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-90 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Donde desea que envien su correspondencia?:</mat-label>
+                  <mat-select [formControl]="correspondenciaControl" required>
+                    <mat-option *ngFor="let correspondencia of correspondencia" [value]="correspondencia">
+                      {{correspondencia.corre_lab}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-90 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Cual:</mat-label>
+                  <input matInput id="cual_lab" [(ngModel)]="cual_lab"  placeholder="(Indique barrio, municipio, departamento, pais)">
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">Diligencie este espacio solo si el accionista es menor de edad</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-130 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>¿Indique si los padres ejercen de manera conjunta la patria potestad?:</mat-label>
+                  <mat-select [formControl]="potestadControl" required>
+                    <mat-option *ngFor="let potestad of potestad" [value]="potestad">
+                      {{potestad.potestad}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
+                </mat-form-field >
+
+                <p class="text-lg font-medium mt-6 ">En caso de respuesta negativa debe aportar documento de limitación de la patria potestad, recuerde que para <br> menores de edad el ejercicio de la patria
+                  potestad, se ejerce de manera conjunta, pero para efectos de representación en asambleas que realice la entidad se debera indicar en este documento cual
+                  de los dos padres ejercera la representación del menor.</p>
+
+              </form>
+            </div>  
+  </div>
+</div>
