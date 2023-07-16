@@ -77,7 +77,7 @@ export const appRoutes: Route[] = [
             {path: 'inicio', loadChildren: () => import('app/modules/admin/inicio/inicio.routes')},
             {path: 'seguridad/usuarios', loadChildren: () => import('app/modules/admin/seguridad/users.routes')},
             {path: 'seguridad/usuarios/agregar', loadChildren: () => import('app/modules/admin/seguridad/addusuario/addusuario.routes')},
-            {path: 'seguridad/usuarios/detalles', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
+            {path: 'seguridad/usuarios/detalles/:id', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
             {path: 'control-accionistas/accionistas', loadChildren: () => import('app/modules/admin/control-accionistas/accionistas.routes')},
             {path: 'control-accionistas/accionistas/agregaraccionista', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista/addaccionista.routes')},
         ]
