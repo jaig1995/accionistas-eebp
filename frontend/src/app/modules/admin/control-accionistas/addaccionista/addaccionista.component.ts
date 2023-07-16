@@ -6,6 +6,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule, Validators, FormControl} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
@@ -27,6 +28,13 @@ interface Potestad{
   potestad: string;
 }
 
+interface Representante{
+  tipo_id_repre: string;
+}
+interface Sexo_repre{
+  gen_repre: string;
+}
+
 @Component({
   selector: 'agregaraccionista',
   standalone   : true,
@@ -34,6 +42,7 @@ interface Potestad{
   imports: [MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
+    MatIconModule,
     MatFormFieldModule, 
     MatInputModule, 
     MatSelectModule, 
@@ -77,6 +86,16 @@ export class AddaccionistaComponent {
   telf_lab: number;
   ext_lab: number;
   cual_lab: string;
+  nom_repre: string;
+  identificacion_repre: number;
+  exp_ide_repre: string;
+  nom_dep_repre: string;
+  fec_nac_repre: Date;
+  lug_nac_repre: string;
+  est_civ_repre: string;
+  cel_repre: number;
+  prof_act_repre: string;
+  correo_repre: string;
 
   constructor(private http: HttpClient) { }
   onSubmit() {
@@ -110,8 +129,17 @@ export class AddaccionistaComponent {
       pais_lab: this.pais_lab,
       telf_lab: this.telf_lab,
       ext_lab: this.ext_lab,
-      cual_lab: this.cual_lab
-
+      cual_lab: this.cual_lab,
+      nom_repre: this.nom_repre,
+      identificacion_repre: this.identificacion_repre,
+      exp_ide_repre: this.exp_ide_repre,
+      nom_dep_repre: this.nom_dep_repre,
+      fec_nac_repre: this.fec_nac_repre,
+      lug_nac_repre:this.lug_nac_repre,
+      est_civ_repre: this.est_civ_repre,
+      cel_repre: this.cel_repre,
+      prof_act_repre: this.prof_act_repre,
+      correo_repre: this.correo_repre
     };
     this.http.post('URL', data).subscribe(response => {
       console.log('Datos enviados:', response);
@@ -125,11 +153,27 @@ export class AddaccionistaComponent {
     {tipo_id_per: 'TI'},
     {tipo_id_per: 'RC'},
   ];
+
+  representanteControl = new FormControl<Representante | null>(null, Validators.required);
+  selectFormControlRepresentante = new FormControl('', Validators.required);
+  representante: Representante[] = [
+    {tipo_id_repre: 'CC'},
+    {tipo_id_repre: 'CE'},
+    {tipo_id_repre: 'Otro'},
+  ];
+
   sexoControl = new FormControl<Sexo | null>(null, Validators.required);
   selectFormControlSexo = new FormControl('', Validators.required);
   sexo: Sexo[] = [
     {gen_per: 'M'},
     {gen_per: 'F'},
+  ];
+
+  sexorepreControl = new FormControl<Sexo_repre | null>(null, Validators.required);
+  selectFormControlSexo_Repre = new FormControl('', Validators.required);
+  sexo_repre: Sexo_repre[] = [
+    {gen_repre: 'M'},
+    {gen_repre: 'F'},
   ];
 
   correspondenciaControl = new FormControl<Correspondencia | null>(null, Validators.required);

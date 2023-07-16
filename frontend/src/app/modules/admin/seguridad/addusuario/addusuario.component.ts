@@ -39,7 +39,7 @@ export class AddusuarioComponent {
       perfil: this.perfil,
       imagen: this.imagen
     };
-    this.http.post('URL', data).subscribe(response => {
+    this.http.post('http://localhost:3000/agregar/usuarios', data).subscribe(response => {
       console.log('Datos enviados:', response);
     });
   }

@@ -9,43 +9,68 @@
 
         <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" (submit)="onSubmit()">
 
-          <p class="text-lg font-medium">Datos personales</p>
+          <p class="text-lg font-medium">DATOS PERSONALES</p>
           <mat-divider class="mt-6 mb-10"></mat-divider>
           
 
           <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
               <mat-label>Primer nombre:</mat-label>
-              <input matInput id="nom_pri" [(ngModel)]="nom_pri" required>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_solid:user-circle'">
+              </mat-icon>
+              <input matInput id="nom_pri" name="nom_pri" [(ngModel)]="nom_pri" required>
           </mat-form-field>
 
           <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
             <mat-label>Segundo nombre:</mat-label>
-            <input matInput id="nom_seg" [(ngModel)]="nom_seg" required>
+            <mat-icon
+              matPrefix
+              class="hidden sm:flex icon-size-5"
+              [svgIcon]="'heroicons_solid:user-circle'">
+            </mat-icon>
+            <input matInput id="nom_seg" name="nom_seg" [(ngModel)]="nom_seg" required>
           </mat-form-field>
 
           <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
             <mat-label>Primer apellido:</mat-label>
-            <input matInput id="ape_pri" [(ngModel)]="ape_pri" required>
+            <mat-icon
+              matPrefix
+              class="hidden sm:flex icon-size-5"
+              [svgIcon]="'heroicons_solid:user-circle'">
+            </mat-icon>
+            <input matInput id="ape_pri" name="ape_pri" [(ngModel)]="ape_pri" required>
           </mat-form-field>
 
           <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
             <mat-label>Segundo apellido:</mat-label>
-            <input matInput id="ape_seg" [(ngModel)]="ape_seg" required>
-          </mat-form-field>
-
-          <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-              <mat-label>Código de usuario:</mat-label>
-              <input matInput id="identificacion" [(ngModel)]="identificacion" required>
-          </mat-form-field>
-
-          <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-              <mat-label>Perfil:</mat-label>
-                <mat-icon
+            <mat-icon
                   matPrefix
                   class="hidden sm:flex icon-size-5"
                   [svgIcon]="'heroicons_solid:user-circle'">
                 </mat-icon>
-              <mat-select id="perfil" [(ngModel)]="perfil" required>
+            <input matInput id="ape_seg" name="ape_seg" [(ngModel)]="ape_seg" required>
+          </mat-form-field>
+
+          <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+              <mat-label>Código de usuario:</mat-label>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_outline:tag'">
+              </mat-icon>
+              <input matInput id="identificacion" name="identificacion" [(ngModel)]="identificacion" required>
+          </mat-form-field>
+
+          <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+              <mat-label>Perfil:</mat-label>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_outline:tag'">
+              </mat-icon>
+              <mat-select id="perfil" name="perfil" [(ngModel)]="perfil" required>
                 <mat-option value="one">Accionista</mat-option>
                 <mat-option value="two">Administrador</mat-option>
               </mat-select>
@@ -64,13 +89,13 @@
                     for="avatar-file-input"
                     matRipple>
                     <mat-icon
-                        class="text-black"
+                        class="text-black sm:ml-4"
                         [svgIcon]="'heroicons_outline:camera'">
                       </mat-icon>
                     <mat-hint class="w-full sm:w-72 mt-4 mb-0 sm:mt-0 sm:ml-4">Cargar imagen</mat-hint>
                 </label>
           
-          <button class="fuse-mat-button w-30 mt-4" mat-fab [color]="'accent'" type="submit">Enviar</button>
+          <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Enviar</button>
           <mat-divider class="mt-6 mb-10"></mat-divider>
         </form>
       </div>
