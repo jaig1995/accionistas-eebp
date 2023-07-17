@@ -6,18 +6,26 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 
 
-
 @Component({
-  selector: 'agregar',
+  selector: 'agregar-usuarios',
   standalone   : true,
   templateUrl: './addusuario.component.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [MatButtonModule,MatFormFieldModule, MatInputModule, MatSelectModule, MatDividerModule, MatIconModule, FormsModule],
+  imports: [MatButtonModule,
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatSelectModule, 
+    MatDividerModule, 
+    MatIconModule, 
+    FormsModule,
+    NgFor, 
+    NgIf],
 })
 export class AddusuarioComponent {
   nom_pri: string;
@@ -43,4 +51,5 @@ export class AddusuarioComponent {
       console.log('Datos enviados:', response);
     });
   }
+
 }

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { UsersComponent } from 'app/modules/admin/seguridad/users.component';
+import { UsersComponent } from 'app/modules/admin/seguridad/permisos/users.component';
 
 export default [
     {

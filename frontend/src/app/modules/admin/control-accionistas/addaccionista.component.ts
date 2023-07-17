@@ -36,7 +36,7 @@ interface Sexo_repre{
 }
 
 @Component({
-  selector: 'agregaraccionista',
+  selector: 'agregar-accionista',
   standalone   : true,
   templateUrl: './addaccionista.component.html',
   imports: [MatDatepickerModule,
