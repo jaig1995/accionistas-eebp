@@ -437,7 +437,24 @@
                           [svgIcon]="'heroicons_solid:envelope'"
                           matPrefix></mat-icon>
                     <input matInput id="correo_repre" name="correo_repre" [(ngModel)]="correo_repre" required>
-                  </mat-form-field><br>
+                  </mat-form-field>
+
+                  <input
+                    id="avatar-file-input"
+                    class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
+                    type="file"
+                    [accept]="'image/jpeg, image/png'"
+                    #avatarFileInput>
+                <label
+                    class="flex items-center justify-center w-40 h-15 mt-4 rounded-full cursor-pointer hover:bg-hover"
+                    for="avatar-file-input"
+                    matRipple>
+                    <mat-icon
+                        class="text-black sm:ml-4"
+                        [svgIcon]="'heroicons_outline:camera'">
+                      </mat-icon>
+                    <mat-hint class="w-full sm:w-72 mt-4 mb-0 sm:mt-0 sm:ml-4">Cargar imagen</mat-hint>
+                </label>
   
                   <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Enviar</button>
   
