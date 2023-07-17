@@ -75,11 +75,10 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'inicio', loadChildren: () => import('app/modules/admin/inicio/inicio.routes')},
-            {path: 'seguridad/usuarios', loadChildren: () => import('app/modules/admin/seguridad/users.routes')},
-            {path: 'seguridad/usuarios/agregar', loadChildren: () => import('app/modules/admin/seguridad/addusuario/addusuario.routes')},
-            {path: 'seguridad/usuarios/detalles/:id', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
-            {path: 'control-accionistas/accionistas', loadChildren: () => import('app/modules/admin/control-accionistas/accionistas.routes')},
-            {path: 'control-accionistas/accionistas/agregaraccionista', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista/addaccionista.routes')},
+            {path: 'seguridad/agregar-usuarios', loadChildren: () => import('app/modules/admin/seguridad/addusuario.routes')},
+            {path: 'seguridad/permisos-usuarios', loadChildren: () => import('app/modules/admin/seguridad/permisos/users.routes')},
+            {path: 'seguridad/permisos-usuarios/detalles/:id', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
+            {path: 'control-accionistas/agregar-accionistas', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista.routes')},
         ]
     }
 ];

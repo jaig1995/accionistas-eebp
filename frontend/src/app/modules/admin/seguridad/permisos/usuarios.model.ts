@@ -1,4 +1,4 @@
-export interface PeriodicElement {
+export interface Usuarios {
   weight: any;
   name: string;
   position: number;
