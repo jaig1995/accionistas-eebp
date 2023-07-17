@@ -3,15 +3,14 @@
     <!-- Main -->
   <div class="flex-auto p-6 sm:p-10">
 
-    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+    <div class="text-4xl font-extrabold tracking-tight leading-none">Usuarios</div>
+      <div class="ml-0.5 font-medium text-secondary">Seguridad</div><br>
+
+    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
       <mat-label>Filtro</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Filtro"  #input>
     </mat-form-field>
 
-    <a
-      class="fuse-mat-button w-40 mt-4 sm:ml-4" mat-fab [color]="'accent'" extended
-      [routerLink]="['/seguridad/usuarios/agregar']"> Agregar usuario
-    </a>
     <mat-divider class="mt-6 mb-10"></mat-divider>
     
     <table mat-table [dataSource]="datos.data" class="mat-elevation-8">

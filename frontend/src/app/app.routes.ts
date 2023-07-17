@@ -78,6 +78,7 @@ export const appRoutes: Route[] = [
             {path: 'seguridad/agregar-usuarios', loadChildren: () => import('app/modules/admin/seguridad/addusuario.routes')},
             {path: 'seguridad/permisos-usuarios', loadChildren: () => import('app/modules/admin/seguridad/permisos/users.routes')},
             {path: 'seguridad/permisos-usuarios/detalles/:id', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},
+            {path: 'seguridad/permisos-usuarios/detalles/:id/asignar', loadChildren: () => import('app/modules/admin/seguridad/asignar-permiso/asignar-permiso.routes')},
             {path: 'control-accionistas/agregar-accionistas', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista.routes')},
         ]
     }

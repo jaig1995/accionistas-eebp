@@ -2,9 +2,15 @@
 
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
-      <div class="text-4xl font-extrabold tracking-tight leading-none">Detalles del usuario, {{id}}</div>
-      <div class="ml-0.5 font-medium text-secondary">Seguridad</div><br>
+      <div class="text-4xl font-extrabold tracking-tight leading-none">Detalles del usuario</div>
+      <div class="ml-0.5 font-medium text-secondary">Seguridad</div>
 
+      <a
+      class="fuse-mat-button w-40 mt-4 sm:ml-4" mat-fab [color]="'accent'" extended
+      [routerLink]="['asignar']"> Dar permisos
+    </a>
+
+    <mat-divider class="mt-6 mb-10"></mat-divider>
 
       <table mat-table [dataSource]="usuario.data" class="mat-elevation-z8">
 
