@@ -34,7 +34,6 @@ export class AuthUtils
 
         // Get the expiration date
         const date = this._getTokenExpirationDate(token);
-        console.log("Date" + date)
 
         offsetSeconds = offsetSeconds || 0;
 
