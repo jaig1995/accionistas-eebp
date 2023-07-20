@@ -12,16 +12,17 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 
-interface Animal {
-  tipo_id_per: string;
+
+interface Documento {
+  tipoIdPer: string;
 }
 
 interface Sexo{
-  gen_per: string;
+  genPersona: string;
 }
 
 interface Correspondencia{
-  corre_lab: string;
+  corresLaboral: string;
 }
 
 interface Potestad{
@@ -29,10 +30,10 @@ interface Potestad{
 }
 
 interface Representante{
-  tipo_id_repre: string;
+  tipoIdRepresentante: string;
 }
 interface Sexo_repre{
-  gen_repre: string;
+  genRepresentante: string;
 }
 
 @Component({
@@ -56,132 +57,136 @@ interface Sexo_repre{
 
 
 export class AddaccionistaComponent {
-  nom_pri: string;
-  nom_seg: string;
-  ape_pri: string;
-  ape_seg: string;
+
+  
+
+
+ //----------------------------
+
+  nomPri: string;
+  nomSeg: string;
+  apePri: string;
+  apeSeg: string;
   identificacion: number;
-  perfil: string;
-  div_exp_ide: number;
-  nom_dep: string;
-  fec_nac: Date;
-  lug_nac: string;
-  est_civ_per: string;
-  cel_per: number;
-  prof_per: string;
-  act_eco_per: string;
-  correo_per: string;
-  dir_per_dom: string;
+  expIdentificacion: number;
+  nomDep: string;
+  fecNacimiento: Date;
+  lugNacimiento: string;
+  estCivPersona: string;
+  celPersona: number;
+  profPersona: string;
+  actEcoPersona: string;
+  correoPersona: string;
+  dirPerDomicilio: string;
   barrio: string;
   municipio: string;
   pais: string;
-  telf_dom: number;
-  ind_tel_dom: number;
-  nom_empre: string;
-  dir_lab: string;
-  bar_lab: string;
-  mun_lab: string;
-  dep_lab: string;
-  pais_lab: string;
-  telf_lab: number;
-  ext_lab: number;
-  cual_lab: string;
-  nom_repre: string;
-  identificacion_repre: number;
-  exp_ide_repre: string;
-  nom_dep_repre: string;
-  fec_nac_repre: Date;
-  lug_nac_repre: string;
-  est_civ_repre: string;
-  cel_repre: number;
-  prof_act_repre: string;
-  correo_repre: string;
+  telfDomicilio: number;
+  indTelDomicilio: number;
+  nomEmpresa: string;
+  dirLaboral: string;
+  barLab: string;
+  munLaboral: string;
+  depLaboral: string;
+  paisLab: string;
+  telfLaboral: number;
+  extLaboral: number;
+  cualLaboratorio: string;
+  nomRepresentante: string;
+  codRepresentante: number;
+  expIdeRepresentante: string;
+  nomDepRepresentante: string;
+  fecNacRepresentante: Date;
+  lugNacRepresentante: string;
+  estCivRepresentante: string;
+  celRepresentante: number;
+  profActRepresentante: string;
+  correoRepresentante: string;
 
   constructor(private http: HttpClient) { }
   onSubmit() {
     const data = {
-      nom_pri: this.nom_pri,
-      nom_seg: this.nom_seg,
-      ape_pri: this.ape_pri,
-      ape_seg: this.ape_seg,
+      nomPri: this.nomPri,
+      nomSeg: this.nomSeg,
+      apePri: this.apePri,
+      apeSeg: this.apeSeg,
       identificacion: this.identificacion,
-      perfil: this.perfil,
-      div_exp_ide: this.div_exp_ide,
-      nom_dep: this.nom_dep,
-      fec_nac: this.fec_nac,
-      lug_nac: this.lug_nac,
-      est_civ_per: this.est_civ_per,
-      cel_per: this.cel_per,
-      prof_per: this.prof_per,
-      act_eco_per: this.act_eco_per,
-      correo_per: this.correo_per,
-      dir_per_dom: this.dir_per_dom,
+      expIdentificacion: this.expIdentificacion,
+      nomDep: this.nomDep,
+      fecNacimiento: this.fecNacimiento,
+      lugNacimiento: this.lugNacimiento,
+      estCivPersona: this.estCivPersona,
+      celPersona: this.celPersona,
+      profPersona: this.profPersona,
+      actEcoPersona: this.actEcoPersona,
+      correoPersona: this.correoPersona,
+      dirPerDomicilio: this.dirPerDomicilio,
       barrio: this.barrio,
       municipio: this.municipio,
       pais: this.pais,
-      telf_dom: this.telf_dom,
-      ind_tel_dom: this.ind_tel_dom,
-      nom_empre: this.nom_empre,
-      dir_lab: this.dir_lab,
-      bar_lab: this.bar_lab,
-      mun_lab: this.mun_lab,
-      dep_lab: this.dep_lab,
-      pais_lab: this.pais_lab,
-      telf_lab: this.telf_lab,
-      ext_lab: this.ext_lab,
-      cual_lab: this.cual_lab,
-      nom_repre: this.nom_repre,
-      identificacion_repre: this.identificacion_repre,
-      exp_ide_repre: this.exp_ide_repre,
-      nom_dep_repre: this.nom_dep_repre,
-      fec_nac_repre: this.fec_nac_repre,
-      lug_nac_repre:this.lug_nac_repre,
-      est_civ_repre: this.est_civ_repre,
-      cel_repre: this.cel_repre,
-      prof_act_repre: this.prof_act_repre,
-      correo_repre: this.correo_repre
+      telfDomicilio: this.telfDomicilio,
+      indTelDomicilio: this.indTelDomicilio,
+      nomEmpresa: this.nomEmpresa,
+      dirLaboral: this.dirLaboral,
+      barLab: this.barLab,
+      munLaboral: this.munLaboral,
+      depLaboral: this.depLaboral,
+      paisLab: this.paisLab,
+      telfLaboral: this.telfLaboral,
+      extLaboral: this.extLaboral,
+      cualLaboratorio: this.cualLaboratorio,
+      nomRepresentante: this.nomRepresentante,
+      codRepresentante: this.codRepresentante,
+      expIdeRepresentante: this.expIdeRepresentante,
+      nomDepRepresentante: this.nomDepRepresentante,
+      fecNacRepresentante: this.fecNacRepresentante,
+      lugNacRepresentante:this.lugNacRepresentante,
+      estCivRepresentante: this.estCivRepresentante,
+      celRepresentante: this.celRepresentante,
+      profActRepresentante: this.profActRepresentante,
+      correoRepresentante: this.correoRepresentante
     };
-    this.http.post('URL', data).subscribe(response => {
+    this.http.post('http://localhost:3000/agregar/accionistas', data).subscribe(response => {
       console.log('Datos enviados:', response);
     });
   }
-  animalControl = new FormControl<Animal | null>(null, Validators.required);
-  selectFormControl = new FormControl('', Validators.required);
-  animals: Animal[] = [
-    {tipo_id_per: 'CC'},
-    {tipo_id_per: 'CE'},
-    {tipo_id_per: 'TI'},
-    {tipo_id_per: 'RC'},
+  documentoControl = new FormControl<Documento | null>(null, Validators.required);
+  selectFormControlDocumento = new FormControl('', Validators.required);
+  documentos: Documento[] = [
+    {tipoIdPer: 'CC'},
+    {tipoIdPer: 'CE'},
+    {tipoIdPer: 'TI'},
+    {tipoIdPer: 'RC'},
   ];
 
   representanteControl = new FormControl<Representante | null>(null, Validators.required);
   selectFormControlRepresentante = new FormControl('', Validators.required);
   representante: Representante[] = [
-    {tipo_id_repre: 'CC'},
-    {tipo_id_repre: 'CE'},
-    {tipo_id_repre: 'Otro'},
+    {tipoIdRepresentante: 'CC'},
+    {tipoIdRepresentante: 'CE'},
+    {tipoIdRepresentante: 'Otro'},
   ];
 
   sexoControl = new FormControl<Sexo | null>(null, Validators.required);
   selectFormControlSexo = new FormControl('', Validators.required);
   sexo: Sexo[] = [
-    {gen_per: 'M'},
-    {gen_per: 'F'},
+    {genPersona: 'M'},
+    {genPersona: 'F'},
   ];
 
   sexorepreControl = new FormControl<Sexo_repre | null>(null, Validators.required);
   selectFormControlSexo_Repre = new FormControl('', Validators.required);
   sexo_repre: Sexo_repre[] = [
-    {gen_repre: 'M'},
-    {gen_repre: 'F'},
+    {genRepresentante: 'M'},
+    {genRepresentante: 'F'},
   ];
 
   correspondenciaControl = new FormControl<Correspondencia | null>(null, Validators.required);
   selectFormControlCorrespondencia = new FormControl('', Validators.required);
   correspondencia: Correspondencia[] = [
-    {corre_lab: 'Direccion laboral'},
-    {corre_lab: 'Direccion domicilio'},
-    {corre_lab: 'Otra'}
+    {corresLaboral: 'Direccion laboral'},
+    {corresLaboral: 'Direccion domicilio'},
+    {corresLaboral: 'Otra'}
   ];
 
   potestadControl = new FormControl<Potestad | null>(null, Validators.required);
@@ -190,4 +195,5 @@ export class AddaccionistaComponent {
     {potestad: 'Si'},
     {potestad: 'No'}
   ];
+
 }
