@@ -1,0 +1,53 @@
+<div class="flex flex-colflex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+      
+      <div class="text-4xl font-extrabold tracking-tight leading-none">Registro de accionistas > Origen de fondos</div>
+        <div class="ml-0.5 font-medium text-secondary">Control de accionistas</div><br>
+  
+            <!-- Filters -->
+            <div class="max-h-400">
+                <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" [formGroup]="declaracionForm" (ngSubmit)="onSubmit()">
+                    <div class="mt-8 text-7xl font-extrabold flex flex-col flex-auto items-center justify-center ">
+                        <p class="text-lg font-extrabold" >FORMATO DE DECLARACION DE ORIGEN DE FONDOS</p>
+                    </div>
+                    <mat-divider class="mt-4 "></mat-divider>
+
+                    <p>&nbsp;</p>
+                    <div class="mt-2 mb-6 text-7xl font-extrabold flex flex-col flex-auto items-center justify-center"><p class="text-lg font-medium" style="text-align: justify;"><b>PERSONA NATURAL O JURIDICA</b></p></div>
+                    <p class="text-lg font-medium" style="text-align: justify;"></p>
+                    <p class="text-lg font-medium" style="text-align: justify;"><span style="font-weight: 400;">Yo, <mat-form-field class="w-full sm:w-72 fuse-mat-dense"><input matInput id="nomPri" type="text" formControlName="nomPri"></mat-form-field>, identificado (a) con el documento de identidad No.<mat-form-field class="w-full sm:w-30 fuse-mat-dense"><input matInput id="codUsuario" type="text" formControlName="codUsuario"></mat-form-field>, expedido en <mat-form-field class="w-full sm:w-72 fuse-mat-dense"><input matInput id="expIdentificacion" type="text" formControlName="expIdentificacion"></mat-form-field>, obrando en nombre propio y/o representaci&oacute;n legal de <mat-form-field class="w-full sm:w-64 fuse-mat-dense"><input matInput id="nomRepresentante" type="text" formControlName="nomRepresentante"></mat-form-field> con NIT No. <mat-form-field class="w-full sm:w-30 fuse-mat-dense"><input matInput id="codRepresentante" type="text" formControlName="codRepresentante"></mat-form-field>, de manera voluntaria y dando certeza de que todo lo aqu&iacute; consignado es cierto, realizo la siguiente declaraci&oacute;n en cumplimiento a lo se&ntilde;alado el Estatuto Org&aacute;nico del Sistema Financiero (Decreto 663 de 1993) la Ley 190 de 1995 &ldquo;Estatuto Anticorrupci&oacute;n&rdquo; y las dem&aacute;s normas legales concordante.</span></p><br>
+                    <p style="text-align: justify;"></p>
+                    <ol style="text-align: justify;">
+                    <li class="text-lg font-medium" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">1. Los recursos que manejo o mis recursos propios provienen de las siguientes fuentes (Detalle de la ocupaci&oacute;n, oficio, Profesi&oacute;n, actividad, negocio, etc.) (No colocar gen&eacute;ricos como, por ejemplo: Comerciante).</span></li>
+                    </ol>
+                    <p class="text-lg font-medium" style="text-align: justify;"><span style="font-weight: 400;"><mat-form-field  class="w-full mt-6"><textarea matInput cdkTextareaAutosize id="recursos" type="text" formControlName="recursos"></textarea></mat-form-field></span></p>
+                    <p style="text-align: justify;"></p>
+                    <ol style="text-align: justify;">
+                    <li class="text-lg font-medium" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">2. Si posee ingresos adicionales, especifique:</span></li>
+                    </ol>
+                    <p style="text-align: justify;"><span style="font-weight: 400;"><mat-form-field  class="w-full mt-6"><textarea matInput cdkTextareaAutosize id="ingresos" type="text" formControlName="ingresos"></textarea></mat-form-field></span></p>
+                    <p style="text-align: justify;"></p>
+                    <ol style="text-align: justify;">
+                    <li class="text-lg font-medium" style="font-weight: 400;" aria-level="1"><span style="font-weight: 400;">3. Declaro que estos recursos que permiten realizar la adquisici&oacute;n de las acciones en esta sociedad, no provienen de ninguna actividad il&iacute;cita de las contempladas en el C&oacute;digo Penal Colombiano o en cualquier norma que lo modifique o adicione.</span></li><br>
+                    </ol>
+                    <p style="text-align: justify;"></p>
+                    <ol>
+                    <li class="text-lg font-medium" style="font-weight: 400; text-align: justify;" aria-level="1"><span style="font-weight: 400;">4. La Empresa de Energ&iacute;a del Bajo Putumayo S.A. E.S.P., quedar&aacute; exenta de toda responsabilidad que se derive de informaci&oacute;n err&oacute;nea, falsa o inexacta que yo hubiere proporcionado en este documento o de la violaci&oacute;n del mismo. </span></li>
+                    </ol>
+                    <p></p>
+
+                    <button class="fuse-mat-button w-60 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">FINALIZAR Y ENVIAR</button>
+
+                    <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" (click)="createPdf()" > Generar Pdf  </button>
+
+    
+
+                    <mat-divider class="mt-6 mb-10"></mat-divider>
+
+                </form>
+            </div>  
+  </div>
+</div>
+
