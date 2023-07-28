@@ -7,28 +7,29 @@ import { UserDataService } from 'app/modules/admin/seguridad/permisos/user-data.
 import { RouterModule } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { Usuarios } from './usuarios.model';
+import { Usuario } from './usuarios.model';
+import {NgIf} from "@angular/common";
 
 
 
 @Component({
     selector     : 'permisos-usuarios',
     standalone   : true,
-    imports: [ MatDividerModule,MatIconModule,RouterModule,MatFormFieldModule,MatInputModule,MatTableModule,MatButtonModule],
+    imports: [MatDividerModule, MatIconModule, RouterModule, MatFormFieldModule, MatInputModule, MatTableModule, MatButtonModule, NgIf],
     templateUrl  : './users.component.html',
     encapsulation: ViewEncapsulation.None,
 })
 export class UsersComponent implements OnInit
 {
-  datos: MatTableDataSource<Usuarios>;
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'element'];
+  datos: MatTableDataSource<Usuario>;
+  displayedColumns: string[] = ['avatar', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'permisos'];
 
   constructor(private userDatos: UserDataService) {}
 
   ngOnInit() {
-    this.userDatos.obtenerDatos().subscribe(
-      (datos: Usuarios[]) => {
-        this.datos = new MatTableDataSource<Usuarios>(datos);
+    this.userDatos.obtenerUsuarios().subscribe(
+      (datos: Usuario[]) => {
+        this.datos = new MatTableDataSource<Usuario>(datos);
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -37,9 +38,10 @@ export class UsersComponent implements OnInit
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.datos.filterPredicate = (data: Usuarios, filter: string) => {
-      const idStr = data.id.toString();
-      return idStr === filter;
+    console.log(filterValue);
+    this.datos.filterPredicate = (data: Usuario, filter: string) => {
+      const idStr = data.codUsuario;
+      return idStr.includes(filterValue);
     };
     this.datos.filter = filterValue.trim();
   }

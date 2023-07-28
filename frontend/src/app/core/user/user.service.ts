@@ -7,7 +7,7 @@ import { map, Observable, ReplaySubject, tap } from 'rxjs';
 export class UserService
 {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    private base_url = 'http://localhost:3000';
+    private base_url = 'http://localhost:8081';
 
     /**
      * Constructor
@@ -43,7 +43,7 @@ export class UserService
     /**
      * Get the current logged in user data
      */
-    get(): Observable<User>
+    /*get(): Observable<User>
     {
         return this._httpClient.get<User>(this.base_url + '/user/1087960237').pipe(
             tap((user) =>
@@ -51,14 +51,14 @@ export class UserService
                 this._user.next(user);
             }),
         );
-    }
+    }*/
 
     /**
      * Update the user
      *
      * @param user
      */
-    update(user: User): Observable<any>
+    /*update(user: User): Observable<any>
     {
         return this._httpClient.patch<User>('/user/1087960237', {user}).pipe(
             map((response) =>
@@ -66,5 +66,5 @@ export class UserService
                 this._user.next(response);
             }),
         );
-    }
+    }*/
 }

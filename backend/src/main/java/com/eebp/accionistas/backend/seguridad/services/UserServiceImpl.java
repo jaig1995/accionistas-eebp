@@ -59,7 +59,48 @@ public class UserServiceImpl implements UserService {
                         EmailDetails.builder()
                                 .recipient(user.getEmail())
                                 .subject("Registro exitoso en el sistema de accionistas EEBP")
-                                .msgBody("Su clave temporal es: " + tempPassword)
+                                .msgBody("<table style='width: 600px; border-collapse: collapse; height: 147px;' border='0'>\n" +
+                                        "<tbody>\n" +
+                                        "<tr style='height: 91px;'>\n" +
+                                        "<td style='width: 23.5796%; text-align: center; height: 91px;'><img src='https://eebpsa.com.co/wp-content/uploads/2020/08/lOGO-2.1.png' /></td>\n" +
+                                        "<td style='width: 67.4766%; height: 91px;'>\n" +
+                                        "<h3 style='text-align: center;'><strong>BIENVENIDO AL SISTEMA DE ACCIONISTAS </strong></h3>\n" +
+                                        "<h3 style='text-align: center;'><strong>Empresa de Energ&iacute;a del Bajo Putumayo S.A. E.S.P.</strong></h3>\n" +
+                                        "</td>\n" +
+                                        "</tr>\n" +
+                                        "<tr style='height: 10px;'>\n" +
+                                        "<td style='text-align: center; height: 10px; width: 91.0562%;' colspan='2'>\n" +
+                                        "<p>&nbsp;</p>\n" +
+                                        "<p style='text-align: left;'>Sus credenciales para iniciar sesi&oacute;n son las siguientes:</p>\n" +
+                                        "</td>\n" +
+                                        "</tr>\n" +
+                                        "<tr style='height: 46px;'>\n" +
+                                        "<td style='width: 23.5796%; text-align: center; height: 46px;'>\n" +
+                                        "<p style='text-align: left;'><strong>USUARIO</strong></p>\n" +
+                                        "</td>\n" +
+                                        "<td style='width: 67.4766%; text-align: center; height: 46px;'>\n" +
+                                        "<p style='text-align: left;'>" + user.getCodUsuario() + "</p>\n" +
+                                        "</td>\n" +
+                                        "</tr>\n" +
+                                        "<tr>\n" +
+                                        "<td style='width: 23.5796%; text-align: center;'>\n" +
+                                        "<p style='text-align: left;'><strong>CONTRASE&Ntilde;A</strong></p>\n" +
+                                        "</td>\n" +
+                                        "<td style='width: 67.4766%; text-align: center;'>\n" +
+                                        "<p style='text-align: left;'>" + tempPassword + "</p>\n" +
+                                        "</td>\n" +
+                                        "</tr>\n" +
+                                        "<tr>\n" +
+                                        "<td style='width: 91.0562%; text-align: center;' colspan='2'>\n" +
+                                        "<p style='text-align: left;'>&nbsp;</p>\n" +
+                                        "<p style='text-align: left;'><span style='text-decoration: underline;'>Se recomienda cambiar su contrase&ntilde;a desde el panel de usuario en Sistema de Accionistas.</span></p>\n" +
+                                        "<p style='text-align: left;'>&nbsp;</p>\n" +
+                                        "<p style='text-align: left;'>Acceso al sistema: <a href='http://localhost:4200'>http://localhost:4200</a></p>\n" +
+                                        "</td>\n" +
+                                        "</tr>\n" +
+                                        "</tbody>\n" +
+                                        "</table>\n" +
+                                        "<p><strong>&nbsp;</strong></p>")
                                 .build()
                 );
                 log.info("Email enviado con clave temporal al usuario " + user.getCodUsuario());

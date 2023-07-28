@@ -1,8 +1,6 @@
-export interface Usuarios {
-  weight: any;
-  name: string;
-  position: number;
-  id: number;
-  perfil: string;
-  element: string;
+export interface Usuario {
+    codUsuario: string,
+    email: string,
+    nombreUsuario: string,
+    apellidoUsuario: string,
 }
