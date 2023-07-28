@@ -8,7 +8,7 @@
   
             <!-- Filters -->
             <div class="max-h-400">
-                <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" (submit)="onSubmit()">
+                <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" id="accionistas" [formGroup]="accionistasForm" (ngSubmit)="onSubmit()">
   
                   <p class="text-lg font-extrabold">DATOS PERSONALES</p>
                   <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -16,13 +16,20 @@
                   <mat-form-field class="w-full sm:w-32 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Documento:</mat-label>
                     <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
-                    <mat-select [formControl]="documentoControl" required>
-                      <mat-option *ngFor="let documento of documentos" [value]="documento.tipoIdPer">
-                        {{documento.tipoIdPer}}
-                      </mat-option>
+                    <mat-select  id="tipDocumento" formControlName="tipDocumento" (selectionChange)="onSelectChange($event)" >
+                      <mat-option value="CC">CC</mat-option>
+                      <mat-option value="CE">CE</mat-option>
+                      <mat-option value="TI">TI</mat-option>
+                      <mat-option value="RC">RC</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="documentoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
                   </mat-form-field >
+
+                  <div *ngIf="showAdditionalField">
+                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                      <mat-label>Razón social:</mat-label>
+                      <input matInput type="text" id="razonSocial"  formControlName="razonSocial">
+                    </mat-form-field>
+                  </div>
   
                   <mat-form-field class="w-full sm:w-36 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Numero:</mat-label>
@@ -30,7 +37,7 @@
                           class="icon-size-5"
                           [svgIcon]="'heroicons_solid:hashtag'"
                           matPrefix></mat-icon>
-                    <input matInput id="identificacion" name="identificacion" [(ngModel)]="identificacion" required>
+                    <input matInput type="text" id="codUsuario"  formControlName="codUsuario" >
                   </mat-form-field>
   
                   <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -40,7 +47,7 @@
                       class="hidden sm:flex icon-size-5"
                       [svgIcon]="'heroicons_solid:user-circle'">
                     </mat-icon>
-                    <input matInput id="nomPri" name="nomPri" [(ngModel)]="nomPri" >
+                    <input matInput type="text" id="nomPri"  formControlName="nomPri" >
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -50,7 +57,7 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput id="nomSeg" name="nomSeg" [(ngModel)]="nomSeg" required>
+                  <input matInput type="text" id="nomSeg"  formControlName="nomSeg" >
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -60,7 +67,7 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput id="apePri" name="apePri" [(ngModel)]="apePri" required>
+                  <input matInput type="text" id="apePri"  formControlName="apePri" >
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -70,400 +77,420 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput id="apeSeg" name="apeSeg" [(ngModel)]="apeSeg" required>
+                  <input matInput type="text" id="apeSeg"  formControlName="apeSeg" >
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento de expedicion:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="departamentos" formControlName="selectDepartamento" (selectionChange)="onDepartamentoChange($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Expedida en el municipio de:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="expIdentificacion" name="expIdentificacion" [(ngModel)]="expIdentificacion" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Expedida en el municipio de:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="selectMunicipio" >
+                    <mat-option *ngFor="let municipio of municipios" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Departamento:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="nom_dep" name="nom_dep" [(ngModel)]="nomDep" placeholder="Indique municipio y departamento" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Fecha de nacimiento:</mat-label>
-                    <input id="fecNacimiento" name="fecNacimiento" [(ngModel)]="fecNacimiento" matInput [matDatepicker]="picker" required>
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error *ngIf="!fecNacimiento">Por favor selecciona una fecha de nacimiento</mat-error>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Fecha de nacimiento:</mat-label>
+                  <input matInput type="text" id="fecNacimiento" formControlName="fecNacimiento" matInput [matDatepicker]="picker" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
 
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Sexo:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:user'"
-                          matPrefix></mat-icon>
-                    <mat-select [formControl]="sexoControl" required>
-                      <mat-option *ngFor="let sexo of sexo" [value]="sexo">
-                        {{sexo.genPersona}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
-                  </mat-form-field >
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Sexo:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                  <mat-select type="text" id="genPersona"  formControlName="genPersona" required>
+                    <mat-option value="Masculino">M</mat-option>
+                    <mat-option value="Femenino">F</mat-option>
+                  </mat-select>
+                </mat-form-field >
   
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Lugar de nacimiento:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="lugNacimiento" name="lugNacimiento" [(ngModel)]="lugNacimiento" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Lugar de nacimiento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="lugNacimiento"  formControlName="lugNacimiento" required>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Estado civil:</mat-label>
-                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-                    <input matInput id="estCivPersona" name="estCivPersona" [(ngModel)]="estCivPersona" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Estado civil:</mat-label>
+                  <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+                  <input matInput type="text" id="estCivPersona"  formControlName="estCivPersona" required>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Numero de celular:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:phone'"
-                          matPrefix></mat-icon>
-                    <input matInput id="celPersona" name="celPersona" [(ngModel)]="celPersona" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero de celular:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="celPersona"  formControlName="celPersona" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Profesion:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:briefcase'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="profPersona"  formControlName="profPersona" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Actividad economica:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:building-office-2'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Correo electronico:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:envelope'"
+                        matPrefix></mat-icon>
+                  <input matInput type="email" id="correoPersona"  formControlName="correoPersona" required>
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                <p class="text-lg font-extrabold mt-6 ">DATOS DE DOMICILIO</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Direccion:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:hashtag'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="dirPerDomicilio"  formControlName="dirPerDomicilio" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="barrio"  formControlName="barrio" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="departamentos" formControlName="selectDepartamentoDomicilio" (selectionChange)="onDepartamentoChangeDomicilio($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Profesion:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:briefcase'"
-                          matPrefix></mat-icon>
-                    <input matInput id="profPersona" name="profPersona" [(ngModel)]="profPersona" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="selectMunicipioDomicilio" >
+                    <mat-option *ngFor="let municipio of municipiosDomicilio" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Pais:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                      <mat-select type="text" id="paisDomicilio"  formControlName="paisDomicilio" required>
+                        <mat-option value="Colombia">Colombia</mat-option>
+                      </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Telefono:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Indicativo:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:hashtag'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="indTelDomicilio"  formControlName="indTelDomicilio"  required>
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">DATOS LABORALES</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Empresa para la cual labora:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:building-office-2'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="nomEmpresa"  formControlName="nomEmpresa"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Direccion:</mat-label>
+                  <mat-icon
+                  class="icon-size-5"
+                  [svgIcon]="'heroicons_solid:map-pin'"
+                  matPrefix></mat-icon>
+                  <input matInput type="text" id="dirLaboral"  formControlName="dirLaboral"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio:</mat-label>
+                  <input matInput type="text" id="barLab"  formControlName="barLab"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="departamentos" formControlName="selectDepartamentoLaboral" (selectionChange)="onDepartamentoChangeLaboral($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Actividad economica:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:building-office-2'"
-                          matPrefix></mat-icon>
-                    <input matInput id="actEcoPersona" name="actEcoPersona" [(ngModel)]="actEcoPersona" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="selectMunicipioLaboral" >
+                    <mat-option *ngFor="let municipio of municipiosLaboral" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Pais:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                      <mat-select type="text" id="paisLaboral"  formControlName="paisLaboral" required>
+                        <mat-option value="Colombia">Colombia</mat-option>
+                      </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Telefono:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Extension:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:hashtag'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="extLaboral"  formControlName="extLaboral"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Donde enviar correspondencia?:</mat-label>
+                  
+                  <mat-select type="text" id="dirCorrespondencia"  formControlName="dirCorrespondencia" required>
+                    <mat-option value="Direccion laboral">Dirección laboral: </mat-option>
+                    <mat-option value="Direccion domicilio">Dirección domicilio: </mat-option>
+                    <mat-option value="Otra">Otra</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Cual:</mat-label>
+                  <input matInput type="text" id="cualLaboratorio"  formControlName="cualLaboratorio"  placeholder="(Indique barrio, municipio, departamento, pais)">
+                </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">DILIGENCIE ESTE ESPACIO SOLO SI EL ACCIONISTA ES MENOR DE EDAD</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-130 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>¿Indique si los padres ejercen de manera conjunta la patria potestad?:</mat-label>
+                  <mat-select type="text" id="opcPotestad"  formControlName="opcPotestad" required>
+                    <mat-option value="Si">Si</mat-option>
+                    <mat-option value="No">No</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <p class="text-lg font-medium mt-4 sm:ml-4 ">En caso de respuesta negativa debe aportar documento de limitación de la patria potestad, recuerde que para <br> menores de edad el ejercicio de la patria
+                  potestad, se ejerce de manera conjunta, pero para efectos de representación en asambleas que realice la entidad se debera indicar en este documento cual
+                  de los dos padres ejercera la representación del menor.
+                </p>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Nombre del representante:</mat-label>
+                  <mat-icon
+                    matPrefix
+                    class="hidden sm:flex icon-size-5"
+                    [svgIcon]="'heroicons_solid:user-circle'">
+                  </mat-icon>
+                  <input matInput type="text" id="nomRepresentante"  formControlName="nomRepresentante"  required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Documento:</mat-label>
+                  <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
+                  <mat-select type="text" id="docRepresentante"  formControlName="docRepresentante" required>
+                    <mat-option value="CC">CC</mat-option>
+                    <mat-option value="CE">CE</mat-option>
+                    <mat-option value="Otro">OTRO</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:hashtag'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="codRepresentante"  formControlName="codRepresentante" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Departamento de expedicion:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="departamentos" formControlName="selectDepartamentoRepresentante" (selectionChange)="onDepartamentoChangeRepresentante($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
   
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Correo electronico:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:envelope'"
-                          matPrefix></mat-icon>
-                    <input matInput id="correoPersona" name="correoPersona" [(ngModel)]="correoPersona" required>
-                  </mat-form-field>
-  
-                  <mat-divider class="mt-6 mb-5"></mat-divider>
-                  <p class="text-lg font-extrabold mt-6 ">DATOS DE DOMICILIO</p>
-                  <mat-divider class="mt-4 mb-10"></mat-divider>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Direccion:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:hashtag'"
-                          matPrefix></mat-icon>
-                    <input matInput id="dirPerDomicilio" name="dirPerDomicilio" [(ngModel)]="dirPerDomicilio" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Barrio:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="barrio" name="barrio" [(ngModel)]="barrio" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Municipio:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="municipio" name="municipio" [(ngModel)]="municipio" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Departamento:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="nomDep" name="nomDep" [(ngModel)]="nomDep" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Pais:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="pais" name="pais" [(ngModel)]="pais"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Telefono:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:phone'"
-                          matPrefix></mat-icon>
-                    <input matInput id="telfDomicilio" name="telfDomicilio" [(ngModel)]="telfDomicilio"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Indicativo:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:hashtag'"
-                          matPrefix></mat-icon>
-                    <input matInput id="indTelDomicilio" name="indTelDomicilio" [(ngModel)]="indTelDomicilio"  required>
-                  </mat-form-field>
-  
-                  <mat-divider class="mt-6 mb-5"></mat-divider>
-                    <p class="text-lg font-extrabold mt-6 ">DATOS LABORALES</p>
-                  <mat-divider class="mt-4 mb-10"></mat-divider>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Empresa para la cual labora:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:building-office-2'"
-                          matPrefix></mat-icon>
-                    <input matInput id="nomEmpresa" name="nomEmpresa" [(ngModel)]="nomEmpresa"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Direccion:</mat-label>
-                    <mat-icon
-                    class="icon-size-5"
-                    [svgIcon]="'heroicons_solid:map-pin'"
-                    matPrefix></mat-icon>
-                    <input matInput id="dirLaboral" name="dirLaboral" [(ngModel)]="dirLaboral"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Barrio:</mat-label>
-                    <input matInput id="barLab" name="barLab" [(ngModel)]="barLab"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Municipio:</mat-label>
-                    <input matInput id="munLaboral" name="munLaboral" [(ngModel)]="munLaboral"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Departameto:</mat-label>
-                    <input matInput id="depLaboral" name="depLaboral" [(ngModel)]="depLaboral"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Pais:</mat-label>
-                    <input matInput id="paisLab" name="paisLab" [(ngModel)]="paisLab"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Telefono:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:phone'"
-                          matPrefix></mat-icon>
-                    <input matInput id="telfLaboral" name="telfLaboral" [(ngModel)]="telfLaboral"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Extension:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:hashtag'"
-                          matPrefix></mat-icon>
-                    <input matInput id="extLaboral" name="extLaboral" [(ngModel)]="extLaboral"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Donde enviar correspondencia?:</mat-label>
-                    
-                    <mat-select [formControl]="correspondenciaControl" required>
-                      <mat-option *ngFor="let correspondencia of correspondencia" [value]="correspondencia">
-                        {{correspondencia.corresLaboral}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
-                  </mat-form-field >
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Cual:</mat-label>
-                    <input matInput id="cualLaboratorio" name="cualLaboratorio" [(ngModel)]="cualLaboratorio"  placeholder="(Indique barrio, municipio, departamento, pais)">
-                  </mat-form-field>
-  
-                  <mat-divider class="mt-6 mb-5"></mat-divider>
-                    <p class="text-lg font-extrabold mt-6 ">DILIGENCIE ESTE ESPACIO SOLO SI EL ACCIONISTA ES MENOR DE EDAD</p>
-                  <mat-divider class="mt-4 mb-10"></mat-divider>
-  
-                  <mat-form-field class="w-full sm:w-130 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>¿Indique si los padres ejercen de manera conjunta la patria potestad?:</mat-label>
-                    <mat-select [formControl]="potestadControl" required>
-                      <mat-option *ngFor="let potestad of potestad" [value]="potestad">
-                        {{potestad.potestad}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="sexoControl.hasError('required')">Por favor selecciona una opcion</mat-error>
-                  </mat-form-field >
-  
-                  <p class="text-lg font-medium mt-4 sm:ml-4 ">En caso de respuesta negativa debe aportar documento de limitación de la patria potestad, recuerde que para <br> menores de edad el ejercicio de la patria
-                    potestad, se ejerce de manera conjunta, pero para efectos de representación en asambleas que realice la entidad se debera indicar en este documento cual
-                    de los dos padres ejercera la representación del menor.
-                  </p>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Nombre del representante:</mat-label>
-                    <mat-icon
-                      matPrefix
-                      class="hidden sm:flex icon-size-5"
-                      [svgIcon]="'heroicons_solid:user-circle'">
-                    </mat-icon>
-                    <input matInput id="nomRepresentante" name="nomRepresentante" [(ngModel)]="nomRepresentante"  required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Documento:</mat-label>
-                    <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
-                    <mat-select [formControl]="representanteControl" required>
-                      <mat-option *ngFor="let representante of representante" [value]="representante">
-                        {{representante.tipoIdRepresentante}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="representanteControl.hasError('required')">Por favor selecciona una opcion</mat-error>
-                  </mat-form-field >
-  
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Numero:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:hashtag'"
-                          matPrefix></mat-icon>
-                    <input matInput id="codRepresentante" name="codRepresentante" [(ngModel)]="codRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Expedida en el municipio de:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="expIdeRepresentante" name="expIdeRepresentante" [(ngModel)]="expIdeRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Departamento:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="nomDepRepresentante" name="nomDepRepresentante" [(ngModel)]="nomDepRepresentante" placeholder="Indique municipio y departamento" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Fecha de nacimiento:</mat-label>
-                    <input id="fecNacRepresentante" name="fecNacRepresentante" [(ngModel)]="fecNacRepresentante" matInput [matDatepicker]="clic" required>
-                    <mat-datepicker-toggle matIconSuffix [for]="clic"></mat-datepicker-toggle>
-                    <mat-datepicker #clic></mat-datepicker>
-                    <mat-error *ngIf="!fecNacRepresentante">Por favor selecciona una fecha de nacimiento</mat-error>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Lugar de nacimiento:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:map-pin'"
-                          matPrefix></mat-icon>
-                    <input matInput id="lugNacRepresentante" name="lugNacRepresentante" [(ngModel)]="lugNacRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Sexo:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:user'"
-                          matPrefix></mat-icon>
-                    <mat-select [formControl]="sexorepreControl" required>
-                      <mat-option *ngFor="let sexo_repre of sexo_repre" [value]="sexo_repre">
-                        {{sexo_repre.genRepresentante}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="representanteControl.hasError('required')">Por favor selecciona una opcion</mat-error>
-                  </mat-form-field >
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio de expedicion:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="selectMunicipioRepresentante" >
+                    <mat-option *ngFor="let municipio of municipiosRepresentante" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Fecha de nacimiento:</mat-label>
+                  <input type="text" id="fecNacRepresentante"  formControlName="fecNacRepresentante" matInput [matDatepicker]="clic" required>
+                  <mat-datepicker-toggle matIconSuffix [for]="clic"></mat-datepicker-toggle>
+                  <mat-datepicker #clic></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Lugar de nacimiento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="lugNacRepresentante"  formControlName="lugNacRepresentante" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Sexo:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                      <mat-select type="text" id="genRepresentante"  formControlName="genRepresentante" required>
+                        <mat-option value="Masculino">M</mat-option>
+                        <mat-option value="Femenino">F</mat-option>
+                      </mat-select>
+                </mat-form-field >
 
 
-                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Numero de celular:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:phone'"
-                          matPrefix></mat-icon>
-                    <input matInput id="celRepresentante" name="celRepresentante" [(ngModel)]="celRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Estado civil:</mat-label>
-                    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-                    <input matInput id="estCivRepresentante" name="estCivRepresentante" [(ngModel)]="estCivRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Profesion y actividad economica:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:briefcase'"
-                          matPrefix></mat-icon>
-                    <input matInput id="profActRepresentante" name="profActRepresentante" [(ngModel)]="profActRepresentante" required>
-                  </mat-form-field>
-  
-                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                    <mat-label>Correo electronico:</mat-label>
-                    <mat-icon
-                          class="icon-size-5"
-                          [svgIcon]="'heroicons_solid:envelope'"
-                          matPrefix></mat-icon>
-                    <input matInput id="correoRepresentante" name="correoRepresentante" [(ngModel)]="correoRepresentante" required>
-                  </mat-form-field>
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero de celular:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="celRepresentante"  formControlName="celRepresentante" required>
+                </mat-form-field>
 
-                  <input
-                    id="avatar-file-input"
-                    class="absolute h-0 w-0 opacity-0 invisible pointer-events-none"
-                    type="file"
-                    [accept]="'image/jpeg, image/png'"
-                    #avatarFileInput>
-                <label
-                    class="flex items-center justify-center w-40 h-15 mt-4 rounded-full cursor-pointer hover:bg-hover"
-                    for="avatar-file-input"
-                    matRipple>
-                    <mat-icon
-                        class="text-black sm:ml-4"
-                        [svgIcon]="'heroicons_outline:camera'">
-                      </mat-icon>
-                    <mat-hint class="w-full sm:w-72 mt-4 mb-0 sm:mt-0 sm:ml-4">Cargar imagen</mat-hint>
-                </label>
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Estado civil:</mat-label>
+                  <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
+                  <input matInput type="text" id="estCivRepresentante"  formControlName="estCivRepresentante" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Profesion y actividad economica:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:briefcase'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="profActRepresentante"  formControlName="profActRepresentante" required>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Correo electronico:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:envelope'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="correoRepresentante" formControlName="correoRepresentante" required>
+                </mat-form-field><br><br>
   
-                  <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Enviar</button>
-  
-                  <mat-divider class="mt-6 mb-10"></mat-divider>
-  
-                </form>
-              </div>  
+              <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Siguiente</button>
+              <mat-divider class="mt-6 mb-10"></mat-divider>
+
+            </form>
+          </div>  
     </div>
   </div>
+<!--{{accionistasForm.get('fecNacimiento')?.value}}-->
   

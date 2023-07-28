@@ -1,46 +1,31 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import {MatSelectModule} from '@angular/material/select';
+import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterModule, ActivatedRoute, RouterLink } from '@angular/router';
+import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule, Validators, FormControl} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators, FormControl, FormBuilder, FormGroup} from '@angular/forms';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { NgFor, NgIf } from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { AccionistasService } from './accionistas.service';
+import { GeoService } from './geo.service';
 
-
-interface Documento {
-  tipoIdPer: string;
-}
-
-interface Sexo{
-  genPersona: string;
-}
-
-interface Correspondencia{
-  corresLaboral: string;
-}
-
-interface Potestad{
-  potestad: string;
-}
-
-interface Representante{
-  tipoIdRepresentante: string;
-}
-interface Sexo_repre{
-  genRepresentante: string;
-}
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Accionistas } from './accionistas.model';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'agregar-accionista',
   standalone   : true,
   templateUrl: './addaccionista.component.html',
   imports: [MatDatepickerModule,
+    RouterModule,
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
@@ -58,142 +43,304 @@ interface Sexo_repre{
 
 export class AddaccionistaComponent {
 
-  
-
+  showAdditionalField: boolean = false;
+  areFieldsDisabled: boolean = false;
 
  //----------------------------
+  
+  private _fuseConfirmationService;
+  
 
-  nomPri: string;
-  nomSeg: string;
-  apePri: string;
-  apeSeg: string;
-  identificacion: number;
-  expIdentificacion: number;
-  nomDep: string;
-  fecNacimiento: Date;
-  lugNacimiento: string;
-  estCivPersona: string;
-  celPersona: number;
-  profPersona: string;
-  actEcoPersona: string;
-  correoPersona: string;
-  dirPerDomicilio: string;
-  barrio: string;
-  municipio: string;
-  pais: string;
-  telfDomicilio: number;
-  indTelDomicilio: number;
-  nomEmpresa: string;
-  dirLaboral: string;
-  barLab: string;
-  munLaboral: string;
-  depLaboral: string;
-  paisLab: string;
-  telfLaboral: number;
-  extLaboral: number;
-  cualLaboratorio: string;
-  nomRepresentante: string;
-  codRepresentante: number;
-  expIdeRepresentante: string;
-  nomDepRepresentante: string;
-  fecNacRepresentante: Date;
-  lugNacRepresentante: string;
-  estCivRepresentante: string;
-  celRepresentante: number;
-  profActRepresentante: string;
-  correoRepresentante: string;
+  constructor(private router: Router,private accionistasService: AccionistasService, private geoService: GeoService, fuseConfirmationService: FuseConfirmationService, private cdRef: ChangeDetectorRef, private cd: ChangeDetectorRef) {
 
-  constructor(private http: HttpClient) { }
-  onSubmit() {
-    const data = {
-      nomPri: this.nomPri,
-      nomSeg: this.nomSeg,
-      apePri: this.apePri,
-      apeSeg: this.apeSeg,
-      identificacion: this.identificacion,
-      expIdentificacion: this.expIdentificacion,
-      nomDep: this.nomDep,
-      fecNacimiento: this.fecNacimiento,
-      lugNacimiento: this.lugNacimiento,
-      estCivPersona: this.estCivPersona,
-      celPersona: this.celPersona,
-      profPersona: this.profPersona,
-      actEcoPersona: this.actEcoPersona,
-      correoPersona: this.correoPersona,
-      dirPerDomicilio: this.dirPerDomicilio,
-      barrio: this.barrio,
-      municipio: this.municipio,
-      pais: this.pais,
-      telfDomicilio: this.telfDomicilio,
-      indTelDomicilio: this.indTelDomicilio,
-      nomEmpresa: this.nomEmpresa,
-      dirLaboral: this.dirLaboral,
-      barLab: this.barLab,
-      munLaboral: this.munLaboral,
-      depLaboral: this.depLaboral,
-      paisLab: this.paisLab,
-      telfLaboral: this.telfLaboral,
-      extLaboral: this.extLaboral,
-      cualLaboratorio: this.cualLaboratorio,
-      nomRepresentante: this.nomRepresentante,
-      codRepresentante: this.codRepresentante,
-      expIdeRepresentante: this.expIdeRepresentante,
-      nomDepRepresentante: this.nomDepRepresentante,
-      fecNacRepresentante: this.fecNacRepresentante,
-      lugNacRepresentante:this.lugNacRepresentante,
-      estCivRepresentante: this.estCivRepresentante,
-      celRepresentante: this.celRepresentante,
-      profActRepresentante: this.profActRepresentante,
-      correoRepresentante: this.correoRepresentante
+    this.watchTipDocumentoChanges();
+    this.tarjetaIdentidad();
+    this._fuseConfirmationService = fuseConfirmationService;
+    // Se obtienen los departamentos 
+    this.geoService.getDepartamentos().subscribe(
+      (data) => {
+        this.departamentos = data;
+      },
+      (error) => {
+        console.log('Error al obtener departamentos desde la API');
+      }
+    );
+   }
+
+    departamentos: any[];
+    municipios: any[];
+    municipiosDomicilio: any[];
+    municipiosLaboral: any[];
+    municipiosRepresentante: any[];
+
+    selectDepartamento: FormControl = new FormControl('');
+    selectMunicipio: FormControl = new FormControl('');
+
+   accionistasForm = new FormGroup({
+    // Agrega más campos si es necesario según tu interfaz Accionistas
+    'tipDocumento':  new FormControl('', Validators.required),
+    'razonSocial':  new FormControl ('asdas', Validators.required),
+    'nomPri':  new FormControl('Juan', Validators.required),
+    'nomSeg': new FormControl('Camilo', Validators.required),
+    'apePri':new FormControl('Insuasty', Validators.required),
+    'apeSeg':new FormControl('Gomez', Validators.required),
+    'codUsuario': new FormControl('123456748', Validators.required),
+    'selectDepartamento': new FormControl('', Validators.required),
+    'selectMunicipio': new FormControl('', Validators.required),
+    'fecNacimiento': new FormControl('7/24/2023', Validators.required),
+    'genPersona': new FormControl('Masculino', Validators.required),
+    'lugNacimiento': new FormControl('Yacuanquer', Validators.required),
+    'estCivPersona': new FormControl('Soltero', Validators.required),
+    'celPersona': new FormControl('12354562', Validators.required),
+    'profPersona': new FormControl('Abogado', Validators.required),
+    'actEcoPersona': new FormControl('empresa', Validators.required),
+    'correoPersona': new FormControl('jksjdk@gmail.com', Validators.required),
+    'dirPerDomicilio': new FormControl('b/santaclara', Validators.required),
+    'barrio': new FormControl('santaclara', Validators.required),
+    'selectDepartamentoDomicilio': new FormControl('', Validators.required),
+    'selectMunicipioDomicilio': new FormControl('', Validators.required),
+    'paisDomicilio': new FormControl('', Validators.required),
+    'telfDomicilio': new FormControl('785216', Validators.required),
+    'indTelDomicilio': new FormControl('+57', Validators.required),
+    'nomEmpresa': new FormControl('chay', Validators.required),
+    'dirLaboral': new FormControl('b/mirador', Validators.required),
+    'barLab': new FormControl('mirador', Validators.required),
+    'selectMunicipioLaboral': new FormControl('', Validators.required),
+    'selectDepartamentoLaboral': new FormControl('', Validators.required),
+    'paisLaboral': new FormControl('', Validators.required),
+    'telfLaboral': new FormControl('75458512', Validators.required),
+    'extLaboral': new FormControl('+57', Validators.required),
+    'dirCorrespondencia': new FormControl('Direccion laboral', Validators.required),
+    'cualLaboratorio': new FormControl('asd', Validators.required),
+    'opcPotestad': new FormControl('Si', Validators.required),
+    'nomRepresentante': new FormControl('sdfsdf', Validators.required),
+    'docRepresentante': new FormControl('CC', Validators.required),
+    'codRepresentante': new FormControl('46465', Validators.required),
+    'selectMunicipioRepresentante': new FormControl('asdasd', Validators.required),
+    'selectDepartamentoRepresentante': new FormControl('', Validators.required),
+    'fecNacRepresentante': new FormControl('', Validators.required),
+    'lugNacRepresentante': new FormControl('asdasd', Validators.required),
+    'genRepresentante': new FormControl('Masculino', Validators.required),
+    'estCivRepresentante': new FormControl('Soltero', Validators.required),
+    'celRepresentante': new FormControl('454486', Validators.required),
+    'profActRepresentante': new FormControl('empresa', Validators.required),
+    'correoRepresentante': new FormControl('asd@gmail.com', Validators.required)
+  });
+
+  onDepartamentoChange(event: MatSelectChange) {
+    const departamentoId = +this.accionistasForm.value.selectDepartamento;
+    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
+      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
+        (data) => {
+          this.municipios = data;
+          this.cd.markForCheck();
+        },
+        (error) => {
+          console.log('Error al obtener municipios desde la API');
+        }
+      );
+    } 
+  }
+
+  onDepartamentoChangeDomicilio(event: MatSelectChange) {
+    const departamentoId = +this.accionistasForm.value.selectDepartamentoDomicilio;
+    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
+      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
+        (data) => {
+          this.municipiosDomicilio = data;
+          this.cd.markForCheck();
+        },
+        (error) => {
+          console.log('Error al obtener municipios desde la API');
+        }
+      );
+    } 
+  }
+
+  onDepartamentoChangeLaboral(event: MatSelectChange) {
+    const departamentoId = +this.accionistasForm.value.selectDepartamentoLaboral;
+    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
+      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
+        (data) => {
+          this.municipiosLaboral = data;
+          this.cd.markForCheck();
+        },
+        (error) => {
+          console.log('Error al obtener municipios desde la API');
+        }
+      );
+    } 
+  }
+
+  onDepartamentoChangeRepresentante(event: MatSelectChange) {
+    const departamentoId = +this.accionistasForm.value.selectDepartamentoRepresentante;
+    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
+      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
+        (data) => {
+          this.municipiosRepresentante = data;
+          this.cd.markForCheck();
+        },
+        (error) => {
+          console.log('Error al obtener municipios desde la API');
+        }
+      );
+    } 
+  }
+
+  onSubmit() { 
+    if (this.accionistasForm.valid) {
+      const formData = this.accionistasForm.value;
+      this.accionistasService.enviarDatos(formData).subscribe(
+        (response) => {
+          // Aquí puedes manejar la respuesta del servidor
+          console.log('Respuesta del servidor: Datos enviados', response);
+
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Datos enviados exitosamente!",
+            "message": "Los datos fueron enviados.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "success"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "primary"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": false
+    
+          });
+
+          this.router.navigate(['control-accionistas/agregar-accionistas/autorizacion']);
+        },
+        (error) => {
+          // Manejo de errores si la petición falla
+          console.error('Error en la petición:', error);
+        }
+      );
+    }
+  }
+
+  onSelectChange(event: MatSelectChange) {
+    const selectedValue = event.value;
+    this.showAdditionalField = selectedValue === 'RC';
+    this.cdRef.detectChanges();
+  }
+
+  createPdf(){
+
+    const pdfDefinition: any = {
+
+      content:[
+        { text: 'Datos del accionista', style: 'header' },
+        {
+          table: {
+            widths: ['auto', '*'],
+            body: [
+              ['Tipo de documento:', this.accionistasForm.get('tipDocumento').value],
+              ['Opción de potestad:', this.accionistasForm.get('opcPotestad').value],
+              ['Nombre del representante:', this.accionistasForm.get('nomRepresentante').value],
+              ['Documento del representante:', this.accionistasForm.get('docRepresentante').value],
+              // Agrega aquí los demás campos del formulario
+            ]
+          },
+          layout: 'lightHorizontalLines' // Estilo de la tabla
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        }
+      }
     };
-    this.http.post('http://localhost:3000/agregar/accionistas', data).subscribe(response => {
-      console.log('Datos enviados:', response);
+
+    
+
+    const pdf = pdfMake.createPdf(pdfDefinition);
+    pdf.open();
+
+  }
+
+  watchTipDocumentoChanges() {
+    const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
+    const nomPriControl = this.accionistasForm.get('nomPri');
+    const nomSegControl = this.accionistasForm.get('nomSeg');
+    const apePriControl = this.accionistasForm.get('apePri');
+    const apeSegControl = this.accionistasForm.get('apeSeg');
+
+    tipDocumentoControl.valueChanges.subscribe((value) => {
+      if (value === 'RC') {
+        nomPriControl.disable();
+        nomSegControl.disable();
+        apePriControl.disable();
+        apeSegControl.disable();
+      } else {
+        nomPriControl.enable();
+        nomSegControl.enable();
+        apePriControl.enable();
+        apeSegControl.enable();
+      }
     });
   }
-  documentoControl = new FormControl<Documento | null>(null, Validators.required);
-  selectFormControlDocumento = new FormControl('', Validators.required);
-  documentos: Documento[] = [
-    {tipoIdPer: 'CC'},
-    {tipoIdPer: 'CE'},
-    {tipoIdPer: 'TI'},
-    {tipoIdPer: 'RC'},
-  ];
 
-  representanteControl = new FormControl<Representante | null>(null, Validators.required);
-  selectFormControlRepresentante = new FormControl('', Validators.required);
-  representante: Representante[] = [
-    {tipoIdRepresentante: 'CC'},
-    {tipoIdRepresentante: 'CE'},
-    {tipoIdRepresentante: 'Otro'},
-  ];
+  tarjetaIdentidad() {
+    const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
 
-  sexoControl = new FormControl<Sexo | null>(null, Validators.required);
-  selectFormControlSexo = new FormControl('', Validators.required);
-  sexo: Sexo[] = [
-    {genPersona: 'M'},
-    {genPersona: 'F'},
-  ];
+    tipDocumentoControl.valueChanges.subscribe((value) => {
+      if (value === 'TI') {
+        this.accionistasForm.get('opcPotestad').setValidators([Validators.required]);
+        this.accionistasForm.get('nomRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('docRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('codRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('selectMunicipioRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('selectDepartamentoRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('fecNacRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('lugNacRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('genRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('estCivRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('celRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('profActRepresentante').setValidators([Validators.required]);
+        this.accionistasForm.get('correoRepresentante').setValidators([Validators.required]);
+      } else {
+        this.accionistasForm.get('opcPotestad').clearValidators();
+        this.accionistasForm.get('nomRepresentante').clearValidators();
+        this.accionistasForm.get('docRepresentante').clearValidators();
+        this.accionistasForm.get('codRepresentante').clearValidators();
+        this.accionistasForm.get('selectMunicipioRepresentante').clearValidators();
+        this.accionistasForm.get('selectDepartamentoRepresentante').clearValidators();
+        this.accionistasForm.get('fecNacRepresentante').clearValidators();
+        this.accionistasForm.get('lugNacRepresentante').clearValidators();
+        this.accionistasForm.get('genRepresentante').clearValidators();
+        this.accionistasForm.get('estCivRepresentante').clearValidators();
+        this.accionistasForm.get('celRepresentante').clearValidators();
+        this.accionistasForm.get('profActRepresentante').clearValidators();
+        this.accionistasForm.get('correoRepresentante').clearValidators();
+      }
 
-  sexorepreControl = new FormControl<Sexo_repre | null>(null, Validators.required);
-  selectFormControlSexo_Repre = new FormControl('', Validators.required);
-  sexo_repre: Sexo_repre[] = [
-    {genRepresentante: 'M'},
-    {genRepresentante: 'F'},
-  ];
-
-  correspondenciaControl = new FormControl<Correspondencia | null>(null, Validators.required);
-  selectFormControlCorrespondencia = new FormControl('', Validators.required);
-  correspondencia: Correspondencia[] = [
-    {corresLaboral: 'Direccion laboral'},
-    {corresLaboral: 'Direccion domicilio'},
-    {corresLaboral: 'Otra'}
-  ];
-
-  potestadControl = new FormControl<Potestad | null>(null, Validators.required);
-  selectFormControlPotestad = new FormControl('', Validators.required);
-  potestad: Potestad[] = [
-    {potestad: 'Si'},
-    {potestad: 'No'}
-  ];
+      this.accionistasForm.get('opcPotestad').updateValueAndValidity();
+      this.accionistasForm.get('nomRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('docRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('codRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('selectMunicipioRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('selectDepartamentoRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('fecNacRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('lugNacRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('genRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('estCivRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('celRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('profActRepresentante').updateValueAndValidity();
+      this.accionistasForm.get('correoRepresentante').updateValueAndValidity();
+    });
+  }
 
 }
