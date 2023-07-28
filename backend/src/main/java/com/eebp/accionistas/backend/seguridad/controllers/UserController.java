@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +39,11 @@ public class UserController {
     @GetMapping("/{codUsuario}")
     public ResponseEntity<Optional<User>> obtenerUsuario(@PathVariable String codUsuario) throws UserNotFoundException {
         return ResponseEntity.ok(userService.obtenerUsuario(codUsuario));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getUsers() {
+        return ResponseEntity.ok(userService.obtenerUsuarios());
     }
 
 }

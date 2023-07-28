@@ -6,6 +6,7 @@ import com.eebp.accionistas.backend.seguridad.entities.UsuarioPerfil;
 import com.eebp.accionistas.backend.seguridad.exceptions.NewUserException;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserExistsException;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
+import com.eebp.accionistas.backend.seguridad.repositories.PerfilesRepository;
 import com.eebp.accionistas.backend.seguridad.repositories.UserRepository;
 import com.eebp.accionistas.backend.seguridad.repositories.UsuarioPerfilRepository;
 import lombok.extern.log4j.Log4j2;
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UsuarioPerfilRepository usuarioPerfilRepository;
+
+    @Autowired
+    private PerfilesRepository perfilesRepository;
 
     @Autowired
     private EmailServiceImpl emailService;
@@ -120,10 +126,20 @@ public class UserServiceImpl implements UserService {
     public Optional<User> obtenerUsuario(String codUsuario) throws UserNotFoundException {
         Optional<User> response = userRepository.findByCodUsuario(codUsuario);
         if (!response.isEmpty()) {
+            response.get().setPerfil(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(response.get().getCodUsuario()).getCodPerfil());
+            response.get().setNomPerfil(perfilesRepository.findById(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(response.get().getCodUsuario()).getCodPerfil()).get().getNomPerfil());
             return response;
         } else {
             log.info("Usuario no encontrado: " + codUsuario);
             throw new UserNotFoundException();
         }
+    }
+
+    public List<User> obtenerUsuarios() {
+        return userRepository.findAll().stream().map(user -> {
+            user.setPerfil(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(user.getCodUsuario()).getCodPerfil());
+            user.setNomPerfil(perfilesRepository.findById(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(user.getCodUsuario()).getCodPerfil()).get().getNomPerfil());
+            return user;
+        }).collect(Collectors.toList());
     }
 }
