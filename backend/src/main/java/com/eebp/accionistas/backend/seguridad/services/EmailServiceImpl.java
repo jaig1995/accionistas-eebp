@@ -20,21 +20,21 @@ public class EmailServiceImpl implements EmailService {
     public String sendSimpleMail(EmailDetails details)
     {
 
+        // Try block to check for exceptions
         try {
-            /*
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setText(details.getMsgBody());
-            mailMessage.setSubject(details.getSubject());
-            javaMailSender.send(mailMessage);*/
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            // Creating a simple mail message
+            MimeMessage mailMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true);
+
+            // Setting up necessary details
             helper.setFrom(sender);
             helper.setTo(details.getRecipient());
-            helper.setSubject(details.getSubject());
             helper.setText(details.getMsgBody(), true);
-            javaMailSender.send(message);
+            helper.setSubject(details.getSubject());
+
+            // Sending the mail
+            javaMailSender.send(mailMessage);
             return "Mail Sent Successfully...";
         }
 

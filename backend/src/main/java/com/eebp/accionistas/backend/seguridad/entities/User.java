@@ -42,6 +42,8 @@ public class User implements UserDetails {
     @Transient
     private Integer perfil;
 
+    @Transient String nomPerfil;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));

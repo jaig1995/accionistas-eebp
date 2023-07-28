@@ -5,8 +5,11 @@ import com.eebp.accionistas.backend.seguridad.dao.SigninRequest;
 import com.eebp.accionistas.backend.seguridad.dao.SigninWithTokenRequest;
 import com.eebp.accionistas.backend.seguridad.entities.FuseUser;
 import com.eebp.accionistas.backend.seguridad.exceptions.AuthException;
+import com.eebp.accionistas.backend.seguridad.repositories.PerfilesRepository;
 import com.eebp.accionistas.backend.seguridad.repositories.UserRepository;
+import com.eebp.accionistas.backend.seguridad.repositories.UsuarioPerfilRepository;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UsuarioPerfilRepository usuarioPerfilRepository;
+
+    @Autowired
+    private PerfilesRepository perfilesRepository;
 
     @Override
     public JwtAuthenticationResponse signIn(SigninRequest request) throws AuthException {
@@ -39,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwt = jwtService.generateToken(user);
         FuseUser fuseUser = FuseUser.builder()
                 .id(user.getCodUsuario())
-                .profile("ADMIN")
+                .profile(perfilesRepository.findById(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(request.getCodUsuario()).getCodPerfil()).get().getNomPerfil())
                 .name(user.getNombreUsuario() + " " + user.getApellidoUsuario())
                 .avatar("assets/images/avatars/" + user.getCodUsuario() + ".jpg")
                 .email(user.getEmail())
@@ -55,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var jwt = jwtService.generateToken(user);
         FuseUser fuseUser = FuseUser.builder()
                 .id(user.getCodUsuario())
-                .profile("ADMIN")
+                .profile(perfilesRepository.findById(usuarioPerfilRepository.getUsuarioPerfilByCodUsuario(codigoUsuario).getCodPerfil()).get().getNomPerfil())
                 .name(user.getNombreUsuario() + " " + user.getApellidoUsuario())
                 .avatar("assets/images/avatars/" + user.getCodUsuario() + ".jpg")
                 .email(user.getEmail())
