@@ -12,6 +12,7 @@ import { Declaracion } from './declaracion.model';
 
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -33,8 +34,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class DeclaracionComponent {
   datosDeclaracion: Declaracion;
+  private _fuseConfirmationService;
 
-  constructor(private accionistasService: AccionistasService) {}
+  constructor(private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService) {
+    this._fuseConfirmationService = fuseConfirmationService;
+  }
 
   declaracionForm = new FormGroup({
     // Agrega más campos si es necesario según tu interfaz Accionistas
@@ -83,6 +87,31 @@ export class DeclaracionComponent {
         (response) => {
           // Aquí puedes manejar la respuesta del servidor
           console.log('Respuesta del servidor: Datos enviados', response);
+
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Envio de datos exitoso!",
+            "message": "Pendiente de aprobación.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "success"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "primary"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": false
+    
+          });
+          this.router.navigate(['inicio']);
         },
         (error) => {
           // Manejo de errores si la petición falla

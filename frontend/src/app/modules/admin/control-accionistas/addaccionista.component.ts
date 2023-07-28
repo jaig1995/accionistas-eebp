@@ -240,28 +240,8 @@ export class AddaccionistaComponent {
     const pdfDefinition: any = {
 
       content:[
-        { text: 'Datos del accionista', style: 'header' },
-        {
-          table: {
-            widths: ['auto', '*'],
-            body: [
-              ['Tipo de documento:', this.accionistasForm.get('tipDocumento').value],
-              ['Opción de potestad:', this.accionistasForm.get('opcPotestad').value],
-              ['Nombre del representante:', this.accionistasForm.get('nomRepresentante').value],
-              ['Documento del representante:', this.accionistasForm.get('docRepresentante').value],
-              // Agrega aquí los demás campos del formulario
-            ]
-          },
-          layout: 'lightHorizontalLines' // Estilo de la tabla
-        }
+       
       ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10],
-        }
-      }
     };
 
     
