@@ -1,46 +1,33 @@
-<div class="flex flex-col flex-auto min-w-0">
-
+<div class="flex flex-col flex-auto min-w-0" *ngIf="usuario && permisosUsuario && permisosGenerales">
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
-      <div class="text-4xl font-extrabold tracking-tight leading-none">Detalles del usuario</div>
-      <div class="ml-0.5 font-medium text-secondary">Seguridad</div>
+        <div class="text-4xl font-extrabold tracking-tight leading-none">Seguridad > Administración de permisos</div><br>
+        <div class="text-xl ml-0.5 font-medium text-primary">{{usuario.nombreUsuario + " " + usuario.apellidoUsuario}}</div><br>
+        <mat-divider></mat-divider><br><br>
+        <div *ngFor="let modulo of dataSource">
+            <div class="text-xl ml-0.5 font-medium">- MÓDULO DE {{modulo.title}}</div><br>
+            <table mat-table [dataSource]="modulo.children" class="mat-elevation-z1">
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef width="20%"> ID </th>
+                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
 
-      <a
-      class="fuse-mat-button w-40 mt-4 sm:ml-4" mat-fab [color]="'accent'" extended
-      [routerLink]="['asignar']"> Dar permisos
-    </a>
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef width="50%"> OPCIÓN </th>
+                    <td mat-cell *matCellDef="let element"> {{element.title.toUpperCase()}} </td>
+                </ng-container>
 
-    <mat-divider class="mt-6 mb-10"></mat-divider>
+                <ng-container matColumnDef="state">
+                    <th mat-header-cell *matHeaderCellDef width="30%"> ESTADO </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="opcionPermitida(element.id)"><mat-slide-toggle [checked]="true" (change)="actualizarPermiso($event, element.id)"></mat-slide-toggle></div>
+                        <div *ngIf="!opcionPermitida(element.id)"><mat-slide-toggle [checked]="false" (change)="actualizarPermiso($event, element.id)"></mat-slide-toggle></div>
+                    </td>
+                </ng-container>
 
-      <table mat-table [dataSource]="usuario.data" class="mat-elevation-z8">
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Nombres de usuario</th>
-            <td mat-cell *matCellDef="let element">{{ element.nomUsuario}}</td>
-          </ng-container>
-
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-            <th mat-header-cell *matHeaderCellDef> Apellidos </th>
-            <td mat-cell *matCellDef="let element"> {{element.apeUsuario}} </td>
-        </ng-container>
-  
-        <!-- Weight Column -->
-        <ng-container matColumnDef="weight">
-          <th mat-header-cell *matHeaderCellDef>Código</th>
-          <td mat-cell *matCellDef="let element">{{ element.codUsuario }}</td>
-        </ng-container>
-  
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="symbol">
-          <th mat-header-cell *matHeaderCellDef>Perfil</th>
-          <td mat-cell *matCellDef="let element">{{ element.perfil }}</td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let element; columns: displayedColumns;"></tr>
-      </table>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table><br><br>
+        </div>
     </div>
-  </div>
-  
+</div>

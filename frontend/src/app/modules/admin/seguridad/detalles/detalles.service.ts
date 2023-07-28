@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { detalleUsuario } from './detalle-usuarios.model';
+import {Navigation} from "../../../../core/navigation/navigation.types";
+import {PermisoModel} from "../permisos/permiso.model";
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class detallesService {
+export class PermisosService {
+    private _baseUrl : string = "http://localhost:8081";
 
-  /**
-     * Constructor
-     */
-  constructor(private http: HttpClient){}
+    /**
+    * Constructor
+    */
+    constructor(private http: HttpClient){}
 
-  obtenerUsuarioPorId(id: number): Observable<detalleUsuario[]> {
-    const url = `http://localhost:3000/api/usuarios/${id}`; // Construye la URL con el ID proporcionado
-    return this.http.get<detalleUsuario[]>(url);
-  }
-  
+    obtenerPermisosPorUsuario(id: string): Observable<Navigation> {
+      return this.http.get<Navigation>(this._baseUrl + "/api/seguridad/perfiles/navigation/" + id);
+    }
+
+    obtenerPermisos() : Observable<Navigation> {
+      return this.http.get<Navigation>(this._baseUrl + "/api/seguridad/perfiles/navigation");
+    }
+
+    addPermiso(permiso : PermisoModel) : Observable<any> {
+      return this.http.post(this._baseUrl + "/api/seguridad/perfiles/usuariosopciones", permiso);
+    }
+
+    deletePermiso(permiso : PermisoModel) : Observable<any> {
+        return this.http.delete(this._baseUrl + "/api/seguridad/perfiles/usuariosopciones", {body : permiso});
+    }
+
 }
