@@ -44,21 +44,23 @@ export class AuthService
     /**
      * Forgot password
      *
-     * @param email
+     * @param codUsuario
      */
-    forgotPassword(email: string): Observable<any>
+    forgotPassword(codUsuario: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post(this._baseUrl + '/api/auth/forgot-password', {codUsuario : codUsuario});
     }
 
     /**
      * Reset password
      *
      * @param password
+     * @param codUsuario
      */
-    resetPassword(password: string): Observable<any>
+    resetPassword(password: string, codUsuario: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/reset-password', password);
+        console.log(password + " " + codUsuario);
+        return this._httpClient.post(this._baseUrl + '/api/auth/reset-password', {codUsuario: codUsuario, password: password});
     }
 
     /**

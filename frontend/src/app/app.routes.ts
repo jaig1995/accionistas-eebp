@@ -31,9 +31,8 @@ export const appRoutes: Route[] = [
         children: [
             {path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.routes')},
             {path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes')},
-            {path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')},
             {path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes')},
-            {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')}
+            {path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes')},
         ]
     },
 
@@ -75,6 +74,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'inicio', loadChildren: () => import('app/modules/admin/inicio/inicio.routes')},
+            {path: 'reset-password/:id', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes')},
             {path: 'seguridad/agregar-usuarios', loadChildren: () => import('app/modules/admin/seguridad/addusuario/addusuario.routes')},
             {path: 'seguridad/permisos-usuarios', loadChildren: () => import('app/modules/admin/seguridad/permisos/users.routes')},
             {path: 'seguridad/permisos-usuarios/detalles/:id', loadChildren: () => import('app/modules/admin/seguridad/detalles/detalles.routes')},

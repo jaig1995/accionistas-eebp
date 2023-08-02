@@ -51,7 +51,7 @@ export class AuthForgotPasswordComponent implements OnInit
     {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
+            codUsuario: ['', [Validators.required]],
         });
     }
 
@@ -77,7 +77,7 @@ export class AuthForgotPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Forgot password
-        this._authService.forgotPassword(this.forgotPasswordForm.get('email').value)
+        this._authService.forgotPassword(this.forgotPasswordForm.get('codUsuario').value)
             .pipe(
                 finalize(() =>
                 {
@@ -97,7 +97,7 @@ export class AuthForgotPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'success',
-                        message: 'Password reset sent! You\'ll receive an email if you are registered on our system.',
+                        message: 'Perfecto! En instantes recibirás un email con las instrucciones para ingresar al sistema.',
                     };
                 },
                 (response) =>
@@ -105,7 +105,7 @@ export class AuthForgotPasswordComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Email does not found! Are you sure you are already a member?',
+                        message: 'Usuario no encontrado, revisa los datos e intenta nuevamente.',
                     };
                 },
             );

@@ -1,8 +1,6 @@
 package com.eebp.accionistas.backend.seguridad.controllers;
 
-import com.eebp.accionistas.backend.seguridad.dao.JwtAuthenticationResponse;
-import com.eebp.accionistas.backend.seguridad.dao.SigninRequest;
-import com.eebp.accionistas.backend.seguridad.dao.SigninWithTokenRequest;
+import com.eebp.accionistas.backend.seguridad.dao.*;
 import com.eebp.accionistas.backend.seguridad.exceptions.AuthException;
 import com.eebp.accionistas.backend.seguridad.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +23,15 @@ public class AuthenticationController {
     @PostMapping("/sign-in-with-token")
     public ResponseEntity<JwtAuthenticationResponse> signInWithToken(@RequestBody SigninWithTokenRequest request) {
         return ResponseEntity.ok(authenticationService.signInWithToken(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public void forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        authenticationService.forgotPassword(forgotPasswordRequest);
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        authenticationService.resetPassword(resetPasswordRequest);
     }
 }
