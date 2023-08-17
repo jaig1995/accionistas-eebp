@@ -8,7 +8,7 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 export class AuthService
 {
     private _authenticated: boolean = false;
-    private _baseUrl: string = 'http://localhost:8081';
+    private _baseUrl: string = 'http://34.125.194.115:8081';
 
     /**
      * Constructor

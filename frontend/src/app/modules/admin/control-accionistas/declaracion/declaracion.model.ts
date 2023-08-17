@@ -1,7 +1,8 @@
 export interface Declaracion{
     nomPri: string;
     codUsuario: string;
-    expIdentificacion: string;
+    departamentoExp: string;
+    municipioExp: string;
     nomSeg: string;
     apePri: string;
     apeSeg: string;

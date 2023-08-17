@@ -63,7 +63,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:hashtag'"
                               matPrefix></mat-icon>
-                        <input matInput id="dirPerDomicilio" type="text" formControlName="dirPerDomicilio" required>
+                        <input matInput id="dirDomicilio" type="text" formControlName="dirDomicilio" required>
                     </mat-form-field>
 
                     <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -73,6 +73,7 @@
                               [svgIcon]="'heroicons_solid:envelope'"
                               matPrefix></mat-icon>
                         <input matInput id="correoPersona" type="texto" formControlName="correoPersona" required>
+                        
                     </mat-form-field>
 
                     <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -127,7 +128,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:user'"
                               matPrefix></mat-icon>
-                        <mat-select id="opcCorreo" type="text" formControlName="opcCorreo" required>
+                        <mat-select id="autorizaCorreo" type="text" formControlName="autorizaCorreo" required>
                           <mat-option value="Si">Si</mat-option>
                           <mat-option value="No">No</mat-option>
                         </mat-select>
@@ -139,19 +140,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:user'"
                               matPrefix></mat-icon>
-                        <mat-select id="opcLlamada" type="text" formControlName="opcLlamada" required>
-                          <mat-option value="Si">Si</mat-option>
-                          <mat-option value="No">No</mat-option>
-                        </mat-select>
-                    </mat-form-field >
-
-                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Todas las anteriores:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="opcTodas" type="text" formControlName="opcTodas" required>
+                        <mat-select id="autorizaLlamada" type="text" formControlName="autorizaLlamada" required>
                           <mat-option value="Si">Si</mat-option>
                           <mat-option value="No">No</mat-option>
                         </mat-select>
@@ -163,7 +152,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:user'"
                               matPrefix></mat-icon>
-                        <mat-select id="opcMensaje" type="text" formControlName="opcMensaje" required>
+                        <mat-select id="autorizaMensaje" type="text" formControlName="autorizaMensaje" required>
                           <mat-option value="Si">Si</mat-option>
                           <mat-option value="No">No</mat-option>
                         </mat-select>
@@ -175,7 +164,19 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:user'"
                               matPrefix></mat-icon>
-                        <mat-select id="opcFisico" name="opcFisico" formControlName="opcFisico" required>
+                        <mat-select id="autorizaFisico" name="opcFisico" formControlName="autorizaFisico" required>
+                          <mat-option value="Si">Si</mat-option>
+                          <mat-option value="No">No</mat-option>
+                        </mat-select>
+                    </mat-form-field >
+
+                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                        <mat-label>Todas las anteriores:</mat-label>
+                        <mat-icon
+                              class="icon-size-5"
+                              [svgIcon]="'heroicons_solid:user'"
+                              matPrefix></mat-icon>
+                        <mat-select id="autorizaTodas" type="text" formControlName="autorizaTodas" required>
                           <mat-option value="Si">Si</mat-option>
                           <mat-option value="No">No</mat-option>
                         </mat-select>
@@ -185,13 +186,15 @@
 
                     <p style="text-align: justify;" class="text-lg font-medium"><span style="font-weight: 400;">Los datos personales aqu&iacute; recolectados ser&aacute;n almacenados, usados, suprimidos, procesados, compilados, transferidos, sometidos a circulaci&oacute;n, actualizaci&oacute;n y dispuestos conforme lo establece la Ley 1581 de 2012, Decreto 1074 de 2015 y la Pol&iacute;tica de Protecci&oacute;n de Datos Personales de la EEBP, con las finalidades descritas en esta autorizaci&oacute;n.</span></p><br>
                     <p class="text-lg font-medium"></p>
-                    <p class="text-lg font-medium"><span style="font-weight: 400;">Firma del titular del dato</span> <span style="font-weight: 400;">_______________________________</span></p>
-                    <p class="text-lg font-medium"><span style="font-weight: 400;">N&uacute;mero de identificaci&oacute;n</span> <span style="font-weight: 400;">_______________________________</span></p>
-                    <p class="text-lg font-medium"><span style="font-weight: 400;">Fecha: D&iacute;a__________ Mes___________ A&ntilde;o _______________</span></p><br>
+                    <p class="text-lg font-medium"><span style="font-weight: 400;">Firma del titular del dato</span> <span style="font-weight: 400;"><input matInput id="firma" formControlName="firma" ></span></p>
+                    <p class="text-lg font-medium"><span style="font-weight: 400;">N&uacute;mero de identificaci&oacute;n: </span> <span style="font-weight: 400;"><input matInput id="codUsuario" type="text" formControlName="codUsuario"  required></span></p>
+                    <p class="text-lg font-medium">
+                        <span style="font-weight: 400;">Fecha: {{ fechaActual }}</span>
+                      </p><br>
                     <p class="text-lg font-medium"></p>
                     <p style="text-align: justify;" class="text-lg font-medium"><span style="font-weight: 400;">El titular del dato, acreditar&aacute; esta condici&oacute;n mediante copia de su documento de identidad, que podr&aacute; suministrar por medio f&iacute;sico o digital. En caso de que el titular este representado por un tercero deber&aacute; hacer llegar el respectivo poder, el cual deber&aacute; tener reconocimiento del contenido de notario, habida cuenta de que se trata del ejercicio del Derecho Fundamental de Habeas Data. El apoderado deber&aacute; igualmente acreditar su identidad en los t&eacute;rminos indicados.</span></p>
 
-                    <button  class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Siguiente</button>
+                    <button  class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit"><mat-icon  svgIcon="navigate_next"></mat-icon>Siguiente</button>
 
 
                     <mat-divider class="mt-6 mb-10"></mat-divider>

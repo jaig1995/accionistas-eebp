@@ -9,7 +9,7 @@ import {PermisoModel} from "../permisos/permiso.model";
   providedIn: 'root'
 })
 export class PermisosService {
-    private _baseUrl : string = "http://localhost:8081";
+  private _baseUrl: string = 'http://34.125.194.115:8081';
 
     /**
     * Constructor

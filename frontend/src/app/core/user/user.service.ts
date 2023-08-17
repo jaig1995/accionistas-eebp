@@ -7,7 +7,7 @@ import { map, Observable, ReplaySubject, tap } from 'rxjs';
 export class UserService
 {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    private base_url = 'http://localhost:8081';
+    private _baseUrl: string = 'http://34.125.194.115:8081';
 
     /**
      * Constructor
