@@ -24,6 +24,7 @@ export interface Actualizar {
     letra2Domicilio: string;
     num3Domicilio: string;
     dirDomicilio: string;
+    barrioDomicilio: string;
     departamentoDomicilio: string;
     municipioDomicilio: string;
     paisDomicilio: string;
@@ -38,6 +39,7 @@ export interface Actualizar {
     letra2Laboral: string;
     num3Laboral: string;
     dirLaboral: string;
+    barrioLaboral: string;
     municipioLaboral: string;
     departamentoLaboral: string;
     paisLaboral: string;
