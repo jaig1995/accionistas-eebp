@@ -273,6 +273,15 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="barrioDomicilio"  formControlName="barrioDomicilio">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Departamento:</mat-label>
                   <mat-icon
                         class="icon-size-5"
@@ -425,6 +434,15 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="barrioLaboral"  formControlName="barrioLaboral">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Departamento:</mat-label>
                   <mat-icon
                         class="icon-size-5"
@@ -484,8 +502,8 @@
                 <mat-form-field class="w-full sm:w-130 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>¿Indique si los padres ejercen de manera conjunta la patria potestad?:</mat-label>
                   <mat-select type="text" id="opcPotestad"  formControlName="opcPotestad" required>
-                    <mat-option value="Si">Si</mat-option>
-                    <mat-option value="No">No</mat-option>
+                    <mat-option value="S">Si</mat-option>
+                    <mat-option value="N">No</mat-option>
                   </mat-select>
                 </mat-form-field >
 
