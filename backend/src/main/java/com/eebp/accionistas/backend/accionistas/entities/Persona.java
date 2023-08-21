@@ -1,2 +1,237 @@
-package com.eebp.accionistas.backend.accionistas.entities;public class Persona {
+package com.eebp.accionistas.backend.accionistas.entities;
+
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "persona")
+public class Persona {
+
+    @Id
+    @Column(name = "COD_USUARIO")
+    private String codUsuario;
+
+    @Column(name = "tipdocumento")
+    private String tipDocumento;
+
+    @Column(name = "nompri")
+    private String nomPri;
+
+    @Column(name = "nomseg")
+    private String nomSeg;
+
+    @Column(name = "apepri")
+    private String apePri;
+
+    @Column(name = "apeseg")
+    private String apeSeg;
+
+    @Column(name = "razonsocial")
+    private String razonSocial;
+
+    @Column(name = "departamentoexp")
+    private String departamentoExp;
+
+    @Column(name = "municipioexp")
+    private String municipioExp;
+
+    @Column(name = "fecnacimiento")
+    private String fecNacimiento;
+
+    @Column(name = "genpersona")
+    private String genPersona;
+
+    @Column(name = "depnacimiento")
+    private String depNacimiento;
+
+    @Column(name = "lugnacimiento")
+    private String lugNacimiento;
+
+    @Column(name = "estcivpersona")
+    private String estCivPersona;
+
+    @Column(name = "celpersona")
+    private String celPersona;
+
+    @Column(name = "profpersona")
+    private String profPersona;
+
+    @Column(name = "actecopersona")
+    private String actEcoPersona;
+
+    @Column(name = "correopersona")
+    private String correoPersona;
+
+    @Column(name = "tipodirecciondomicilio")
+    private String tipoDireccionDomicilio;
+
+    @Column(name = "calle")
+    private String calle;
+
+    @Column(name = "numdomicilio")
+    private String numDomicilio;
+
+    @Column(name = "letradomicilio")
+    private String letraDomicilio;
+
+    @Column(name = "num2domicilio")
+    private String num2Domicilio;
+
+    @Column(name = "letra2domicilio")
+    private String letra2Domicilio;
+
+    @Column(name = "num3domicilio")
+    private String num3Domicilio;
+
+    @Column(name = "dirdomicilio")
+    private String dirDomicilio;
+
+    @Column(name = "departamentodomicilio")
+    private String departamentoDomicilio;
+
+    @Column(name = "municipiodomicilio")
+    private String municipioDomicilio;
+
+    @Column(name = "paisdomicilio")
+    private String paisDomicilio;
+
+    @Column(name = "telfdomicilio")
+    private String telfDomicilio;
+
+    @Column(name = "indteldomicilio")
+    private String indTelDomicilio;
+
+    @Column(name = "nomempresa")
+    private String nomEmpresa;
+
+    @Column(name = "tipodireccionlaboral")
+    private String tipoDireccionLaboral;
+
+    @Column(name = "callelaboral")
+    private String calleLaboral;
+
+    @Column(name = "numlaboral")
+    private String numLaboral;
+
+    @Column(name = "letralaboral")
+    private String letraLaboral;
+
+    @Column(name = "num2laboral")
+    private String num2Laboral;
+
+    @Column(name = "letra2laboral")
+    private String letra2Laboral;
+
+    @Column(name = "num3laboral")
+    private String num3Laboral;
+
+    @Column(name = "dirlaboral")
+    private String dirLaboral;
+
+    @Column(name = "municipiolaboral")
+    private String municipioLaboral;
+
+    @Column(name = "departamentolaboral")
+    private String departamentoLaboral;
+
+    @Column(name = "paislaboral")
+    private String paisLaboral;
+
+    @Column(name = "telflaboral")
+    private String telfLaboral;
+
+    @Column(name = "extlaboral")
+    private String extLaboral;
+
+    @Column(name = "dircorrespondencia")
+    private String dirCorrespondencia;
+
+    @Column(name = "otradirlaboral")
+    private String otraDirLaboral;
+
+    @Column(name = "opcpotestad")
+    private String opcPotestad;
+
+    @Column(name = "nomrepresentante")
+    private String nomRepresentante;
+
+    @Column(name = "tipodocrepresentante")
+    private String tipoDocRepresentante;
+
+    @Column(name = "codrepresentante")
+    private String codRepresentante;
+
+    @Column(name = "municipiorepresentante")
+    private String municipioRepresentante;
+
+    @Column(name = "departamentorepresentante")
+    private String departamentoRepresentante;
+
+    @Column(name = "fecnacrepresentante")
+    private String fecNacRepresentante;
+
+    @Column(name = "depnacrepresentante")
+    private String depNacRepresentante;
+
+    @Column(name = "lugnacrepresentante")
+    private String lugNacRepresentante;
+
+    @Column(name = "genrepresentante")
+    private String genRepresentante;
+
+    @Column(name = "estcivrepresentante")
+    private String estCivRepresentante;
+
+    @Column(name = "celrepresentante")
+    private String celRepresentante;
+
+    @Column(name = "profactrepresentante")
+    private String profActRepresentante;
+
+    @Column(name = "correorepresentante")
+    private String correoRepresentante;
+
+    @Column(name = "huella")
+    private byte[] huella;
+
+    @Column(name = "firma")
+    private byte[] firma;
+
+    @Column(name = "tipovivienda")
+    private String tipoVivienda;
+
+    @Column(name = "numpersonas")
+    private Integer numPersonas;
+
+    @Column(name = "autorizacorreo")
+    private String autorizaCorreo;
+
+    @Column(name = "autorizallamada")
+    private String autorizaLlamada;
+
+    @Column(name = "autorizatodas")
+    private String autorizaTodas;
+
+    @Column(name = "autorizamensaje")
+    private String autorizaMensaje;
+
+    @Column(name = "autorizafisico")
+    private String autorizaFisico;
+
+    @Column(name = "declaracionrecursos")
+    private String declaracionRecursos;
+
+    @Column(name = "declaracioningresos")
+    private String declaracionIngresos;
+
 }
+
