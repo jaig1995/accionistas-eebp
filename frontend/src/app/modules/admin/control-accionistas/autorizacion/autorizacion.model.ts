@@ -5,9 +5,10 @@ export interface Autorizacion{
   apePri: string;
   apeSeg: string;
   codUsuario: string;
-  dirPerDomicilio: string;
+  dirDomicilio: string;
   correoPersona: string;
   telfDomicilio: string;
   celPersona: string;
+  firma: string;
 
 }

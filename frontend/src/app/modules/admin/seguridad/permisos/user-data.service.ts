@@ -8,7 +8,7 @@ import { Usuario } from './usuarios.model';
   providedIn: 'root'
 })
 export class UserDataService {
-    private base_url = 'http://localhost:8081'
+  private _baseUrl: string = 'http://34.125.194.115:8081';
 
   /**
      * Constructor
@@ -16,11 +16,11 @@ export class UserDataService {
     constructor(private http: HttpClient){}
 
     obtenerUsuarios(): Observable<Usuario[]> {
-        return this.http.get<Usuario[]>(this.base_url + "/api/usuarios");
+        return this.http.get<Usuario[]>(this._baseUrl + "/api/usuarios");
     }
 
     obtenerUsuario(id : string): Observable<Usuario> {
-        return this.http.get<Usuario>(this.base_url + "/api/usuarios/" + id);
+        return this.http.get<Usuario>(this._baseUrl + "/api/usuarios/" + id);
     }
 
 }

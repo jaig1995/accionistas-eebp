@@ -5,11 +5,12 @@ import {Observable, ReplaySubject, Subject, takeUntil, tap} from 'rxjs';
 import { UserService } from 'app/core/user/user.service';
 import {User} from "../user/user.types";
 
+
 @Injectable({providedIn: 'root'})
 export class NavigationService
 {
     private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
-    private base_url = 'http://localhost:8081'
+    private _baseUrl: string = 'http://34.125.194.115:8081';
     user: User;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -47,7 +48,7 @@ export class NavigationService
      */
     get(): Observable<Navigation>
     {
-        return this._httpClient.get<Navigation>(this.base_url + '/api/seguridad/perfiles/navigation/' + this.user.id).pipe(
+        return this._httpClient.get<Navigation>(this._baseUrl + '/api/seguridad/perfiles/navigation/' + this.user.id).pipe(
             tap((navigation) =>
             {
                 this._navigation.next(navigation);

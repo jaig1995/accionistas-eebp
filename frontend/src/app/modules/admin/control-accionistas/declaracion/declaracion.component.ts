@@ -1,20 +1,14 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Router, RouterModule} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule, Validators,FormControl, FormGroup } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { AccionistasService } from '../accionistas.service';
-import { Accionistas } from '../accionistas.model';
+import { AccionistasService } from '../addaccionista/accionistas.service';
 import { Declaracion } from './declaracion.model';
-
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'autorizacion',
@@ -38,15 +32,16 @@ export class DeclaracionComponent {
 
   constructor(private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService) {
     this._fuseConfirmationService = fuseConfirmationService;
+    // Se obtienen los departamentos 
   }
 
   declaracionForm = new FormGroup({
     // Agrega más campos si es necesario según tu interfaz Accionistas
     'nomPri':  new FormControl(''),
-    'codUsuario':  new FormControl('', Validators.required),
-    'expIdentificacion':  new FormControl('', Validators.required),
-    'nomRepresentante':  new FormControl('', Validators.required),
-    'codRepresentante':  new FormControl('', Validators.required),
+    'codUsuario':  new FormControl(''),
+    'departamentoExp':  new FormControl(''),
+    'nomRepresentante':  new FormControl(''),
+    'codRepresentante':  new FormControl(''),
     'recursos':  new FormControl('', Validators.required),
     'ingresos':  new FormControl('', Validators.required),
   });
@@ -61,15 +56,14 @@ export class DeclaracionComponent {
         this.datosDeclaracion = datos;
 
         const nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
-
+        const lugarExp = datos.departamentoExp + ' ' + datos.municipioExp;
         // Establecer el valor de los campos con el valor obtenido de la API
         this.declaracionForm.patchValue({
           codUsuario: datos.codUsuario,
           nomPri: nombreCompleto,
-          expIdentificacion: datos.expIdentificacion,
+          departamentoExp: lugarExp,
           nomRepresentante: nombreCompleto,
-          codRepresentante: datos.codRepresentante
-
+          codRepresentante: datos.codRepresentante,
         });
       },
       error => {
@@ -78,12 +72,14 @@ export class DeclaracionComponent {
     );
   }
 
-
   onSubmit() { 
-    console.log('hola');
+    console.log('Datos del formulario:', this.declaracionForm.value);
     if (this.declaracionForm.valid) {
-      const formDataAutorizacion = this.declaracionForm.value;
-      this.accionistasService.enviarDatosDeclaracion(formDataAutorizacion).subscribe(
+      const formData = {
+        recursos: this.declaracionForm.get('recursos').value,
+        ingresos: this.declaracionForm.get('ingresos').value,
+      };
+      this.accionistasService.enviarDatosDeclaracion(formData).subscribe(
         (response) => {
           // Aquí puedes manejar la respuesta del servidor
           console.log('Respuesta del servidor: Datos enviados', response);
@@ -119,20 +115,6 @@ export class DeclaracionComponent {
         }
       );
     }
-  }
-
-  createPdf(){
-
-    const pdfDefinition: any = {
-
-      content:[
-        {text: 'Hola'}
-      ]
-    }
-
-    const pdf = pdfMake.createPdf(pdfDefinition);
-    pdf.open();
-
   }
 
 }

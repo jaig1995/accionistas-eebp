@@ -21,6 +21,7 @@
                       <mat-option value="CE">CE</mat-option>
                       <mat-option value="TI">TI</mat-option>
                       <mat-option value="RC">RC</mat-option>
+                      <mat-option value="NIT">NIT</mat-option>
                     </mat-select>
                   </mat-form-field >
 
@@ -38,6 +39,7 @@
                           [svgIcon]="'heroicons_solid:hashtag'"
                           matPrefix></mat-icon>
                     <input matInput type="text" id="codUsuario"  formControlName="codUsuario" >
+                    <div *ngIf="accionistasForm.get('codUsuario').hasError('pattern')">Solo números.</div>
                   </mat-form-field>
   
                   <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -86,7 +88,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="departamentos" formControlName="selectDepartamento" (selectionChange)="onDepartamentoChange($event)">
+                  <mat-select id="departamentos" formControlName="departamentoExp" (selectionChange)="onDepartamentoChange($event)">
                     <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
                       {{ departamento.nombreDepartamento }}
                     </mat-option>
@@ -99,7 +101,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="municipios" formControlName="selectMunicipio" >
+                  <mat-select id="municipios" formControlName="municipioExp" >
                     <mat-option *ngFor="let municipio of municipios" value="{{municipio.codMunicipio}}">
                       {{ municipio.nomMunicipio }}
                     </mat-option>
@@ -108,7 +110,7 @@
   
                 <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Fecha de nacimiento:</mat-label>
-                  <input matInput type="text" id="fecNacimiento" formControlName="fecNacimiento" matInput [matDatepicker]="picker" required>
+                  <input matInput  id="fecNacimiento" formControlName="fecNacimiento" matInput [matDatepicker]="picker" required>
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -120,34 +122,58 @@
                         [svgIcon]="'heroicons_solid:user'"
                         matPrefix></mat-icon>
                   <mat-select type="text" id="genPersona"  formControlName="genPersona" required>
-                    <mat-option value="Masculino">M</mat-option>
-                    <mat-option value="Femenino">F</mat-option>
+                    <mat-option value="M">M</mat-option>
+                    <mat-option value="F">F</mat-option>
                   </mat-select>
                 </mat-form-field >
-  
-  
+
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Lugar de nacimiento:</mat-label>
+                  <mat-label>Departamento de nacimiento:</mat-label>
                   <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="lugNacimiento"  formControlName="lugNacimiento" required>
+                  <mat-select id="departamentos" formControlName="depNacimiento" (selectionChange)="onDepartamentoNacimiento($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
   
-                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+  
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio de Nacimiento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="lugNacimiento" >
+                    <mat-option *ngFor="let municipio of municipiosPersona" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+  
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Estado civil:</mat-label>
                   <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-                  <input matInput type="text" id="estCivPersona"  formControlName="estCivPersona" required>
+                  <mat-select  id="estCivPersona" formControlName="estCivPersona">
+                    <mat-option value="SOLTERO">Soltero(a)</mat-option>
+                    <mat-option value="CASADO">Casado(a)</mat-option>
+                    <mat-option value="VIUDO">Viudo(a)</mat-option>
+                    <mat-option value="SEPARADO">Separado(a)</mat-option>
+                    <mat-option value="DIVORCIADO">Divorciado(a)</mat-option>
+                  </mat-select>
                 </mat-form-field>
   
-                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Numero de celular:</mat-label>
                   <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="celPersona"  formControlName="celPersona" required>
+                  <div *ngIf="accionistasForm.get('celPersona').hasError('pattern')">Solo números.</div>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -175,6 +201,7 @@
                         [svgIcon]="'heroicons_solid:envelope'"
                         matPrefix></mat-icon>
                   <input matInput type="email" id="correoPersona"  formControlName="correoPersona" required>
+                  <div *ngIf="accionistasForm.get('correoPersona').hasError('pattern')">Ingrese un correo electrónico válido.</div>
                 </mat-form-field>
 
                 <mat-divider class="mt-6 mb-5"></mat-divider>
@@ -182,21 +209,76 @@
                 <mat-divider class="mt-4 mb-10"></mat-divider>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Direccion:</mat-label>
-                  <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
-                        matPrefix></mat-icon>
-                  <input matInput type="text" id="dirPerDomicilio"  formControlName="dirPerDomicilio" required>
-                </mat-form-field>
-
-                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Barrio:</mat-label>
+                  <mat-label>Tipo de dirección:</mat-label>
                   <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="barrio"  formControlName="barrio" required>
+                  <mat-select  id="tipoDireccionDomicilio" formControlName="tipoDireccionDomicilio" (selectionChange)="onSelectChangeDireccion($event)" >
+                    <mat-option value="Urbana">Urbana</mat-option>
+                    <mat-option value="Rural">Rural</mat-option>
+                  </mat-select>
+                </mat-form-field ><br>
+                
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Vía:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select  id="calle" formControlName="calle" >
+                    <mat-option value="Calle">Calle</mat-option>
+                    <mat-option value="Cra">Cra</mat-option>
+                    <mat-option value="Av">Av</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput  id="numDomicilio" formControlName="numDomicilio">
+                </mat-form-field>
+            
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-20 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Letra</mat-label>
+                  <input matInput type="text" id="letraDomicilio" formControlName="letraDomicilio">
+                </mat-form-field>
+
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput type="text" id="num2Domicilio" formControlName="num2Domicilio" >
+                </mat-form-field>
+          
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Letra</mat-label>
+                  <input matInput type="text" id="letra2Domicilio" formControlName="letra2Domicilio"  >
+                </mat-form-field>
+             
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-20 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput type="text" id="num3Domicilio" formControlName="num3Domicilio">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Dirección domicilio</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="dirDomicilio"  formControlName="dirDomicilio">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="barrioDomicilio"  formControlName="barrioDomicilio">
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -205,7 +287,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="departamentos" formControlName="selectDepartamentoDomicilio" (selectionChange)="onDepartamentoChangeDomicilio($event)">
+                  <mat-select id="departamentos" formControlName="departamentoDomicilio" (selectionChange)="onDepartamentoChangeDomicilio($event)">
                     <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
                       {{ departamento.nombreDepartamento }}
                     </mat-option>
@@ -218,7 +300,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="municipios" formControlName="selectMunicipioDomicilio" >
+                  <mat-select id="municipios" formControlName="municipioDomicilio" >
                     <mat-option *ngFor="let municipio of municipiosDomicilio" value="{{municipio.codMunicipio}}">
                       {{ municipio.nomMunicipio }}
                     </mat-option>
@@ -243,6 +325,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio"  required>
+                  <div *ngIf="accionistasForm.get('telfDomicilio').hasError('pattern')">Solo números.</div>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -267,18 +350,96 @@
                   <input matInput type="text" id="nomEmpresa"  formControlName="nomEmpresa"  required>
                 </mat-form-field>
 
-                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Direccion:</mat-label>
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Telefono:</mat-label>
                   <mat-icon
-                  class="icon-size-5"
-                  [svgIcon]="'heroicons_solid:map-pin'"
-                  matPrefix></mat-icon>
-                  <input matInput type="text" id="dirLaboral"  formControlName="dirLaboral"  required>
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  required>
+                  <div *ngIf="accionistasForm.get('telfLaboral').hasError('pattern')">Solo números.</div>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Extension:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:hashtag'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="extLaboral"  formControlName="extLaboral"  required>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Barrio:</mat-label>
-                  <input matInput type="text" id="barLab"  formControlName="barLab"  required>
+                  <mat-label>Tipo de dirección:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select  id="tipoDireccionLaboral" formControlName="tipoDireccionLaboral" (selectionChange)="onSelectChangeDireccionLaboral($event)">
+                    <mat-option value="Urbana">Urbana</mat-option>
+                    <mat-option value="Rural">Rural</mat-option>
+                  </mat-select>
+                </mat-form-field >
+                
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Vía:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select  id="calleLaboral" formControlName="calleLaboral">
+                    <mat-option value="Calle">Calle</mat-option>
+                    <mat-option value="Cra">Cra</mat-option>
+                    <mat-option value="Av">Av</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-18 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput type="text" id="numLaboral" formControlName="numLaboral"  >
+                </mat-form-field>
+            
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-16 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Letra</mat-label>
+                  <input matInput type="text" id="letraLaboral" formControlName="letraLaboral" >
+                </mat-form-field>
+
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput type="text" id="num2Laboral" formControlName="num2Laboral">
+                </mat-form-field>
+          
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Letra</mat-label>
+                  <input matInput type="text" id="letra2Laboral" formControlName="letra2Laboral">
+                </mat-form-field>
+             
+                <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-20 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                  <mat-label>Número</mat-label>
+                  <input matInput type="text" id="num3Laboral" formControlName="num3Laboral">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Dirección Laboral</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="dirLaboral"  formControlName="dirLaboral">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Barrio</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <input matInput type="text" id="barrioLaboral"  formControlName="barrioLaboral">
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -287,7 +448,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="departamentos" formControlName="selectDepartamentoLaboral" (selectionChange)="onDepartamentoChangeLaboral($event)">
+                  <mat-select id="departamentos" formControlName="departamentoLaboral" (selectionChange)="onDepartamentoChangeLaboral($event)">
                     <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
                       {{ departamento.nombreDepartamento }}
                     </mat-option>
@@ -300,7 +461,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="municipios" formControlName="selectMunicipioLaboral" >
+                  <mat-select id="municipios" formControlName="municipioLaboral" >
                     <mat-option *ngFor="let municipio of municipiosLaboral" value="{{municipio.codMunicipio}}">
                       {{ municipio.nomMunicipio }}
                     </mat-option>
@@ -318,37 +479,20 @@
                       </mat-select>
                 </mat-form-field >
 
-                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Telefono:</mat-label>
-                  <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:phone'"
-                        matPrefix></mat-icon>
-                  <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  required>
-                </mat-form-field>
-
-                <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Extension:</mat-label>
-                  <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
-                        matPrefix></mat-icon>
-                  <input matInput type="text" id="extLaboral"  formControlName="extLaboral"  required>
-                </mat-form-field>
+                
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Donde enviar correspondencia?:</mat-label>
-                  
-                  <mat-select type="text" id="dirCorrespondencia"  formControlName="dirCorrespondencia" required>
-                    <mat-option value="Direccion laboral">Dirección laboral: </mat-option>
-                    <mat-option value="Direccion domicilio">Dirección domicilio: </mat-option>
+                  <mat-select type="text" id="dirCorrespondencia"  formControlName="dirCorrespondencia" (selectionChange)="onSelectChangeCorrespondencia($event)">
+                    <mat-option value="Direccion laboral">Dirección laboral </mat-option>
+                    <mat-option value="Direccion domicilio">Dirección domicilio </mat-option>
                     <mat-option value="Otra">Otra</mat-option>
                   </mat-select>
                 </mat-form-field >
 
-                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field *ngIf="showAdditionalFieldCorrespondencia" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Cual:</mat-label>
-                  <input matInput type="text" id="cualLaboratorio"  formControlName="cualLaboratorio"  placeholder="(Indique barrio, municipio, departamento, pais)">
+                  <input matInput type="text" id="otraDirLaboral"  formControlName="otraDirLaboral"  placeholder="(Indique barrio, municipio, departamento, pais)">
                 </mat-form-field>
 
                 <mat-divider class="mt-6 mb-5"></mat-divider>
@@ -358,8 +502,8 @@
                 <mat-form-field class="w-full sm:w-130 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>¿Indique si los padres ejercen de manera conjunta la patria potestad?:</mat-label>
                   <mat-select type="text" id="opcPotestad"  formControlName="opcPotestad" required>
-                    <mat-option value="Si">Si</mat-option>
-                    <mat-option value="No">No</mat-option>
+                    <mat-option value="S">Si</mat-option>
+                    <mat-option value="N">No</mat-option>
                   </mat-select>
                 </mat-form-field >
 
@@ -381,7 +525,7 @@
                 <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Documento:</mat-label>
                   <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
-                  <mat-select type="text" id="docRepresentante"  formControlName="docRepresentante" required>
+                  <mat-select type="text" id="tipoDocRepresentante"  formControlName="tipoDocRepresentante" required>
                     <mat-option value="CC">CC</mat-option>
                     <mat-option value="CE">CE</mat-option>
                     <mat-option value="Otro">OTRO</mat-option>
@@ -395,6 +539,7 @@
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="codRepresentante"  formControlName="codRepresentante" required>
+                  <div *ngIf="accionistasForm.get('codRepresentante').hasError('pattern')">Solo números.</div>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -403,7 +548,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="departamentos" formControlName="selectDepartamentoRepresentante" (selectionChange)="onDepartamentoChangeRepresentante($event)">
+                  <mat-select id="departamentos" formControlName="departamentoRepresentante" (selectionChange)="onDepartamentoChangeRepresentante($event)">
                     <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
                       {{ departamento.nombreDepartamento }}
                     </mat-option>
@@ -416,7 +561,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <mat-select id="municipios" formControlName="selectMunicipioRepresentante" >
+                  <mat-select id="municipios" formControlName="municipioRepresentante" >
                     <mat-option *ngFor="let municipio of municipiosRepresentante" value="{{municipio.codMunicipio}}">
                       {{ municipio.nomMunicipio }}
                     </mat-option>
@@ -431,12 +576,30 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                  <mat-label>Lugar de nacimiento:</mat-label>
+                  <mat-label>Departamento de nacimiento:</mat-label>
                   <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="lugNacRepresentante"  formControlName="lugNacRepresentante" required>
+                  <mat-select id="departamentos" formControlName="depNacRepresentante" (selectionChange)="onDepartamentoNacimientoRepresentante($event)">
+                    <mat-option *ngFor="let departamento of departamentos" value="{{ departamento.codigoDepartamento }}">
+                      {{ departamento.nombreDepartamento }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+  
+  
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Municipio de Nacimiento:</mat-label>
+                  <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:map-pin'"
+                        matPrefix></mat-icon>
+                  <mat-select id="municipios" formControlName="lugNacRepresentante" >
+                    <mat-option *ngFor="let municipio of municipiosRepresentanteNacimiento" value="{{municipio.codMunicipio}}">
+                      {{ municipio.nomMunicipio }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -446,8 +609,8 @@
                         [svgIcon]="'heroicons_solid:user'"
                         matPrefix></mat-icon>
                       <mat-select type="text" id="genRepresentante"  formControlName="genRepresentante" required>
-                        <mat-option value="Masculino">M</mat-option>
-                        <mat-option value="Femenino">F</mat-option>
+                        <mat-option value="M">M</mat-option>
+                        <mat-option value="F">F</mat-option>
                       </mat-select>
                 </mat-form-field >
 
@@ -459,12 +622,19 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="celRepresentante"  formControlName="celRepresentante" required>
+                  <div *ngIf="accionistasForm.get('celRepresentante').hasError('pattern')">Solo números.</div>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Estado civil:</mat-label>
                   <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
-                  <input matInput type="text" id="estCivRepresentante"  formControlName="estCivRepresentante" required>
+                  <mat-select  id="estCivPRepresentante" formControlName="estCivRepresentante">
+                    <mat-option value="SOLTERO">Soltero(a)</mat-option>
+                    <mat-option value="CASADO">Casado(a)</mat-option>
+                    <mat-option value="VIUDO">Viudo(a)</mat-option>
+                    <mat-option value="SEPARADO">Separado(a)</mat-option>
+                    <mat-option value="DIVORCIADO">Divorciado(a)</mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -483,14 +653,62 @@
                         [svgIcon]="'heroicons_solid:envelope'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="correoRepresentante" formControlName="correoRepresentante" required>
-                </mat-form-field><br><br>
+                  <div *ngIf="accionistasForm.get('correoRepresentante').hasError('pattern')">Ingrese un correo electrónico válido.</div>
+                </mat-form-field><br>
+
+                <button class="w-full sm:w-1/6 m-4 sm:mt-4 sm:ml-4" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir fotografia</button>
+                <input hidden (change)="onFileSelected($event)" #fileInput type="file" formControlName="file" required>
+                <span class="file-name">{{selectedFile?.name}}</span><br>
+
+                <p class="text-lg font-medium mt-4 sm:ml-4 ">Declaro que la información aquí suministrada es veras, y autorizo a la EEBP S.A.E.S.P., para verificar
+                  con todas las fuentes de información aquí consignadas.
+                </p>
+                
+                <div class=" sm:mt-2 sm:ml-4" *ngIf="message">
+                  <mat-label class="font-extrabold" >Huella Recibida:</mat-label>
+                  <img class="w-30 h-30" style="transform: rotate(90deg);" [src]="message" alt="Huella recibida">
+                </div><br>
+
+                <div class=" sm:mt-2 sm:ml-4" *ngIf="messageFirma">
+                  <mat-label class="font-extrabold" >Firma Recibida:</mat-label>
+                  <img class="w-100 h-30" [src]="messageFirma" alt="Firma recibida">
+                </div><br>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Huella</mat-label>
+                <input matInput id="huella" formControlName="huella">
+              </mat-form-field>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Firma</mat-label>
+                <input matInput id="firma" formControlName="firma">
+              </mat-form-field>
   
-              <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Siguiente</button>
+              <div class="button-container">
+                <button class="fuse-mat-button sm:w-50 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="button" (click)="obtenerFirma()">
+                  <mat-icon svgIcon="heroicons_outline:pencil-square"></mat-icon>
+                  Iniciar registro de firma
+                </button>
+
+                <button class="fuse-mat-button sm:w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="button" (click)="capturarFirma()">
+                  <mat-icon svgIcon="mat_outline:save"></mat-icon>
+                  Guardar firma
+                </button>
+                
+                <button class="fuse-mat-button sm:w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="button" (click)="obtenerHuella()">
+                  <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
+                  Registrar huella
+                </button>
+
+                
+              </div>
+
+              
+              <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit"><mat-icon class=" sm:ml-4" svgIcon="navigate_next"></mat-icon>Siguiente</button>
               <mat-divider class="mt-6 mb-10"></mat-divider>
 
             </form>
           </div>  
     </div>
-  </div>
-<!--{{accionistasForm.get('fecNacimiento')?.value}}-->
+</div>
   

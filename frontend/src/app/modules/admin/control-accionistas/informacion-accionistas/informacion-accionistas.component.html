@@ -1,0 +1,68 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+  <div class="flex-auto p-6 sm:p-10">
+
+    <div class="text-4xl font-extrabold tracking-tight leading-none">Accionistas > Información</div><br>
+
+      <mat-divider class="mt-6 mb-10"></mat-divider><br>
+
+    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'">
+      <mat-label>Buscar por código (Identificación):</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filtro"  #input>
+    </mat-form-field><br><br>
+
+    <table mat-table [dataSource]="datos" class="mat-elevation-z2">
+
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+            <img
+                class="w-10 h-10 rounded-full"
+                src="/assets/images/avatars/{{element.codUsuario}}.jpg"
+                alt="Accionista avatar">
+        </td>
+    </ng-container>
+
+      <ng-container matColumnDef="codUsuario">
+        <th mat-header-cell *matHeaderCellDef> CÓDIGO DE ACCIONISTA </th>
+        <td mat-cell *matCellDef="let element"> {{element.codUsuario}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomPri">
+        <th mat-header-cell *matHeaderCellDef> NOMBRES </th>
+        <td mat-cell *matCellDef="let element"> {{element.nomPri}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="apePri">
+        <th mat-header-cell *matHeaderCellDef> APELLIDOS </th>
+        <td mat-cell *matCellDef="let element"> {{element.apePri}}
+        </td>
+      </ng-container>
+
+        <ng-container matColumnDef="correoPersona">
+            <th mat-header-cell *matHeaderCellDef> EMAIL </th>
+            <td mat-cell *matCellDef="let element"> {{element.correoPersona.toUpperCase()}}
+            </td>
+        </ng-container>
+
+      <ng-container matColumnDef="permisos">
+        <th mat-header-cell *matHeaderCellDef>  </th>
+        <td mat-cell *matCellDef="let element">
+          <a mat-button [color]="'accent'"
+          [routerLink]="['actualizar-informacion-accionistas/actualizar/' + element.codUsuario ]">Actualizar información<mat-icon svgIcon="mat_solid:update"></mat-icon>
+          </a>
+        </td>
+      </ng-container> 
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No hay usuarios que coincidan con el código "{{input.value}}"</td>
+      </tr>
+    </table>
+
+  </div>
+</div>
