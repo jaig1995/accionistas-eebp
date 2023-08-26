@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from 'app/core/user/user.types';
+import { ServicesConfig } from 'app/services.config';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class UserService
 {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    private _baseUrl: string = 'http://34.125.194.115:8081';
+    private _baseUrl: string = ServicesConfig.apiUrl;
 
     /**
      * Constructor

@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule, Validators,FormControl, FormGroup } f
 import { MatIconModule } from '@angular/material/icon';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { Autorizacion } from './autorizacion.model';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'autorizacion',
@@ -21,6 +22,8 @@ import { Autorizacion } from './autorizacion.model';
     MatIconModule,
     MatSelectModule,
     MatButtonModule,
+    NgFor,
+    NgIf
    ],
   templateUrl: './autorizacion.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -28,8 +31,10 @@ import { Autorizacion } from './autorizacion.model';
 export class AutorizacionComponent {
   datosAutorizacion: Autorizacion;
   fechaActual: string;
+  id : string;
+  messageFirma : string;
 
-  constructor(private accionistasService: AccionistasService, private router: Router) {
+  constructor(private route: ActivatedRoute, private accionistasService: AccionistasService, private router: Router) {
     this.fechaActual = new Date().toLocaleDateString();
   }
 
@@ -55,11 +60,12 @@ export class AutorizacionComponent {
   });
 
   ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
     this.obtenerDatos(); // Llamado del método al inicializar el componente
   }
 
   obtenerDatos() {
-    this.accionistasService.obtenerDatosAutorizacion().subscribe(
+    this.accionistasService.obtenerDatosAutorizacion(this.id).subscribe(
       (datos: Autorizacion) => {
         this.datosAutorizacion = datos;
 
@@ -76,6 +82,9 @@ export class AutorizacionComponent {
           firma: datos.firma,
 
         });
+
+        this.messageFirma = 'data:image/png;base64,' + datos.firma;
+        //this.autorizacionForm.get('firma').setValue(messageFirma);
       },
       error => {
         console.error('Error en la solicitud GET:', error);
@@ -95,15 +104,13 @@ export class AutorizacionComponent {
         autorizaMensaje: this.autorizacionForm.get('autorizaMensaje').value,
         autorizaTodas: this.autorizacionForm.get('autorizaTodas').value,
         autorizaFisico: this.autorizacionForm.get('autorizaFisico').value,
+        codUsuario: this.autorizacionForm.get('codUsuario').value
       };
       this.accionistasService.enviarDatosAutorizacion(formData).subscribe(
         (response) => {
-          // Aquí puedes manejar la respuesta del servidor
-          console.log('Respuesta del servidor: Datos enviados', response);
-          this.router.navigate(['control-accionistas/agregar-accionistas/autorizacion/declaracion']);
+          this.router.navigate(['accionistas/agregar/declaracion/' + this.autorizacionForm.get('codUsuario').value]);
         },
         (error) => {
-          // Manejo de errores si la petición falla
           console.error('Error en la petición:', error);
         }
       );

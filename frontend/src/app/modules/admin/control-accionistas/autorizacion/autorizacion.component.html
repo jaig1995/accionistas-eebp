@@ -186,7 +186,10 @@
 
                     <p style="text-align: justify;" class="text-lg font-medium"><span style="font-weight: 400;">Los datos personales aqu&iacute; recolectados ser&aacute;n almacenados, usados, suprimidos, procesados, compilados, transferidos, sometidos a circulaci&oacute;n, actualizaci&oacute;n y dispuestos conforme lo establece la Ley 1581 de 2012, Decreto 1074 de 2015 y la Pol&iacute;tica de Protecci&oacute;n de Datos Personales de la EEBP, con las finalidades descritas en esta autorizaci&oacute;n.</span></p><br>
                     <p class="text-lg font-medium"></p>
-                    <p class="text-lg font-medium"><span style="font-weight: 400;">Firma del titular del dato</span> <span style="font-weight: 400;"><input matInput id="firma" formControlName="firma" ></span></p>
+                    <p class="text-lg font-medium"><span style="font-weight: 400;">Firma del titular del dato</span> <span style="font-weight: 400;"></span></p>
+                    <div class=" sm:mt-2 sm:ml-4" *ngIf="messageFirma">
+                        <img class="w-100 h-30" [src]="messageFirma" alt="Firma recibida">
+                    </div><br>
                     <p class="text-lg font-medium"><span style="font-weight: 400;">N&uacute;mero de identificaci&oacute;n: </span> <span style="font-weight: 400;"><input matInput id="codUsuario" type="text" formControlName="codUsuario"  required></span></p>
                     <p class="text-lg font-medium">
                         <span style="font-weight: 400;">Fecha: {{ fechaActual }}</span>

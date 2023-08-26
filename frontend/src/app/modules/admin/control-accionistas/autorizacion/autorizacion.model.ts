@@ -10,5 +10,4 @@ export interface Autorizacion{
   telfDomicilio: string;
   celPersona: string;
   firma: string;
-
 }

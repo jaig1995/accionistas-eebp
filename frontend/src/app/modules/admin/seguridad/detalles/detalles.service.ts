@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Navigation} from "../../../../core/navigation/navigation.types";
 import {PermisoModel} from "../permisos/permiso.model";
+import { ServicesConfig } from 'app/services.config';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermisosService {
-  private _baseUrl: string = 'http://34.125.194.115:8081';
+  private _baseUrl: string = ServicesConfig.apiUrl;
 
     /**
     * Constructor

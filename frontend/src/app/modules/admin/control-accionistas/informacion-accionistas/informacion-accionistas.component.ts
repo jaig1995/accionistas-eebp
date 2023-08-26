@@ -9,6 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { infoAccionistas } from './informacion-accionistas.model';
 import {NgIf} from "@angular/common";
+import { ServicesConfig } from 'app/services.config';
 
 
 
@@ -21,15 +22,15 @@ import {NgIf} from "@angular/common";
 })
 export class InformacionAccionistasComponent implements OnInit
 {
+  private _baseUrl: string = ServicesConfig.apiUrl;
   datos: MatTableDataSource<infoAccionistas>;
-  displayedColumns: string[] = [ 'avatar', 'codUsuario', 'nomPri', 'apePri', 'correoPersona', 'permisos'];
+  displayedColumns: string[] = [ 'avatar', 'codUsuario', 'nomPri', 'apePri', 'correoPersona',  'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion','actualizar'];
 
   constructor(private userDatos: InformacionAccionistasService) {}
 
   ngOnInit() {
     this.userDatos.obtenerUsuarios().subscribe(
       (datos: infoAccionistas[]) => {
-        console.log(datos);
         this.datos = new MatTableDataSource<infoAccionistas>(datos);
       },
       (error) => {
@@ -41,11 +42,12 @@ export class InformacionAccionistasComponent implements OnInit
  
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    console.log(filterValue);
     this.datos.filterPredicate = (data: infoAccionistas, filter: string) => {
       const idStr = data.codUsuario;
       return idStr.includes(filterValue);
     };
     this.datos.filter = filterValue.trim();
   }
+
+
 }

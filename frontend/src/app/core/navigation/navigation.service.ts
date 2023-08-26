@@ -4,13 +4,14 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import {Observable, ReplaySubject, Subject, takeUntil, tap} from 'rxjs';
 import { UserService } from 'app/core/user/user.service';
 import {User} from "../user/user.types";
+import { ServicesConfig } from 'app/services.config';
 
 
 @Injectable({providedIn: 'root'})
 export class NavigationService
 {
     private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
-    private _baseUrl: string = 'http://34.125.194.115:8081';
+    private _baseUrl: string = ServicesConfig.apiUrl;
     user: User;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { ServicesConfig } from 'app/services.config';
 
 @Injectable({providedIn: 'root'})
 export class AuthService
 {
     private _authenticated: boolean = false;
-    private _baseUrl: string = 'http://34.125.194.115:8081';
+    private _baseUrl: string = ServicesConfig.apiUrl;
 
     /**
      * Constructor

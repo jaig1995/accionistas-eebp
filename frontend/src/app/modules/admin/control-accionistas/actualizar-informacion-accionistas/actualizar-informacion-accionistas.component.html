@@ -102,8 +102,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="municipioExp" >
-                  <mat-option *ngFor="let municipio of municipios" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipios" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -122,8 +122,8 @@
                       [svgIcon]="'heroicons_solid:user'"
                       matPrefix></mat-icon>
                 <mat-select type="text" id="genPersona"  formControlName="genPersona" required>
-                  <mat-option value="Masculino">M</mat-option>
-                  <mat-option value="Femenino">F</mat-option>
+                  <mat-option value="M">M</mat-option>
+                  <mat-option value="F">F</mat-option>
                 </mat-select>
               </mat-form-field >
 
@@ -148,8 +148,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="lugNacimiento" >
-                  <mat-option *ngFor="let municipio of municipiosPersona" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipiosPersona" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -158,11 +158,11 @@
                 <mat-label>Estado civil:</mat-label>
                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
                 <mat-select  id="estCivPersona" formControlName="estCivPersona">
-                  <mat-option value="Soltero(a)">Soltero(a)</mat-option>
-                  <mat-option value="Casado(a)">Casado(a)</mat-option>
-                  <mat-option value="Viudo(a)">Viudo(a)</mat-option>
-                  <mat-option value="Separado(a)">Separado(a)</mat-option>
-                  <mat-option value="Divorciado(a)">Divorciado(a)</mat-option>
+                  <mat-option value="SOLTERO">Soltero(a)</mat-option>
+                  <mat-option value="CASADO">Casado(a)</mat-option>
+                  <mat-option value="VIUDO">Viudo(a)</mat-option>
+                  <mat-option value="SEPARADO">Separado(a)</mat-option>
+                  <mat-option value="DIVORCIADO">Divorciado(a)</mat-option>
                 </mat-select>
               </mat-form-field>
 
@@ -296,8 +296,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="municipioDomicilio" >
-                  <mat-option *ngFor="let municipio of municipiosDomicilio" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipiosDomicilio" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -433,8 +433,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="municipioLaboral" >
-                  <mat-option *ngFor="let municipio of municipiosLaboral" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipiosLaboral" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -472,9 +472,9 @@
               <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                 <mat-label>Donde enviar correspondencia?:</mat-label>
                 <mat-select type="text" id="dirCorrespondencia"  formControlName="dirCorrespondencia" (selectionChange)="onSelectChangeCorrespondencia($event)">
-                  <mat-option value="Direccion laboral">Dirección laboral </mat-option>
-                  <mat-option value="Direccion domicilio">Dirección domicilio </mat-option>
-                  <mat-option value="Otra">Otra</mat-option>
+                  <mat-option value="laboral">Dirección laboral </mat-option>
+                  <mat-option value="domicilio">Dirección domicilio </mat-option>
+                  <mat-option value="otra">Otra</mat-option>
                 </mat-select>
               </mat-form-field >
 
@@ -550,8 +550,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="municipioRepresentante" >
-                  <mat-option *ngFor="let municipio of municipiosRepresentante" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipiosRepresentante" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -584,8 +584,8 @@
                       [svgIcon]="'heroicons_solid:map-pin'"
                       matPrefix></mat-icon>
                 <mat-select id="municipios" formControlName="lugNacRepresentante" >
-                  <mat-option *ngFor="let municipio of municipiosRepresentanteNacimiento" value="{{municipio.codMunicipio}}">
-                    {{ municipio.nomMunicipio }}
+                  <mat-option *ngFor="let municipio of municipiosRepresentanteNacimiento" value="{{municipio.codigoMunicipio}}">
+                    {{ municipio.nombreMunicipio }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -597,8 +597,8 @@
                       [svgIcon]="'heroicons_solid:user'"
                       matPrefix></mat-icon>
                     <mat-select type="text" id="genRepresentante"  formControlName="genRepresentante" required>
-                      <mat-option value="Masculino">M</mat-option>
-                      <mat-option value="Femenino">F</mat-option>
+                      <mat-option value="M">M</mat-option>
+                      <mat-option value="F">F</mat-option>
                     </mat-select>
               </mat-form-field >
 
@@ -617,11 +617,11 @@
                 <mat-label>Estado civil:</mat-label>
                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
                 <mat-select  id="estCivPRepresentante" formControlName="estCivRepresentante">
-                  <mat-option value="Soltero(a)">Soltero(a)</mat-option>
-                  <mat-option value="Casado(a)">Casado(a)</mat-option>
-                  <mat-option value="Viudo(a)">Viudo(a)</mat-option>
-                  <mat-option value="Separado(a)">Separado(a)</mat-option>
-                  <mat-option value="Divorciado(a)">Divorciado(a)</mat-option>
+                  <mat-option value="SOLTERO">Soltero(a)</mat-option>
+                  <mat-option value="CASADO">Casado(a)</mat-option>
+                  <mat-option value="VIUDO">Viudo(a)</mat-option>
+                  <mat-option value="SEPARADO">Separado(a)</mat-option>
+                  <mat-option value="DIVORCIADO">Divorciado(a)</mat-option>
                 </mat-select>
               </mat-form-field>
 
@@ -692,6 +692,16 @@
               <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                 <mat-label>Ingresos</mat-label>
                 <input matInput id="ingresos" formControlName="ingresos">
+              </mat-form-field>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Firma</mat-label>
+                <input matInput id="firma" formControlName="firma">
+              </mat-form-field>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Huella</mat-label>
+                <input matInput id="huella" formControlName="huella">
               </mat-form-field>
 
             <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit"><mat-icon  svgIcon="navigate_next"></mat-icon>Actualizar</button>

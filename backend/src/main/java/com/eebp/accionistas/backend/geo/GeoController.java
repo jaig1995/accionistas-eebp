@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -26,5 +27,10 @@ public class GeoController {
     @GetMapping("/departamentos/{codigoDepartamento}/municipios")
     public List<Municipio> getMunicipiosByDepartamento(@PathVariable Integer codigoDepartamento) {
         return geoService.getMunicipiosByDepartamento(codigoDepartamento);
+    }
+
+    @GetMapping("municipios/{codigoMunicipio}")
+    public Optional<Municipio> getMunicipioById(@PathVariable Integer codigoMunicipio) {
+        return geoService.getMunicipioById(codigoMunicipio);
     }
 }

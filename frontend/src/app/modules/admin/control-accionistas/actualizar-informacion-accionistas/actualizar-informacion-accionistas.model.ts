@@ -71,4 +71,6 @@ export interface Actualizar {
     autorizaFisico: string;
     recursos: string;
     ingresos: string;
+    firma: string;
+    huella: string;
 }

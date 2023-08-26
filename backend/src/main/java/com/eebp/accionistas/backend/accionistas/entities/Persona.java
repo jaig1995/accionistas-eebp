@@ -1,12 +1,10 @@
 package com.eebp.accionistas.backend.accionistas.entities;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Data
 @Builder
@@ -227,11 +225,20 @@ public class Persona {
     @Column(name = "autorizafisico")
     private String autorizaFisico;
 
-    @Column(name = "declaracionrecursos")
-    private String declaracionRecursos;
+    @Column(name = "recursos")
+    private String recursos;
 
-    @Column(name = "declaracioningresos")
-    private String declaracionIngresos;
+    @Column(name = "ingresos")
+    private String ingresos;
+
+    @Column(name = "numsuscripcion")
+    private String numSuscripcion;
+
+    @Column(name = "barriolaboral")
+    private String barrioLaboral;
+
+    @Column(name = "barriodomicilio")
+    private String barrioDomicilio;
 
 }
 

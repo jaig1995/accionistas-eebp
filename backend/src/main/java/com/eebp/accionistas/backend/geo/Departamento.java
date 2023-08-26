@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,5 +21,5 @@ public class Departamento {
     private Integer codigo;
 
     @Column(name = "nombre_departamento")
-    private String nombreDepartanmento;
+    private String nombreDepartamento;
 }

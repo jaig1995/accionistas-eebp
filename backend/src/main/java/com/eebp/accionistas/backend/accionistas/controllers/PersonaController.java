@@ -38,6 +38,11 @@ public class PersonaController {
         return personaService.addDeclaracionPersona(persona);
     }
 
+    @PostMapping("/autorizacion")
+    public Persona addAutorizacionPersona(@RequestBody Persona persona) {
+        return personaService.addAutorizacionPersona(persona);
+    }
+
     @GetMapping(value = "/pdfAutorizacion/{codUsuario}", produces = MediaType.APPLICATION_PDF_VALUE)
     public @ResponseBody byte[] getPDFAutorizacion(@PathVariable String codUsuario) throws IOException {
         return personaService.getPDFAutorizacion(codUsuario);

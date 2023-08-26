@@ -5,6 +5,7 @@ import { Accionistas } from './accionistas.model';
 import { Autorizacion } from '../autorizacion/autorizacion.model';
 import { Declaracion } from '../declaracion/declaracion.model';
 import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
+import { ServicesConfig } from 'app/services.config';
 
   @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-inf
 
   export class AccionistasService {
 
-    private _baseUrl: string = 'http://localhost:3000';
+    private _baseUrl: string = ServicesConfig.apiUrl;
 
     /**
        * Constructor
@@ -24,45 +25,45 @@ import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-inf
     //envio de informacion
 
     enviarDatos(formData: any): Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/agregar/accionistas', formData);
+      return this.http.post<any>(this._baseUrl + '/api/accionistas', formData);
     }
 
     enviarDatosAutorizacion(formData: any): Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/api/accionista/autorizacion', formData);
+      return this.http.post<any>(this._baseUrl + '/api/accionistas/autorizacion', formData);
     }
 
     enviarDatosDeclaracion(formData: any): Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/api/accionista/autorizacion/declaracion', formData);
+      return this.http.post<any>(this._baseUrl + '/api/accionistas/declaracion', formData);
     }
 
     //Obtener la infromacion para los fomrularios
 
-    obtenerDatosAutorizacion(): Observable<Autorizacion> {
-      return this.http.get<Autorizacion>(this._baseUrl + '/api/accionista/autorizacion');
+    obtenerDatosAutorizacion(id: string): Observable<Autorizacion> {
+      return this.http.get<Autorizacion>(this._baseUrl + '/api/accionistas/' + id);
     }
 
-    obtenerDatosDeclaracion(): Observable<Declaracion> {
-      return this.http.get<Declaracion>(this._baseUrl + '/api/accionista/autorizacion/declaracion');
+    obtenerDatosDeclaracion(id: string): Observable<Declaracion> {
+      return this.http.get<Declaracion>(this._baseUrl + '/api/accionistas/' + id);
     }
 
     obtenerDatosActualizar(id: string): Observable<Actualizar> {
-      return this.http.get<Actualizar>(this._baseUrl + '/api/accionista/actualizar/' + id);
+      return this.http.get<Actualizar>(this._baseUrl + '/api/accionistas/' + id);
     }
 
     peticionGetHuella(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/fingerprint');
+      return this.http.get<any>( 'http://localhost:9090/fingerprint');
     }
 
     peticionGetFirma(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/sigplus/start');
+      return this.http.get<any>( 'http://localhost:9090/sigplus/start');
     }
 
     peticionGetFirmaCaptura(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/sigplus/stop');
+      return this.http.get<any>( 'http://localhost:9090/sigplus/stop');
     }
 
-    enviarFotografia(formDataFotografia: any): Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/api/uploadFileAccionista', formDataFotografia);
+    enviarFotografia(formDataFotografia: FormData): Observable<FormData> {
+      return this.http.post<any>(this._baseUrl + '/api/uploadFile', formDataFotografia);
     }
 
   }

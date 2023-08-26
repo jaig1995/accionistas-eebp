@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from './usuarios.model';
+import { ServicesConfig } from 'app/services.config';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDataService {
-  private _baseUrl: string = 'http://34.125.194.115:8081';
+  private _baseUrl: string = ServicesConfig.apiUrl;
 
   /**
      * Constructor

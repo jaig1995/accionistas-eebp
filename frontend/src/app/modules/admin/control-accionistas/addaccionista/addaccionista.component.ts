@@ -270,7 +270,8 @@ export class AddaccionistaComponent {
           // Aquí puedes manejar la respuesta del servidor
           console.log('Respuesta del servidor: Datos enviados', response);
 
-          const formDataFotografia = this.accionistasForm.value;
+          const formDataFotografia = new FormData();
+          formDataFotografia.append("file", this.selectedFile, formData.codUsuario + ".jpg");
           this.accionistasService.enviarFotografia(formDataFotografia).subscribe(
             (response) => {
               console.log('Respuesta del servidor: Foto Cargada', response);
@@ -300,7 +301,7 @@ export class AddaccionistaComponent {
     
           });
 
-          this.router.navigate(['control-accionistas/agregar-accionistas/autorizacion']);
+          this.router.navigate(['accionistas/agregar/autorizacion/' + this.accionistasForm.get('codUsuario').value]);
         },
         (error) => {
           // Manejo de errores si la petición falla
@@ -589,6 +590,7 @@ export class AddaccionistaComponent {
 
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0] ?? null;
+    console.log(this.selectedFile);
   }
 
 }

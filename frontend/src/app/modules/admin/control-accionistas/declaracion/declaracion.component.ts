@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
-import { Router, RouterModule} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -9,6 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { Declaracion } from './declaracion.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { GeoService } from '../addaccionista/geo.service';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'autorizacion',
@@ -29,8 +31,9 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 export class DeclaracionComponent {
   datosDeclaracion: Declaracion;
   private _fuseConfirmationService;
+  id : string;
 
-  constructor(private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService) {
+  constructor(private route: ActivatedRoute, private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService, private geoService: GeoService) {
     this._fuseConfirmationService = fuseConfirmationService;
     // Se obtienen los departamentos 
   }
@@ -47,17 +50,17 @@ export class DeclaracionComponent {
   });
 
   ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
     this.obtenerDatos(); // Llamado del método al inicializar el componente
   }
 
   obtenerDatos() {
-    this.accionistasService.obtenerDatosDeclaracion().subscribe(
-      (datos: Declaracion) => {
+    this.accionistasService.obtenerDatosDeclaracion(this.id).subscribe(
+      async (datos: Declaracion) => {
         this.datosDeclaracion = datos;
 
         const nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
-        const lugarExp = datos.departamentoExp + ' ' + datos.municipioExp;
-        // Establecer el valor de los campos con el valor obtenido de la API
+        const lugarExp = await this.obtenerMunicipioById(Number(datos.municipioExp)).toPromise();
         this.declaracionForm.patchValue({
           codUsuario: datos.codUsuario,
           nomPri: nombreCompleto,
@@ -73,9 +76,9 @@ export class DeclaracionComponent {
   }
 
   onSubmit() { 
-    console.log('Datos del formulario:', this.declaracionForm.value);
     if (this.declaracionForm.valid) {
       const formData = {
+        codUsuario: this.declaracionForm.get('codUsuario').value,
         recursos: this.declaracionForm.get('recursos').value,
         ingresos: this.declaracionForm.get('ingresos').value,
       };
@@ -115,6 +118,12 @@ export class DeclaracionComponent {
         }
       );
     }
+  }
+
+  obtenerMunicipioById(id: number): Observable<string> {
+    return this.geoService.getMunicipioById(id).pipe(
+      map(response => response.nombreMunicipio + " - " + response.departamento.nombreDepartamento)
+    );
   }
 
 }

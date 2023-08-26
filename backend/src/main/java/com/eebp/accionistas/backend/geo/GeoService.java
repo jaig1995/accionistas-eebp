@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GeoService {
@@ -20,6 +21,10 @@ public class GeoService {
 
     public List<Municipio> getMunicipios() {
         return municipioRepository.findAll();
+    }
+
+    public Optional<Municipio> getMunicipioById(Integer id) {
+        return municipioRepository.findById(id);
     }
 
     public List<Municipio> getMunicipiosByDepartamento(Integer codigoDepartamento) {

@@ -10,10 +10,8 @@ import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -49,8 +47,21 @@ public class PersonaService {
 
     public Persona addDeclaracionPersona(Persona persona) {
         Persona per = personaRepository.findById(persona.getCodUsuario()).get();
-        per.setDeclaracionIngresos(persona.getDeclaracionIngresos());
-        per.setDeclaracionRecursos(persona.getDeclaracionRecursos());
+        per.setIngresos(persona.getIngresos());
+        per.setRecursos(persona.getRecursos());
+        return personaRepository.save(per);
+    }
+
+    public Persona addAutorizacionPersona(Persona persona) {
+        Persona per = personaRepository.findById(persona.getCodUsuario()).get();
+        per.setNumSuscripcion(persona.getNumSuscripcion());
+        per.setNumPersonas(persona.getNumPersonas());
+        per.setAutorizaCorreo(persona.getAutorizaCorreo());
+        per.setAutorizaLlamada(persona.getAutorizaLlamada());
+        per.setAutorizaMensaje(persona.getAutorizaMensaje());
+        per.setAutorizaFisico(persona.getAutorizaFisico());
+        per.setAutorizaTodas(persona.getAutorizaTodas());
+        per.setTipoVivienda(persona.getTipoVivienda());
         return personaRepository.save(per);
     }
 
@@ -72,8 +83,8 @@ public class PersonaService {
         document.selectFirst("#" + datosPersona.getTipDocumento()).text("X");
         document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
         document.selectFirst("#municipioExp").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartanmento().toUpperCase());
-        document.selectFirst("#fecNacimiento").text(datosPersona.getFecNacimiento().split(" ")[0]);
+        document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartamento().toUpperCase());
+        document.selectFirst("#fecNacimiento").text(datosPersona.getFecNacimiento().split("T")[0]);
         document.selectFirst("#lugNacimiento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getLugNacimiento())).get().getNombreMunicipio().toUpperCase());
 
         if (datosPersona.getGenPersona().equalsIgnoreCase("M")) {
@@ -89,13 +100,13 @@ public class PersonaService {
         document.selectFirst("#correoPersona").text(datosPersona.getCorreoPersona().toUpperCase());
         document.selectFirst("#dirDomicilio").text(datosPersona.getDirDomicilio().toUpperCase());
         document.selectFirst("#munDomicilio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioDomicilio())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#departamentoDomicilio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioDomicilio())).get().getDepartamento().getNombreDepartanmento().toUpperCase());
+        document.selectFirst("#departamentoDomicilio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioDomicilio())).get().getDepartamento().getNombreDepartamento().toUpperCase());
         document.selectFirst("#paisDomicilio").text(datosPersona.getPaisDomicilio().toUpperCase());
         document.selectFirst("#telfDomicilio").text(datosPersona.getTelfDomicilio());
         document.selectFirst("#indDomicilio").text(datosPersona.getIndTelDomicilio());
         document.selectFirst("#dirLaboral").text(datosPersona.getDirLaboral().toUpperCase());
         document.selectFirst("#munLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#depLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getDepartamento().getNombreDepartanmento().toUpperCase());
+        document.selectFirst("#depLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getDepartamento().getNombreDepartamento().toUpperCase());
         document.selectFirst("#paisLaboral").text(datosPersona.getPaisLaboral().toUpperCase());
         document.selectFirst("#telLaboral").text(datosPersona.getTelfLaboral());
         document.selectFirst("#extLaboral").text(datosPersona.getExtLaboral());
@@ -120,8 +131,8 @@ public class PersonaService {
             document.selectFirst("#tipoDocRepresentante" + datosPersona.getTipoDocRepresentante()).text("X");
             document.selectFirst("#codRepresentante").text(datosPersona.getCodRepresentante());
             document.selectFirst("#munRepresentante").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioRepresentante())).get().getNombreMunicipio().toUpperCase());
-            document.selectFirst("#depRepresentante").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioRepresentante())).get().getDepartamento().getNombreDepartanmento().toUpperCase());
-            document.selectFirst("#fecNacRepresentante").text(datosPersona.getFecNacRepresentante().split(" ")[0]);
+            document.selectFirst("#depRepresentante").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioRepresentante())).get().getDepartamento().getNombreDepartamento().toUpperCase());
+            document.selectFirst("#fecNacRepresentante").text(datosPersona.getFecNacRepresentante().split("T")[0]);
             document.selectFirst("#lugNacRepresentante").text(municipioRepository.findById(Integer.parseInt(datosPersona.getLugNacRepresentante())).get().getNombreMunicipio().toUpperCase());
             if (datosPersona.getGenRepresentante().equalsIgnoreCase("M")) {
                 document.selectFirst("#genRepresentanteM").text("X");
@@ -134,8 +145,8 @@ public class PersonaService {
             document.selectFirst("#correoRepresentante").text(datosPersona.getCorreoRepresentante().toUpperCase());
         }
 
-        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + new String(datosPersona.getFirma(), StandardCharsets.UTF_8) + "\">");
-        byte[] bytes = Base64.getDecoder().decode(datosPersona.getHuella());
+        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
+        byte[] bytes = datosPersona.getHuella();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         BufferedImage originalImage = ImageIO.read(inputStream);
         BufferedImage rotatedImage = rotateImage(originalImage, 270);
@@ -216,7 +227,7 @@ public class PersonaService {
         } else {
             document.selectFirst("#autorizaTodasNo").text("x");
         }
-        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + new String(datosPersona.getFirma(), StandardCharsets.UTF_8) + "\">");
+        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
         document.selectFirst("#identificacion").text(datosPersona.getCodUsuario());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
@@ -256,8 +267,8 @@ public class PersonaService {
         document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
         document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
         document.selectFirst("#nit").text(datosPersona.getCodUsuario());
-        document.selectFirst("#recursos").text(datosPersona.getDeclaracionRecursos());
-        document.selectFirst("#ingresos").text(datosPersona.getDeclaracionIngresos());
+        document.selectFirst("#recursos").text(datosPersona.getRecursos());
+        document.selectFirst("#ingresos").text(datosPersona.getIngresos());
 
         LocalDate fecha = LocalDate.now();
         Map<Integer, String> meses = new HashMap<>();
@@ -278,8 +289,8 @@ public class PersonaService {
         document.selectFirst("#mes").text(meses.get(fecha.getMonth().getValue()));
         document.selectFirst("#anio").text(String.valueOf(fecha.getYear()));
 
-        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + new String(datosPersona.getFirma(), StandardCharsets.UTF_8) + "\">");
-        byte[] bytes = Base64.getDecoder().decode(datosPersona.getHuella());
+        document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
+        byte[] bytes = datosPersona.getHuella();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         BufferedImage originalImage = ImageIO.read(inputStream);
         BufferedImage rotatedImage = rotateImage(originalImage, 270);

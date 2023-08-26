@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { GeoService } from '../addaccionista/geo.service';
 import { Actualizar } from './actualizar-informacion-accionistas.model';
+import { forEach } from 'lodash';
 
 @Component({
   selector: 'actualizar',
@@ -97,7 +98,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
    accionistasForm = new FormGroup({
     // Agrega más campos si es necesario según tu interfaz Accionistas
     'tipDocumento':  new FormControl('', Validators.required),
-    'razonSocial':  new FormControl ('', Validators.required),
+    'razonSocial':  new FormControl (''),
     'nomPri':  new FormControl('', Validators.required),
     'nomSeg': new FormControl('', Validators.required),
     'apePri':new FormControl('', Validators.required),
@@ -143,8 +144,8 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     'paisLaboral': new FormControl('', Validators.required),
     'telfLaboral': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'extLaboral': new FormControl('', Validators.required),
-    'dirCorrespondencia': new FormControl('Direccion laboral', Validators.required),
-    'otraDirLaboral': new FormControl('', Validators.required),
+    'dirCorrespondencia': new FormControl('', Validators.required),
+    'otraDirLaboral': new FormControl(''),
     'opcPotestad': new FormControl('', Validators.required),
     'nomRepresentante': new FormControl('', Validators.required),
     'tipoDocRepresentante': new FormControl('', Validators.required),
@@ -169,6 +170,8 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     'autorizaFisico': new FormControl(''),
     'recursos': new FormControl(''),
     'ingresos': new FormControl(''),
+    'firma': new FormControl(''),
+    'huella': new FormControl(''),
   });
 
 
@@ -176,7 +179,6 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
 
   ngOnInit() {
       this.id = this.route.snapshot.paramMap.get('id');
-      console.log(this.id);
       this.obtenerDatos(); // Llama al método para obtener los datos
   }
 
@@ -257,7 +259,9 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
           autorizaMensaje: datos.autorizaMensaje,
           autorizaFisico: datos.autorizaFisico,
           recursos: datos.recursos,
-          ingresos: datos.ingresos
+          ingresos: datos.ingresos,
+          firma: datos.firma,
+          huella: datos.huella
 
         });
         this.onDepartamentoChange(null);
@@ -364,6 +368,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
   }
 
   onSubmit() { 
+    console.log(this.accionistasForm);
     if (this.accionistasForm.valid) {
       console.log('Datos del formulario:', this.accionistasForm.value);
       const formData = this.accionistasForm.value;

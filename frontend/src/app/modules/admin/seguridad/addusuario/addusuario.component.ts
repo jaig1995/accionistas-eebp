@@ -10,6 +10,7 @@ import {FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Router } from "@angular/router";
+import { ServicesConfig } from 'app/services.config';
 
 
 @Component({
@@ -30,7 +31,7 @@ import { Router } from "@angular/router";
 
 export class AddusuarioComponent {
 
-    private _baseUrl: string = 'http://34.125.194.115:8081';
+    private _baseUrl: string = ServicesConfig.apiUrl;
 
     nom_pri: string;
     nom_seg: string;
