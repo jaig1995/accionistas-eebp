@@ -88,9 +88,9 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     municipios: any[];
     municipiosDomicilio: any[];
     municipiosLaboral: any[];
-    municipiosRepresentante: any[];
+    
     municipiosPersona: any[];
-    municipiosRepresentanteNacimiento: any[];
+   
 
     selectDepartamento: FormControl = new FormControl('');
     selectMunicipio: FormControl = new FormControl('');
@@ -146,20 +146,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     'extLaboral': new FormControl('', Validators.required),
     'dirCorrespondencia': new FormControl('', Validators.required),
     'otraDirLaboral': new FormControl(''),
-    'opcPotestad': new FormControl('', Validators.required),
-    'nomRepresentante': new FormControl('', Validators.required),
-    'tipoDocRepresentante': new FormControl('', Validators.required),
-    'codRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'municipioRepresentante': new FormControl('', Validators.required),
-    'departamentoRepresentante': new FormControl('', Validators.required),
-    'fecNacRepresentante': new FormControl('', Validators.required),
-    'depNacRepresentante': new FormControl('', Validators.required),
-    'lugNacRepresentante': new FormControl('', Validators.required),
-    'genRepresentante': new FormControl('', Validators.required),
-    'estCivRepresentante': new FormControl('', Validators.required),
-    'celRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'profActRepresentante': new FormControl('', Validators.required),
-    'correoRepresentante': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
+    
     'numSuscripcion': new FormControl(''),
     'tipoVivienda': new FormControl(''),
     'numPersonas': new FormControl(''),
@@ -236,20 +223,6 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
           extLaboral: datos.extLaboral,
           dirCorrespondencia: datos.dirCorrespondencia,
           otraDirLaboral: datos.otraDirLaboral,
-          opcPotestad: datos.opcPotestad,
-          nomRepresentante: datos.nomRepresentante,
-          tipoDocRepresentante: datos.tipoDocRepresentante,
-          codRepresentante: datos.codRepresentante,
-          departamentoRepresentante: datos.departamentoRepresentante,
-          municipioRepresentante: datos.municipioRepresentante,
-          fecNacRepresentante: datos.fecNacRepresentante,
-          depNacRepresentante: datos.depNacRepresentante,
-          lugNacRepresentante: datos.lugNacRepresentante,
-          genRepresentante: datos.genRepresentante,
-          estCivRepresentante: datos.estCivRepresentante,
-          celRepresentante: datos.celRepresentante,
-          profActRepresentante: datos.profActRepresentante,
-          correoRepresentante: datos.correoRepresentante ,
           numSuscripcion: datos.numSuscripcion ,
           tipoVivienda: datos.tipoVivienda,
           numPersonas: datos.numPersonas ,
@@ -266,10 +239,10 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
         });
         this.onDepartamentoChange(null);
         this.onDepartamentoNacimiento(null);
-        this.onDepartamentoNacimientoRepresentante(null);
+        
         this.onDepartamentoChangeDomicilio(null);
         this.onDepartamentoChangeLaboral(null);
-        this.onDepartamentoChangeRepresentante(null);
+        
       },
       error => {
         console.error('Error en la solicitud GET:', error);
@@ -307,20 +280,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     } 
   }
 
-  onDepartamentoNacimientoRepresentante(event: MatSelectChange) {
-    const departamentoId = +this.accionistasForm.value.depNacRepresentante;
-    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
-      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
-        (data) => {
-          this.municipiosRepresentanteNacimiento = data;
-          this.cd.markForCheck();
-        },
-        (error) => {
-          console.log('Error al obtener municipios desde la API');
-        }
-      );
-    } 
-  }
+ 
 
   onDepartamentoChangeDomicilio(event: MatSelectChange) {
     const departamentoId = +this.accionistasForm.value.departamentoDomicilio;
@@ -352,20 +312,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
     } 
   }
 
-  onDepartamentoChangeRepresentante(event: MatSelectChange) {
-    const departamentoId = +this.accionistasForm.value.departamentoRepresentante;
-    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
-      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
-        (data) => {
-          this.municipiosRepresentante = data;
-          this.cd.markForCheck();
-        },
-        (error) => {
-          console.log('Error al obtener municipios desde la API');
-        }
-      );
-    } 
-  }
+  
 
   onSubmit() { 
     console.log(this.accionistasForm);
