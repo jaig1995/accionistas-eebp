@@ -1,3 +1,3 @@
 export const ServicesConfig = {
-    apiUrl: 'http://localhost:8081'
+    apiUrl: 'http://192.168.100.15:8081'
 };

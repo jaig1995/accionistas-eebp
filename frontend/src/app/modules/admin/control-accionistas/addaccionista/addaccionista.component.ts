@@ -67,7 +67,7 @@ export class AddaccionistaComponent {
     this.accionistasForm.get('num3Laboral').valueChanges.subscribe(() => this.actualizarDireccionLaboral());
 
     this.watchTipDocumentoChanges();
-    this.tarjetaIdentidad();
+
     this._fuseConfirmationService = fuseConfirmationService;
     // Se obtienen los departamentos 
     this.geoService.getDepartamentos().subscribe(
@@ -152,20 +152,7 @@ export class AddaccionistaComponent {
     'extLaboral': new FormControl('', Validators.required),
     'dirCorrespondencia': new FormControl('', Validators.required),
     'otraDirLaboral': new FormControl(''),
-    'opcPotestad': new FormControl('', Validators.required),
-    'nomRepresentante': new FormControl('', Validators.required),
-    'tipoDocRepresentante': new FormControl('', Validators.required),
-    'codRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'municipioRepresentante': new FormControl('', Validators.required),
-    'departamentoRepresentante': new FormControl('', Validators.required),
-    'fecNacRepresentante': new FormControl('', Validators.required),
-    'depNacRepresentante': new FormControl('', Validators.required),
-    'lugNacRepresentante': new FormControl('', Validators.required),
-    'genRepresentante': new FormControl('', Validators.required),
-    'estCivRepresentante': new FormControl('', Validators.required),
-    'celRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'profActRepresentante': new FormControl('', Validators.required),
-    'correoRepresentante': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
+
     'huella': new FormControl(''),
     'firma': new FormControl(''),
     'file': new FormControl(''),
@@ -201,21 +188,6 @@ export class AddaccionistaComponent {
     } 
   }
 
-  onDepartamentoNacimientoRepresentante(event: MatSelectChange) {
-    const departamentoId = +this.accionistasForm.value.depNacRepresentante;
-    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
-      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
-        (data) => {
-          this.municipiosRepresentanteNacimiento = data;
-          this.cd.markForCheck();
-        },
-        (error) => {
-          console.log('Error al obtener municipios desde la API');
-        }
-      );
-    } 
-  }
-
   onDepartamentoChangeDomicilio(event: MatSelectChange) {
     const departamentoId = +this.accionistasForm.value.departamentoDomicilio;
     if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
@@ -237,21 +209,6 @@ export class AddaccionistaComponent {
       this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
         (data) => {
           this.municipiosLaboral = data;
-          this.cd.markForCheck();
-        },
-        (error) => {
-          console.log('Error al obtener municipios desde la API');
-        }
-      );
-    } 
-  }
-
-  onDepartamentoChangeRepresentante(event: MatSelectChange) {
-    const departamentoId = +this.accionistasForm.value.departamentoRepresentante;
-    if (departamentoId) { // Si departamentoId tiene un valor asignado, se ejecuta la solicitud
-      this.geoService.getMunicipiosByDepartamento(departamentoId).subscribe(
-        (data) => {
-          this.municipiosRepresentante = data;
           this.cd.markForCheck();
         },
         (error) => {
@@ -358,20 +315,7 @@ export class AddaccionistaComponent {
     const apePriControl = this.accionistasForm.get('apePri');
     const apeSegControl = this.accionistasForm.get('apeSeg');
     const razonSocialControl = this.accionistasForm.get('razonSocial');
-    const opcPotestadControl = this.accionistasForm.get('opcPotestad');
-    const nomRepresentanteControl = this.accionistasForm.get('nomRepresentante');
-    const tipoDocRepresentanteControl = this.accionistasForm.get('tipoDocRepresentante');
-    const codRepresentantelControl = this.accionistasForm.get('codRepresentante');
-    const municipioRepresentanteControl = this.accionistasForm.get('municipioRepresentante');
-    const departamentoRepresentanteControl = this.accionistasForm.get('departamentoRepresentante');
-    const fecNacRepresentanteControl = this.accionistasForm.get('fecNacRepresentante');
-    const depNacRepresentanteControl = this.accionistasForm.get('depNacRepresentante');
-    const lugNacRepresentanteControl = this.accionistasForm.get('lugNacRepresentante');
-    const genRepresentanteSocialControl = this.accionistasForm.get('genRepresentante');
-    const estCivRepresentanteControl = this.accionistasForm.get('estCivRepresentante');
-    const celRepresentanteControl = this.accionistasForm.get('celRepresentante');
-    const profActRepresentanteControl = this.accionistasForm.get('profActRepresentante');
-    const correoRepresentanteControl = this.accionistasForm.get('correoRepresentante');
+  
 
     tipDocumentoControl.valueChanges.subscribe((value) => {
       if (value === 'NIT') {
@@ -386,91 +330,7 @@ export class AddaccionistaComponent {
         apePriControl.enable();
         apeSegControl.enable();
         razonSocialControl.disable();
-      }if(value === 'NIT' || value==='CE' || value ==='CC' || value === 'RC'){
-
-        opcPotestadControl.disable();
-        nomRepresentanteControl.disable();
-        tipoDocRepresentanteControl.disable();
-        codRepresentantelControl.disable();
-        municipioRepresentanteControl.disable();
-        departamentoRepresentanteControl.disable();
-        fecNacRepresentanteControl.disable();
-        depNacRepresentanteControl.disable();
-        lugNacRepresentanteControl.disable();
-        genRepresentanteSocialControl.disable();
-        estCivRepresentanteControl.disable();
-        celRepresentanteControl.disable();
-        profActRepresentanteControl.disable();
-        correoRepresentanteControl.disable();
-      }else{
-        opcPotestadControl.enable();
-        nomRepresentanteControl.enable();;
-        tipoDocRepresentanteControl.enable();;
-        codRepresentantelControl.enable();;
-        municipioRepresentanteControl.enable();;
-        departamentoRepresentanteControl.enable();;
-        fecNacRepresentanteControl.enable();;
-        depNacRepresentanteControl.enable();;
-        lugNacRepresentanteControl.enable();;
-        genRepresentanteSocialControl.enable();;
-        estCivRepresentanteControl.enable();;
-        celRepresentanteControl.enable();;
-        profActRepresentanteControl.enable();;
-        correoRepresentanteControl.enable();;
       }
-    });
-  }
-
-  tarjetaIdentidad() {
-    const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
-
-    tipDocumentoControl.valueChanges.subscribe((value) => {
-      if (value === 'TI') {
-        this.accionistasForm.get('opcPotestad').setValidators([Validators.required]);
-        this.accionistasForm.get('nomRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('tipoDocRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('codRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
-        this.accionistasForm.get('municipioRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('departamentoRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('fecNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('depNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('lugNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('genRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('estCivRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('celRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
-        this.accionistasForm.get('profActRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('correoRepresentante').setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]);
-      } else {
-        this.accionistasForm.get('opcPotestad').clearValidators();
-        this.accionistasForm.get('nomRepresentante').clearValidators();
-        this.accionistasForm.get('tipoDocRepresentante').clearValidators();
-        this.accionistasForm.get('codRepresentante').clearValidators();
-        this.accionistasForm.get('municipioRepresentante').clearValidators();
-        this.accionistasForm.get('departamentoRepresentante').clearValidators();
-        this.accionistasForm.get('fecNacRepresentante').clearValidators();
-        this.accionistasForm.get('depNacRepresentante').clearValidators();
-        this.accionistasForm.get('lugNacRepresentante').clearValidators();
-        this.accionistasForm.get('genRepresentante').clearValidators();
-        this.accionistasForm.get('estCivRepresentante').clearValidators();
-        this.accionistasForm.get('celRepresentante').clearValidators();
-        this.accionistasForm.get('profActRepresentante').clearValidators();
-        this.accionistasForm.get('correoRepresentante').clearValidators();
-      }
-
-      this.accionistasForm.get('opcPotestad').updateValueAndValidity();
-      this.accionistasForm.get('nomRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('tipoDocRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('codRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('municipioRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('departamentoRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('fecNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('depNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('lugNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('genRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('estCivRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('celRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('profActRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('correoRepresentante').updateValueAndValidity();
     });
   }
 

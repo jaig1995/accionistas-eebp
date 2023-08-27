@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { Autorizacion } from './autorizacion.model';
 import { NgFor, NgIf } from '@angular/common';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
   selector: 'autorizacion',
@@ -33,9 +34,11 @@ export class AutorizacionComponent {
   fechaActual: string;
   id : string;
   messageFirma : string;
+  private _fuseConfirmationService;
 
-  constructor(private route: ActivatedRoute, private accionistasService: AccionistasService, private router: Router) {
+  constructor(fuseConfirmationService: FuseConfirmationService,private route: ActivatedRoute, private accionistasService: AccionistasService, private router: Router) {
     this.fechaActual = new Date().toLocaleDateString();
+    this._fuseConfirmationService = fuseConfirmationService;
   }
 
   autorizacionForm = new FormGroup({
@@ -106,9 +109,33 @@ export class AutorizacionComponent {
         autorizaFisico: this.autorizacionForm.get('autorizaFisico').value,
         codUsuario: this.autorizacionForm.get('codUsuario').value
       };
+      
       this.accionistasService.enviarDatosAutorizacion(formData).subscribe(
         (response) => {
-          this.router.navigate(['accionistas/agregar/declaracion/' + this.autorizacionForm.get('codUsuario').value]);
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Envio de datos exitoso!",
+            "message": "Pendiente de aprobación.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "success"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "primary"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": false
+    
+          });
+          this.router.navigate(['inicio']);
         },
         (error) => {
           console.error('Error en la petición:', error);

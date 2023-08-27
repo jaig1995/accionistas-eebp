@@ -6,6 +6,7 @@ import { Autorizacion } from '../autorizacion/autorizacion.model';
 import { Declaracion } from '../declaracion/declaracion.model';
 import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 import { ServicesConfig } from 'app/services.config';
+import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
 
   @Injectable({
     providedIn: 'root'
@@ -64,6 +65,14 @@ import { ServicesConfig } from 'app/services.config';
 
     enviarFotografia(formDataFotografia: FormData): Observable<FormData> {
       return this.http.post<any>(this._baseUrl + '/api/uploadFile', formDataFotografia);
+    }
+
+    enviarDatosRegistro(formData: any): Observable<any> {
+      return this.http.post<any>(this._baseUrl + '/api/accionistas/registro', formData);
+    }
+
+    obtenerDatosRegistro(id: string): Observable<RegAccionistas[]> {
+      return this.http.get<RegAccionistas[]>(this._baseUrl + '/api/accionistas/registro/' + id);
     }
 
   }

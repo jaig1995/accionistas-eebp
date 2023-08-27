@@ -81,9 +81,10 @@ export const appRoutes: Route[] = [
             {path: 'seguridad/permisos-usuarios/detalles/:id/asignar', loadChildren: () => import('app/modules/admin/seguridad/asignar-permiso/asignar-permiso.routes')},
             {path: 'accionistas/agregar', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista/addaccionista.routes')},
             {path: 'accionistas/agregar/autorizacion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/autorizacion/autorizacion.routes')},
-            {path: 'accionistas/agregar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/declaracion/declaracion.routes')},
             {path: 'accionistas/informacion', loadChildren: () => import('app/modules/admin/control-accionistas/informacion-accionistas/informacion-accionistas.routes')},
-            {path: 'accionistas/actualizar/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.routes')}
+            {path: 'accionistas/actualizar/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.routes')},
+            {path: 'accionistas/registrar', loadChildren: () => import('app/modules/admin/control-accionistas/registraraccionista/registraraccionista.routes')},
+            {path: 'accionistas/agregar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/declaracion/declaracion.routes')},
         ]   
     }
 ];
