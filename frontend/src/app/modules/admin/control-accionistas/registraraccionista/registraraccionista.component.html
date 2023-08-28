@@ -3,8 +3,8 @@
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
 
-        <div class="text-4xl font-extrabold tracking-tight leading-none">Registro de accionistas.</div>
-        <div class="ml-0.5 font-medium text-secondary">Manejo de accionistas.</div><br>
+        <div class="text-4xl font-extrabold tracking-tight leading-none">Registro de accionistas</div>
+        <div class="ml-0.5 font-medium text-secondary">Manejo de accionistas</div><br>
 
         <mat-divider class="mt-4 mb-4"></mat-divider><br>
 
@@ -91,10 +91,12 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     
-        </table><br>
+        </table><br><br><br>
+        <div class="ml-0.5 font-medium text-primary" *ngIf="mostrarCampoAdicionalFueraTabla">El accionista es mejor de edad, por lo cual debe tener un representante.</div><br>
 
         <form  id="registro" [formGroup]="registroForm"  >
             <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'" *ngIf="mostrarCampoAdicionalFueraTabla" >
+            <br>
                 <mat-label>Consultar por código (Identificación):</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
                 <input matInput type="text" id="campoTI" formControlName="codRepresentante">

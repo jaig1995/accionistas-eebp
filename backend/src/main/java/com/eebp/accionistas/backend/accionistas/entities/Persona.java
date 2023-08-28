@@ -72,24 +72,6 @@ public class Persona {
     @Column(name = "tipodirecciondomicilio")
     private String tipoDireccionDomicilio;
 
-    @Column(name = "calle")
-    private String calle;
-
-    @Column(name = "numdomicilio")
-    private String numDomicilio;
-
-    @Column(name = "letradomicilio")
-    private String letraDomicilio;
-
-    @Column(name = "num2domicilio")
-    private String num2Domicilio;
-
-    @Column(name = "letra2domicilio")
-    private String letra2Domicilio;
-
-    @Column(name = "num3domicilio")
-    private String num3Domicilio;
-
     @Column(name = "dirdomicilio")
     private String dirDomicilio;
 
@@ -113,24 +95,6 @@ public class Persona {
 
     @Column(name = "tipodireccionlaboral")
     private String tipoDireccionLaboral;
-
-    @Column(name = "callelaboral")
-    private String calleLaboral;
-
-    @Column(name = "numlaboral")
-    private String numLaboral;
-
-    @Column(name = "letralaboral")
-    private String letraLaboral;
-
-    @Column(name = "num2laboral")
-    private String num2Laboral;
-
-    @Column(name = "letra2laboral")
-    private String letra2Laboral;
-
-    @Column(name = "num3laboral")
-    private String num3Laboral;
 
     @Column(name = "dirlaboral")
     private String dirLaboral;
@@ -158,45 +122,6 @@ public class Persona {
 
     @Column(name = "opcpotestad")
     private String opcPotestad;
-
-    @Column(name = "nomrepresentante")
-    private String nomRepresentante;
-
-    @Column(name = "tipodocrepresentante")
-    private String tipoDocRepresentante;
-
-    @Column(name = "codrepresentante")
-    private String codRepresentante;
-
-    @Column(name = "municipiorepresentante")
-    private String municipioRepresentante;
-
-    @Column(name = "departamentorepresentante")
-    private String departamentoRepresentante;
-
-    @Column(name = "fecnacrepresentante")
-    private String fecNacRepresentante;
-
-    @Column(name = "depnacrepresentante")
-    private String depNacRepresentante;
-
-    @Column(name = "lugnacrepresentante")
-    private String lugNacRepresentante;
-
-    @Column(name = "genrepresentante")
-    private String genRepresentante;
-
-    @Column(name = "estcivrepresentante")
-    private String estCivRepresentante;
-
-    @Column(name = "celrepresentante")
-    private String celRepresentante;
-
-    @Column(name = "profactrepresentante")
-    private String profActRepresentante;
-
-    @Column(name = "correorepresentante")
-    private String correoRepresentante;
 
     @Column(name = "huella")
     private byte[] huella;

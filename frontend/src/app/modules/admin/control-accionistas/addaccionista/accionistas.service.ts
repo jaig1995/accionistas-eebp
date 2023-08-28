@@ -68,11 +68,11 @@ import { RegAccionistas } from '../registraraccionista/registraraccionista.model
     }
 
     enviarDatosRegistro(formData: any): Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/api/accionistas/registro', formData);
+      return this.http.post<any>(this._baseUrl + '/api/accionista', formData);
     }
 
-    obtenerDatosRegistro(id: string): Observable<RegAccionistas[]> {
-      return this.http.get<RegAccionistas[]>(this._baseUrl + '/api/accionistas/registro/' + id);
+    obtenerDatosRegistro(id: string): Observable<RegAccionistas> {
+      return this.http.get<RegAccionistas>(this._baseUrl + '/api/accionistas/' + id);
     }
 
   }

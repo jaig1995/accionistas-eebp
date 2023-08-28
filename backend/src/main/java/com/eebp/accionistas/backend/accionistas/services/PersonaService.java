@@ -122,7 +122,7 @@ public class PersonaService {
         }
 
         if (datosPersona.getTipDocumento().equalsIgnoreCase("TI")) {
-            if (datosPersona.getOpcPotestad().equalsIgnoreCase("S")) {
+            /*if (datosPersona.getOpcPotestad().equalsIgnoreCase("S")) {
                 document.selectFirst("#opcPotestadSi").text("X");
             } else {
                 document.selectFirst("#opcPotestadNo").text("X");
@@ -142,7 +142,7 @@ public class PersonaService {
             document.selectFirst("#estCivRepresentante").text(datosPersona.getEstCivPersona().toUpperCase());
             document.selectFirst("#numCelRepresentante").text(datosPersona.getCelRepresentante());
             document.selectFirst("#actEcoRepresentante").text(datosPersona.getProfActRepresentante().toUpperCase());
-            document.selectFirst("#correoRepresentante").text(datosPersona.getCorreoRepresentante().toUpperCase());
+            document.selectFirst("#correoRepresentante").text(datosPersona.getCorreoRepresentante().toUpperCase());*/
         }
 
         document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
@@ -267,9 +267,10 @@ public class PersonaService {
         document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
         document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
         document.selectFirst("#nit").text(datosPersona.getCodUsuario());
-        document.selectFirst("#recursos").text(datosPersona.getRecursos());
-        document.selectFirst("#ingresos").text(datosPersona.getIngresos());
-
+        if (datosPersona.getRecursos() != null) {
+            document.selectFirst("#recursos").text(datosPersona.getRecursos());
+            document.selectFirst("#ingresos").text(datosPersona.getIngresos());
+        }
         LocalDate fecha = LocalDate.now();
         Map<Integer, String> meses = new HashMap<>();
         meses.put(1, "Enero");

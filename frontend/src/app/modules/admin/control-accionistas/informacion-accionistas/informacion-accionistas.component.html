@@ -31,13 +31,12 @@
 
       <ng-container matColumnDef="nomPri">
         <th mat-header-cell *matHeaderCellDef> NOMBRES </th>
-        <td mat-cell *matCellDef="let element"> {{element.nomPri}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.nomPri}} {{element.nomSeg}} </td>
       </ng-container>
 
       <ng-container matColumnDef="apePri">
         <th mat-header-cell *matHeaderCellDef> APELLIDOS </th>
-        <td mat-cell *matCellDef="let element"> {{element.apePri}}
-        </td>
+        <td mat-cell *matCellDef="let element"> {{element.apePri}} {{element.apeSeg}}</td>
       </ng-container>
 
       <ng-container matColumnDef="correoPersona">

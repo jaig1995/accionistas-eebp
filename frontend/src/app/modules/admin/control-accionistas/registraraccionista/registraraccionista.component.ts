@@ -33,8 +33,8 @@ import { items } from 'app/mock-api/apps/file-manager/data';
 })
 export class RegistraraccionistaComponent{
 
-  datosAccionista: MatTableDataSource<RegAccionistas>;
-  datosRepresentante: MatTableDataSource<RegAccionistas>;
+  datosAccionista: RegAccionistas[];
+  datosRepresentante: RegAccionistas[];
   displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio', 'tipoVivienda'];
   private _fuseConfirmationService;
   mostrarCampoAdicionalFueraTabla: boolean = false;
@@ -55,7 +55,8 @@ export class RegistraraccionistaComponent{
   onSubmit(){
       
     const formDataAccionista = {
-      codUsuario: this.codigoUsuarioAccionista
+      codUsuario: this.codigoUsuarioAccionista,
+      codRepresentante: this.codigoUsuarioRepresentante
     };
 
     if (this.registroForm.valid) {
@@ -101,10 +102,10 @@ export class RegistraraccionistaComponent{
     const codUsuario = this.registroForm.get('codUsuario').value; // Obtener el valor del campo codUsuario
   
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
-      (data: RegAccionistas[]) => {
+      (data: RegAccionistas) => {
         this.codigoUsuarioAccionista = codUsuario;
-        this.datosAccionista = new MatTableDataSource<RegAccionistas>(data);
-        this.mostrarCampoAdicionalFueraTabla = data.some(item => item.tipDocumento === 'TI');
+        this.datosAccionista = [data];
+        this.mostrarCampoAdicionalFueraTabla = data.tipDocumento === 'TI';
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -132,8 +133,7 @@ export class RegistraraccionistaComponent{
   
         });
         confirmation.afterClosed().subscribe(() => {
-          // Si el usuario cierra la confirmación, resetear la tabla
-          this.datosAccionista = new MatTableDataSource<RegAccionistas>([]);
+          this.datosAccionista = null;
         });
       }
     );
@@ -167,17 +167,15 @@ export class RegistraraccionistaComponent{
 
       });
       confirmation.afterClosed().subscribe(() => {
-        // Si el usuario cierra la confirmación, resetear la tabla
-        this.datosRepresentante = new MatTableDataSource<RegAccionistas>([]);
+        this.datosRepresentante = null;
       });
       
     }else{
 
       this.accionistasService.obtenerDatosRegistro(codRepresentante).subscribe(
-        (data: RegAccionistas[]) => {
+        (data: RegAccionistas) => {
           this.codigoUsuarioRepresentante = codRepresentante;
-          this.datosRepresentante = new MatTableDataSource<RegAccionistas>(data);
-          this.mostrarCampoAdicionalFueraTabla = data.some(item => item.tipDocumento === 'TI');
+          this.datosRepresentante = [data];
         },
         (error) => {
           console.error('Error al obtener los datos:', error);
@@ -205,8 +203,7 @@ export class RegistraraccionistaComponent{
     
           });
           confirmation.afterClosed().subscribe(() => {
-            // Si el usuario cierra la confirmación, resetear la tabla
-            this.datosRepresentante = new MatTableDataSource<RegAccionistas>([]);
+
           });
         }
       );

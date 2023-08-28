@@ -41,7 +41,8 @@ public class SecurityConfiguration {
                                 "/api/geo/*",
                                 "/api/geo/municipios/*",
                                 "/api/geo/departamentos/*/municipios",
-                                "/api/accionistas/*")
+                                "/api/accionistas/*",
+                                "/api/accionista")
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
