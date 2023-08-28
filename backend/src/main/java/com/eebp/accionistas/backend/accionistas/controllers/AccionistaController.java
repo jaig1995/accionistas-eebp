@@ -17,4 +17,9 @@ public class AccionistaController {
     public Accionista addAccionista(@RequestBody Accionista accionista) {
         return accionistaService.addAccionista(accionista);
     }
+
+    @PostMapping("/aprobar")
+    public void aprobarAccionista(@RequestBody String codUsuario) {
+        accionistaService.aprobarAccionista(codUsuario);
+    }
 }

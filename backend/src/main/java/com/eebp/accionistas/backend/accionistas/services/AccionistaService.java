@@ -17,4 +17,8 @@ public class AccionistaService {
         accionista.setTipoAccionista(1);
         return accionistaRepository.save(accionista);
     }
+
+    public void aprobarAccionista(String codUsuario) {
+        accionistaRepository.aprobarAccionista(codUsuario);
+    }
 }

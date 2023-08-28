@@ -75,4 +75,4 @@ import { RegAccionistas } from '../registraraccionista/registraraccionista.model
       return this.http.get<RegAccionistas>(this._baseUrl + '/api/accionistas/' + id);
     }
 
-  }
+  } 
