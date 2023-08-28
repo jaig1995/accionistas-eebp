@@ -82,9 +82,11 @@ export const appRoutes: Route[] = [
             {path: 'accionistas/agregar', loadChildren: () => import('app/modules/admin/control-accionistas/addaccionista/addaccionista.routes')},
             {path: 'accionistas/agregar/autorizacion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/autorizacion/autorizacion.routes')},
             {path: 'accionistas/informacion', loadChildren: () => import('app/modules/admin/control-accionistas/informacion-accionistas/informacion-accionistas.routes')},
-            {path: 'accionistas/actualizar/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.routes')},
+            
             {path: 'accionistas/registrar', loadChildren: () => import('app/modules/admin/control-accionistas/registraraccionista/registraraccionista.routes')},
             {path: 'accionistas/agregar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/declaracion/declaracion.routes')},
+            {path: 'persona/actualizar', loadChildren: () => import('app/modules/admin/seguridad/infopersonas/infopersonas.routes')},
+            {path: 'persona/actualizar/:id', loadChildren: () => import('app/modules/admin/seguridad/actualizarinfopersona/actualizarinfopersona.routes')},
         ]   
     }
 ];

@@ -11,13 +11,13 @@ import { NgFor, NgIf } from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
-import { AccionistasService } from '../addaccionista/accionistas.service';
-import { GeoService } from '../addaccionista/geo.service';
-import { Actualizar } from './actualizar-informacion-accionistas.model';
+import { AccionistasService } from '../../control-accionistas/addaccionista/accionistas.service';
+import { GeoService } from '../../control-accionistas/addaccionista/geo.service';
+import { Actualizar } from '../../control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 import { forEach } from 'lodash';
 
 @Component({
-  selector: 'actualizar',
+  selector: 'actualizarinfopersona',
   standalone   : true,
   imports: [MatDatepickerModule,
     RouterModule,
@@ -33,10 +33,10 @@ import { forEach } from 'lodash';
     NgFor, 
     NgIf
   ],
-  templateUrl: './actualizar-informacion-accionistas.component.html',
+  templateUrl: './actualizarinfopersona.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class ActualizarInformacionAccionistasComponent implements OnInit{
+export class ActualizarinfopersonaComponent implements OnInit{
 
   showAdditionalField: boolean = false;
   showAdditionalFieldDir: boolean = false;
@@ -81,7 +81,7 @@ export class ActualizarInformacionAccionistasComponent implements OnInit{
       }
     );
   }
-   id: string;
+    id: string;
     message: any;
 
     departamentos: any[];
