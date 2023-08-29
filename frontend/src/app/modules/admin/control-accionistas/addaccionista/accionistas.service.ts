@@ -75,4 +75,8 @@ import { RegAccionistas } from '../registraraccionista/registraraccionista.model
       return this.http.get<RegAccionistas>(this._baseUrl + '/api/accionistas/' + id);
     }
 
+    aprobar(codUsuario : string) : Observable<any> {
+      return this.http.post<any>(this._baseUrl + '/api/accionista/aprobar', {"codUsuario": codUsuario});
+    }
+
   } 

@@ -87,6 +87,7 @@ export const appRoutes: Route[] = [
             {path: 'accionistas/agregar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/declaracion/declaracion.routes')},
             {path: 'persona/actualizar', loadChildren: () => import('app/modules/admin/seguridad/infopersonas/infopersonas.routes')},
             {path: 'persona/actualizar/:id', loadChildren: () => import('app/modules/admin/seguridad/actualizarinfopersona/actualizarinfopersona.routes')},
+            {path: 'accionista/aprobar', loadChildren: () => import('app/modules/admin/control-accionistas/aprobaraccionista/aprobaraccionista.routes')}
         ]   
     }
 ];

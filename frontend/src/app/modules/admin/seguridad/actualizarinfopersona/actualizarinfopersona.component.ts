@@ -348,7 +348,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     
           });
 
-          this.router.navigate(['inicio']);
+          this.router.navigate(['/persona/actualizar']);
         },
         (error) => {
           // Manejo de errores si la petición falla
