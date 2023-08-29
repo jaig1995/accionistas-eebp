@@ -159,6 +159,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'ingresos': new FormControl(''),
     'firma': new FormControl(''),
     'huella': new FormControl(''),
+    'huella2': new FormControl(''),
   });
 
 

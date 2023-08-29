@@ -81,11 +81,11 @@
                 <mat-option value="1">ADMINISTRADOR</mat-option>
               </mat-select>
             </mat-form-field><br><br>
-            <button class="w-full sm:w-1/6 m-4 sm:mt-4 sm:ml-4" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir fotografia</button>
+            <button class="w-full sm:w-1/6 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir fotografia</button>
             <input hidden (change)="onFileSelected($event)" #fileInput type="file" required>
             <span class="file-name">{{selectedFile?.name}}</span><br>
 
-          <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" type="submit">Enviar</button>
+          <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit">Enviar</button>
         </form>
       </div>
 

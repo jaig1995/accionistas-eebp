@@ -11,6 +11,10 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { RegAccionistas } from "../registraraccionista/registraraccionista.model"
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { NgFor, NgIf } from '@angular/common';
+import { InformacionAccionistasService } from '../informacion-accionistas/accionistas-data.service';
+import { ServicesConfig } from 'app/services.config';
+import { NgClass } from '@angular/common';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'aprobaraccionista',
@@ -26,26 +30,31 @@ import { NgFor, NgIf } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     NgFor,
-    NgIf
+    NgIf,
+    TextFieldModule
   ],
   encapsulation: ViewEncapsulation.None,
 })
 export class AprobaraccionistaComponent{
 
   datosAccionista: RegAccionistas[];
+  mostrarCampos: boolean = false;
 
-  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio', 'tipoVivienda'];
+  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion'];
   private _fuseConfirmationService;
+  private _baseUrl: string = ServicesConfig.apiUrl;
 
   codigoUsuarioAccionista: string;
+  descripcionRechazo: string;
 
 
-  constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
+  constructor(private userDatos: InformacionAccionistasService,private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
   }
   
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'descripcionRechazo': new FormControl(''),
   })
 
   onSubmit(){
@@ -132,6 +141,54 @@ export class AprobaraccionistaComponent{
       }
     );
   }
+
+  camposRechazo() {
+    this.mostrarCampos = true;
+  }
+
+  rechazarUsuario(){
+    const formDataRechazo = {
+      codUsuario: this.codigoUsuarioAccionista,
+      descripcionRechazo: this.descripcionRechazo,
+    };
+    if (this.registroForm.valid) {
+      this.accionistasService.rechazar(this.codigoUsuarioAccionista, this.descripcionRechazo).subscribe(
+        (response) => {
+          console.log('Respuesta del servidor - Accionista: Datos enviados', response);
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Datos enviados exitosamente!",
+            "message": "Los datos fueron enviados.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "success"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "primary"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": false
+    
+          });
+
+          this.router.navigate(['/accionista/aprobar']);
+        },
+        (error) => {
+          console.error('Error en la petición - Accionista:', error);
+        }
+      );
+    }
+  }
+
+  
 }
 
 

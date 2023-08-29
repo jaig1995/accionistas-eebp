@@ -73,4 +73,5 @@ export interface Actualizar {
     ingresos: string;
     firma: string;
     huella: string;
+    huella2: string;
 }
