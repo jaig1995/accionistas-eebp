@@ -1,8 +1,10 @@
 package com.eebp.accionistas.backend.accionistas.services;
 
+import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
 import com.eebp.accionistas.backend.accionistas.entities.Persona;
 import com.eebp.accionistas.backend.accionistas.repositories.PersonaRepository;
 import com.eebp.accionistas.backend.geo.MunicipioRepository;
+import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.jsoup.Jsoup;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -33,16 +36,30 @@ public class PersonaService {
     @Autowired
     MunicipioRepository municipioRepository;
 
+    @Autowired
+    LogRegistroAccionistaService logRegistroAccionistaService;
+
     public List<Persona> getPersonas() {
         return personaRepository.findAll();
     }
 
     public Persona addPersona(Persona persona) {
+        logRegistroAccionistaService.add(LogRegistroAccionistas.builder()
+                .codUsuario(persona.getCodUsuario())
+                .tipo("AGREGAR")
+                .accion(persona.getNomPri() + " " + persona.getNomSeg() + " " + persona.getApePri() +  " " + persona.getApeSeg()  + " se agregó exitosamente como PERSONA en el sistema.")
+                .fecha(LocalDateTime.now())
+                .build());
         return personaRepository.save(persona);
     }
 
-    public Optional<Persona> getPersona(String codUsuario) {
-        return personaRepository.findById(codUsuario);
+    public Optional<Persona> getPersona(String codUsuario) throws UserNotFoundException {
+        Optional<Persona> response =personaRepository.findById(codUsuario);
+        if (response.isPresent()) {
+            return personaRepository.findById(codUsuario);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     public Persona addDeclaracionPersona(Persona persona) {

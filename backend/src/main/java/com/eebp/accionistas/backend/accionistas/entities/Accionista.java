@@ -30,4 +30,7 @@ public class Accionista {
     @Column(name = "aprobado")
     private String aprobado;
 
+    @Column(name = "descripcionrechazo")
+    private String descripcionRechazo;
+
 }

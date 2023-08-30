@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     public User crearUsuario(User user, String tempPassword) throws NewUserException {
         try {
-            if (userRepository.findByCodUsuario(user.getCodUsuario()).isEmpty()) {
+            if (!userRepository.findByCodUsuario(user.getCodUsuario()).isPresent()) {
                 User response = userRepository.save(user);
                 usuarioPerfilRepository.save(
                         UsuarioPerfil.builder()

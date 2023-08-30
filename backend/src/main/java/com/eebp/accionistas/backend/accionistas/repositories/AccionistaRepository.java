@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository;
 public interface AccionistaRepository extends JpaRepository<Accionista, String> {
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Accionista SET aprobado='Y' WHERE codUsuario =:codigo")
+    @Query(value = "UPDATE Accionista SET aprobado='S' WHERE codUsuario =:codigo")
     void aprobarAccionista(@Param("codigo") String codUsuario);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Accionista SET aprobado='N', descripcionRechazo=:descripcion WHERE codUsuario =:codigo")
+    void rechazarAccionista(@Param("codigo") String codUsuario, @Param("descripcion") String descripcionRechazo);
 }

@@ -2,6 +2,7 @@ package com.eebp.accionistas.backend.accionistas.controllers;
 
 import com.eebp.accionistas.backend.accionistas.entities.Persona;
 import com.eebp.accionistas.backend.accionistas.services.PersonaService;
+import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class PersonaController {
     }
 
     @GetMapping("/{codUsuario}")
-    public Optional<Persona> getPersona(@PathVariable String codUsuario) {
+    public Optional<Persona> getPersona(@PathVariable String codUsuario) throws UserNotFoundException {
         return personaService.getPersona(codUsuario);
     }
 
