@@ -15,7 +15,7 @@
                 <input matInput type="text" id="codUsuario" formControlName="codUsuario">
             </mat-form-field>
 
-            <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
+            <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
         </form><br>
 
         <table mat-table [dataSource]="datosAccionista" class="mat-table">
@@ -102,7 +102,7 @@
                 <input matInput type="text" id="campoTI" formControlName="codRepresentante">
             </mat-form-field>
 
-            <button  *ngIf="mostrarCampoAdicionalFueraTabla" class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-fab [color]="'accent'" (click)="consultarRepresentante()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
+            <button  *ngIf="mostrarCampoAdicionalFueraTabla" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarRepresentante()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
         </form><br>
 
         <table *ngIf="mostrarCampoAdicionalFueraTabla" mat-table [dataSource]="datosRepresentante" class="mat-elevation-z2">
@@ -180,7 +180,7 @@
     
         </table><br>
 
-        <button class="fuse-mat-button w-30 mt-4 " mat-fab [color]="'accent'" (click)="onSubmit()" ><mat-icon class=" sm:ml-4" svgIcon="navigate_next"></mat-icon>Siguiente</button>
+        <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()" ><mat-icon class=" sm:ml-4" svgIcon="navigate_next"></mat-icon>Siguiente</button>
 
     </div>
 </div>

@@ -163,16 +163,21 @@ public class PersonaService {
         }
 
         document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
-        byte[] bytes = datosPersona.getHuella();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-        BufferedImage originalImage = ImageIO.read(inputStream);
-        BufferedImage rotatedImage = rotateImage(originalImage, 270);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(rotatedImage, "jpg", outputStream);
-        byte[] rotatedBytes = outputStream.toByteArray();
-        String imagenRotada = Base64.getEncoder().encodeToString(rotatedBytes);
 
-        document.selectFirst("#huella").html("<img style=\"border: 1px black solid;\" width=\"70\" src=\"data:image/png;base64, " + imagenRotada + "\">");
+        try {
+            byte[] bytes = datosPersona.getHuella();
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            BufferedImage originalImage = ImageIO.read(inputStream);
+            BufferedImage rotatedImage = rotateImage(originalImage, 270);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(rotatedImage, "jpg", outputStream);
+            byte[] rotatedBytes = outputStream.toByteArray();
+            String imagenRotada = Base64.getEncoder().encodeToString(rotatedBytes);
+
+            document.selectFirst("#huella").html("<img style=\"border: 1px black solid;\" width=\"70\" src=\"data:image/png;base64, " + imagenRotada + "\">");
+        } catch (Exception e) {
+
+        }
 
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -308,16 +313,20 @@ public class PersonaService {
         document.selectFirst("#anio").text(String.valueOf(fecha.getYear()));
 
         document.selectFirst("#firma").html("<img width=\"150\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + Base64.getEncoder().encodeToString(datosPersona.getFirma()) + "\">");
-        byte[] bytes = datosPersona.getHuella();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-        BufferedImage originalImage = ImageIO.read(inputStream);
-        BufferedImage rotatedImage = rotateImage(originalImage, 270);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(rotatedImage, "jpg", outputStream);
-        byte[] rotatedBytes = outputStream.toByteArray();
-        String imagenRotada = Base64.getEncoder().encodeToString(rotatedBytes);
+        try {
+            byte[] bytes = datosPersona.getHuella();
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            BufferedImage originalImage = ImageIO.read(inputStream);
+            BufferedImage rotatedImage = rotateImage(originalImage, 270);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(rotatedImage, "jpg", outputStream);
+            byte[] rotatedBytes = outputStream.toByteArray();
+            String imagenRotada = Base64.getEncoder().encodeToString(rotatedBytes);
+            document.selectFirst("#huella").html("<img width=\"70\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + imagenRotada + "\">");
+        } catch (Exception e) {
 
-        document.selectFirst("#huella").html("<img width=\"70\" src=\"data:image/png;base64, " + "<img width=\"150\" src=\"data:image/png;base64, " + imagenRotada + "\">");
+        }
+
         document.selectFirst("#expedicion").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
         document.selectFirst("#cc").text(datosPersona.getCodUsuario());
 
