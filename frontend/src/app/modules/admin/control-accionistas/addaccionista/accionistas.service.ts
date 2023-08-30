@@ -7,6 +7,7 @@ import { Declaracion } from '../declaracion/declaracion.model';
 import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 import { ServicesConfig } from 'app/services.config';
 import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
+import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
 
   @Injectable({
     providedIn: 'root'
@@ -80,7 +81,11 @@ import { RegAccionistas } from '../registraraccionista/registraraccionista.model
     }
 
     rechazar(codUsuario : string, descripcionRechazo: string) : Observable<any> {
-      return this.http.post<any>(this._baseUrl + '/api/accionista/rechazar', {"codUsuario": codUsuario, "descripcion": descripcionRechazo});
+      return this.http.post<any>(this._baseUrl + '/api/accionista/rechazar', {"codUsuario": codUsuario, "descripcionRechazo": descripcionRechazo});
+    }
+
+    obtenerDatosHojaDeRuta(id: string): Observable<HojaDeRuta[]> {
+      return this.http.get<HojaDeRuta[]>(this._baseUrl + '/api/accionista/ruta/' + id);
     }
 
   } 

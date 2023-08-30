@@ -92,7 +92,7 @@
 
         <div *ngIf="mostrarCampos">
             
-            <form  id="registro" [formGroup]="registroForm" >
+            
                 <div class="flex">
             
                     <mat-form-field  [ngClass]="formFieldHelpers"
@@ -100,12 +100,12 @@
                         <mat-label>¿Por qué se rechaza?</mat-label>
                         <textarea
                                     matInput
-                                    cdkTextareaAutosize id="descripcionRechazo" formControlName="descripcionRechazo"></textarea>
+                                    cdkTextareaAutosize id="descripcionRechazo" [(ngModel)]="descripcionRechazo"></textarea>
                         <!-- <input matInput cdkTextArea type="text" id="descripcion" formControlName="descripcion"> -->
                     </mat-form-field>
                     
                 </div>
-            </form>
+           
 
            
 

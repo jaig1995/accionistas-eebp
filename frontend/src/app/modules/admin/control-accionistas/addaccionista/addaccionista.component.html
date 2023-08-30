@@ -13,7 +13,7 @@
                   <p class="text-lg font-extrabold">DATOS PERSONALES</p>
                   <mat-divider class="mt-6 mb-10"></mat-divider>
 
-                  <mat-form-field class="w-full sm:w-32 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Documento:</mat-label>
                     <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
                     <mat-select  id="tipDocumento" formControlName="tipDocumento" (selectionChange)="onSelectChange($event)" >
@@ -32,13 +32,13 @@
                     </mat-form-field>
                   </div>
   
-                  <mat-form-field class="w-full sm:w-36 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Numero:</mat-label>
                     <mat-icon
                           class="icon-size-5"
                           [svgIcon]="'heroicons_solid:hashtag'"
                           matPrefix></mat-icon>
-                    <input matInput type="text" id="codUsuario"  formControlName="codUsuario" >
+                    <input matInput type="text" id="codUsuario"  formControlName="codUsuario" (input)="onChange()" >
                     <div *ngIf="accionistasForm.get('codUsuario').hasError('pattern')">Solo números.</div>
                   </mat-form-field>
   
@@ -956,7 +956,7 @@
                   </mat-select>
                 </mat-form-field ><br>
                 
-                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Vía:</mat-label>
                   <mat-icon
                         class="icon-size-5"
@@ -969,13 +969,13 @@
                   </mat-select>
                 </mat-form-field >
 
-                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-18 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
                   <input matInput  id="numDomicilio" formControlName="numDomicilio">
                 </mat-form-field>
             
-                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-20 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-16 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Letra</mat-label>
                   <input matInput type="text" id="letraDomicilio" formControlName="letraDomicilio">
@@ -1115,7 +1115,7 @@
                     <mat-option value="Urbana">Urbana</mat-option>
                     <mat-option value="Rural">Rural</mat-option>
                   </mat-select>
-                </mat-form-field >
+                </mat-form-field ><br>
                 
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-30 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Vía:</mat-label>

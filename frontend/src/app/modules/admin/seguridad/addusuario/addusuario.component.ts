@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Router } from "@angular/router";
 import { ServicesConfig } from 'app/services.config';
+import { UserDataService } from '../permisos/user-data.service';
 
 
 @Component({
@@ -37,14 +38,15 @@ export class AddusuarioComponent {
     nom_seg: string;
     ape_pri: string;
     ape_seg: string;
-    identificacion: number;
+    identificacion: string;
     perfil: number;
     email: string;
     selectedFile: File;
     private _fuseConfirmationService;
 
-    constructor(private http: HttpClient, fuseConfirmationService: FuseConfirmationService, private router: Router) {
+    constructor(private http: HttpClient, fuseConfirmationService: FuseConfirmationService, private router: Router, private userService: UserDataService) {
         this._fuseConfirmationService = fuseConfirmationService;
+        
     }
     onSubmit() {
         const data = {
@@ -117,6 +119,35 @@ export class AddusuarioComponent {
                 "dismissible": true
             });
         });
+    }
+
+    onChange(){
+        console.log(this.identificacion);
+        this.userService.obtenerUsuario(this.identificacion).subscribe(response => {
+            const confirmation = this._fuseConfirmationService.open({
+                "title": "El usuario ya existe!",
+                "message": "Verifica su identificación",
+                "icon": {
+                    "show": true,
+                    "name": "heroicons_outline:exclamation-triangle",
+                    "color": "warn"
+                },
+                "actions": {
+                    "confirm": {
+                    "show": false,
+                    "label": "Remove",
+                    "color": "warn"
+                    },
+                    "cancel": {
+                    "show": false,
+                    "label": "Cancel"
+                    }
+                },
+                "dismissible": true
+            });
+            this.identificacion = '';
+        });
+
     }
 
     onFileSelected(event: any): void {

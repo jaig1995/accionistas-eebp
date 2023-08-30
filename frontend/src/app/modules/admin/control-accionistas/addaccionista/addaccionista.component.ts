@@ -13,6 +13,8 @@ import {MatNativeDateModule} from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { AccionistasService } from './accionistas.service';
 import { GeoService } from './geo.service';
+import { UserDataService } from '../../seguridad/permisos/user-data.service';
+import { Usuario } from '../../seguridad/permisos/usuarios.model';
 
 @Component({
   selector: 'agregar-accionista',
@@ -50,7 +52,7 @@ export class AddaccionistaComponent {
   private _fuseConfirmationService;
   codUsuario: any;
 
-  constructor(private router: Router,private accionistasService: AccionistasService, private geoService: GeoService, fuseConfirmationService: FuseConfirmationService, private cdRef: ChangeDetectorRef, private cd: ChangeDetectorRef) {
+  constructor(private userService: UserDataService, private router: Router,private accionistasService: AccionistasService, private geoService: GeoService, fuseConfirmationService: FuseConfirmationService, private cdRef: ChangeDetectorRef, private cd: ChangeDetectorRef) {
     
     this.accionistasForm.get('calle').valueChanges.subscribe(() => this.actualizarDireccionDomicilio());
     this.accionistasForm.get('numDomicilio').valueChanges.subscribe(() => this.actualizarDireccionDomicilio());
@@ -79,7 +81,7 @@ export class AddaccionistaComponent {
       }
     );
    }
-
+   codUsuarioPersona: string = '';
    //variable para la huella
     message: any;
     message_2: any;
@@ -463,6 +465,35 @@ export class AddaccionistaComponent {
 
   capturarFirma(){
     this.accionistasService.peticionGetFirmaCaptura().subscribe();
+  }
+
+  onChange(){
+    const codUsuarioValue = this.accionistasForm.get('codUsuario').value;
+    this.userService.obtenerUsuario(codUsuarioValue).subscribe(response => {
+        const confirmation = this._fuseConfirmationService.open({
+            "title": "La persona ya existe!",
+            "message": "Verifica su identificación",
+            "icon": {
+                "show": true,
+                "name": "heroicons_outline:exclamation-triangle",
+                "color": "warn"
+            },
+            "actions": {
+                "confirm": {
+                "show": false,
+                "label": "Remove",
+                "color": "warn"
+                },
+                "cancel": {
+                "show": false,
+                "label": "Cancel"
+                }
+            },
+            "dismissible": true
+        });
+        this.accionistasForm.get('codUsuario').setValue('');
+    });
+
   }
 
   onFileSelected(event: any): void {

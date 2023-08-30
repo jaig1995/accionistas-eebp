@@ -54,7 +54,6 @@ export class AprobaraccionistaComponent{
   
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'descripcionRechazo': new FormControl(''),
   })
 
   onSubmit(){
@@ -67,6 +66,7 @@ export class AprobaraccionistaComponent{
       this.accionistasService.aprobar(this.codigoUsuarioAccionista).subscribe(
         (response) => {
           console.log('Respuesta del servidor - Accionista: Datos enviados', response);
+          this.router.navigate(['/accionista/aprobar']);
           const confirmation = this._fuseConfirmationService.open({
 
             "title": "Datos enviados exitosamente!",
@@ -91,7 +91,9 @@ export class AprobaraccionistaComponent{
     
           });
 
-          this.router.navigate(['/accionista/aprobar']);
+          this.registroForm.get('codUsuario').setValue('');
+          this.datosAccionista = null;
+
         },
         (error) => {
           console.error('Error en la petición - Accionista:', error);
@@ -103,7 +105,7 @@ export class AprobaraccionistaComponent{
 
 
   consultarUsuario() {
-    const codUsuario = this.registroForm.get('codUsuario').value; // Obtener el valor del campo codUsuario
+    const codUsuario = this.registroForm.get('codUsuario').value; 
   
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
       (data: RegAccionistas) => {
@@ -149,9 +151,9 @@ export class AprobaraccionistaComponent{
   rechazarUsuario(){
     const formDataRechazo = {
       codUsuario: this.codigoUsuarioAccionista,
-      descripcionRechazo: this.descripcionRechazo,
+      descripcionRechazo: this.descripcionRechazo
     };
-    if (this.registroForm.valid) {
+    console.log(formDataRechazo);
       this.accionistasService.rechazar(this.codigoUsuarioAccionista, this.descripcionRechazo).subscribe(
         (response) => {
           console.log('Respuesta del servidor - Accionista: Datos enviados', response);
@@ -178,14 +180,16 @@ export class AprobaraccionistaComponent{
             "dismissible": false
     
           });
+          this.registroForm.get('codUsuario').setValue('');
+          this.descripcionRechazo = null;
+          this.datosAccionista = null;
 
-          this.router.navigate(['/accionista/aprobar']);
         },
         (error) => {
           console.error('Error en la petición - Accionista:', error);
         }
       );
-    }
+    
   }
 
   

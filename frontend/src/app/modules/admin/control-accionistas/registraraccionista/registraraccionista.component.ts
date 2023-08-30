@@ -132,9 +132,7 @@ export class RegistraraccionistaComponent{
           "dismissible": true
   
         });
-        confirmation.afterClosed().subscribe(() => {
-          this.datosAccionista = null;
-        });
+        this.registroForm.get('codUsuario').setValue('');
       }
     );
   }
@@ -145,7 +143,7 @@ export class RegistraraccionistaComponent{
 
       const confirmation = this._fuseConfirmationService.open({
   
-        "title": "No puede ser representante usted mismo.",
+        "title": "El usuario menor de edad no puede ser su propio representante.",
         "message": "Intente con otro código de usuario.",
         "icon": {
           "show": true,
@@ -166,9 +164,9 @@ export class RegistraraccionistaComponent{
         "dismissible": true
 
       });
-      confirmation.afterClosed().subscribe(() => {
-        this.datosRepresentante = null;
-      });
+      
+      this.registroForm.get('codRepresentante').setValue('');
+      
       
     }else{
 
@@ -202,9 +200,7 @@ export class RegistraraccionistaComponent{
             "dismissible": true
     
           });
-          confirmation.afterClosed().subscribe(() => {
-
-          });
+          this.registroForm.get('codRepresentante').setValue('');
         }
       );
 
