@@ -25,12 +25,12 @@
     </ng-container>
 
       <ng-container matColumnDef="codUsuario">
-        <th mat-header-cell *matHeaderCellDef> CÓDIGO DE ACCIONISTA </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> CÓDIGO DE ACCIONISTA </th>
         <td mat-cell *matCellDef="let element"> {{element.codUsuario}} </td>
       </ng-container>
 
       <ng-container matColumnDef="accionista">
-        <th mat-header-cell *matHeaderCellDef> ES ACCIONISTA</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ES ACCIONISTA</th>
         <td mat-cell *matCellDef="let element"> {{element.esAccionista}} </td>
       </ng-container>
 
@@ -40,7 +40,7 @@
       </ng-container>
 
       <ng-container matColumnDef="apePri">
-        <th mat-header-cell *matHeaderCellDef> APELLIDOS </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> APELLIDOS </th>
         <td mat-cell *matCellDef="let element"> {{element.apePri}} {{element.apeSeg}}</td>
       </ng-container>
 
