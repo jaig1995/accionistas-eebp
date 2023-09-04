@@ -32,6 +32,8 @@ export class DeclaracionComponent {
   datosDeclaracion: Declaracion;
   private _fuseConfirmationService;
   id : string;
+  public lugarExp: string;
+  public nombreCompleto: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService, private geoService: GeoService) {
     this._fuseConfirmationService = fuseConfirmationService;
@@ -40,11 +42,11 @@ export class DeclaracionComponent {
 
   declaracionForm = new FormGroup({
     // Agrega más campos si es necesario según tu interfaz Accionistas
-    'nomPri':  new FormControl(''),
-    'codUsuario':  new FormControl(''),
-    'departamentoExp':  new FormControl(''),
-    'nomRepresentante':  new FormControl(''),
-    'codRepresentante':  new FormControl(''),
+    'nomPri':  new FormControl({ value: '', disabled: true },),
+    'codUsuario':  new FormControl({ value: '', disabled: true },),
+    'departamentoExp':  new FormControl({ value: '', disabled: true },),
+    'nomRepresentante':  new FormControl({ value: '', disabled: true },),
+    'codRepresentante':  new FormControl({ value: '', disabled: true },),
     'recursos':  new FormControl('', Validators.required),
     'ingresos':  new FormControl('', Validators.required),
   });
@@ -59,13 +61,13 @@ export class DeclaracionComponent {
       async (datos: Declaracion) => {
         this.datosDeclaracion = datos;
 
-        const nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
-        const lugarExp = await this.obtenerMunicipioById(Number(datos.municipioExp)).toPromise();
+        this.nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
+        this.lugarExp = await this.obtenerMunicipioById(Number(datos.municipioExp)).toPromise();
         this.declaracionForm.patchValue({
           codUsuario: datos.codUsuario,
-          nomPri: nombreCompleto,
-          departamentoExp: lugarExp,
-          nomRepresentante: nombreCompleto,
+          nomPri: this.nombreCompleto,
+          departamentoExp: this.lugarExp,
+          nomRepresentante: this.nombreCompleto,
           codRepresentante: datos.codRepresentante,
         });
       },

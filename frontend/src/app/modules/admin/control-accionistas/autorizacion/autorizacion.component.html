@@ -36,7 +36,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:hashtag'"
                               matPrefix></mat-icon>
-                        <input matInput id="numSuscripcion" type="text" formControlName="numSuscripcion" required>
+                        <input matInput id="numSuscripcion" type="text" formControlName="numSuscripcion">
                     </mat-form-field>
 
                     <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -112,6 +112,7 @@
                               class="icon-size-5"
                               [svgIcon]="'heroicons_solid:hashtag'"
                               matPrefix></mat-icon>
+                        <mat-error>Solo se permiten números.</mat-error>
                         <input matInput id="numPersonas" type="numPersonas" formControlName="numPersonas" required>
                     </mat-form-field>
 
@@ -122,65 +123,26 @@
 
                     <mat-divider class="mt-6 mb-10"></mat-divider>
 
-                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Correo electrónico:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="autorizaCorreo" type="text" formControlName="autorizaCorreo" required>
-                          <mat-option value="S">Si</mat-option>
-                          <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field >
-
-                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Llamadas telefónicas:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="autorizaLlamada" type="text" formControlName="autorizaLlamada" required>
-                          <mat-option value="S">Si</mat-option>
-                          <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field >
-
-                    <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Mensaje de texto:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="autorizaMensaje" type="text" formControlName="autorizaMensaje" required>
-                          <mat-option value="S">Si</mat-option>
-                          <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field >
-
-                    <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Físico:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="autorizaFisico" name="opcFisico" formControlName="autorizaFisico" required>
-                          <mat-option value="S">Si</mat-option>
-                          <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field >
-
-                    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                        <mat-label>Todas las anteriores:</mat-label>
-                        <mat-icon
-                              class="icon-size-5"
-                              [svgIcon]="'heroicons_solid:user'"
-                              matPrefix></mat-icon>
-                        <mat-select id="autorizaTodas" type="text" formControlName="autorizaTodas" required>
-                          <mat-option value="S">Si</mat-option>
-                          <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field ><br>
+                    <mat-checkbox formControlName="autorizaCorreo" (change)="actualizarAutorizaTodas()">
+                        Correo electrónico   
+                    </mat-checkbox>
+                      
+                    <mat-checkbox formControlName="autorizaLlamada" (change)="actualizarAutorizaTodas()" >
+                        Llamada Telefónica
+                    </mat-checkbox>
+                    
+                    <mat-checkbox formControlName="autorizaMensaje" (change)="actualizarAutorizaTodas()">
+                        Mensaje de Texto
+                    </mat-checkbox>
+                    
+                    <mat-checkbox formControlName="autorizaFisico" (change)="actualizarAutorizaTodas()">
+                        Físico
+                    </mat-checkbox>
+                    
+                    <mat-checkbox formControlName="autorizaTodas" (change)="todasLasAnteriores()">
+                        Todas las Anteriores
+                    </mat-checkbox>
+                      
 
                     <mat-divider class="mt-6 mb-10"></mat-divider>
 
@@ -197,7 +159,7 @@
                     <p class="text-lg font-medium"></p>
                     <p style="text-align: justify;" class="text-lg font-medium"><span style="font-weight: 400;">El titular del dato, acreditar&aacute; esta condici&oacute;n mediante copia de su documento de identidad, que podr&aacute; suministrar por medio f&iacute;sico o digital. En caso de que el titular este representado por un tercero deber&aacute; hacer llegar el respectivo poder, el cual deber&aacute; tener reconocimiento del contenido de notario, habida cuenta de que se trata del ejercicio del Derecho Fundamental de Habeas Data. El apoderado deber&aacute; igualmente acreditar su identidad en los t&eacute;rminos indicados.</span></p>
 
-                    <button  class="fuse-mat-button w-44 mt-4" mat-mini-fab [color]="'accent'" type="submit"><mat-icon svgIcon="mat_outline:save"></mat-icon>FINALIZAR Y ENVIAR</button>
+                    <button  class="fuse-mat-button w-30 mt-4" mat-mini-fab [color]="'accent'" type="submit"><mat-icon svgIcon="navigate_next"></mat-icon>Siguiente</button>
 
 
                     <mat-divider class="mt-6 mb-10"></mat-divider>
@@ -206,3 +168,4 @@
             </div>  
   </div>
 </div>
+

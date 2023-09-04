@@ -10,6 +10,9 @@ import { AccionistasService } from '../addaccionista/accionistas.service';
 import { Autorizacion } from './autorizacion.model';
 import { NgFor, NgIf } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { combineLatest } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'autorizacion',
@@ -24,12 +27,13 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
     MatSelectModule,
     MatButtonModule,
     NgFor,
-    NgIf
+    NgIf,
+    MatCheckboxModule
    ],
   templateUrl: './autorizacion.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class AutorizacionComponent {
+export class AutorizacionComponent  {
   datosAutorizacion: Autorizacion;
   fechaActual: string;
   id : string;
@@ -43,20 +47,20 @@ export class AutorizacionComponent {
 
   autorizacionForm = new FormGroup({
     // Agrega más campos si es necesario según tu interfaz Accionistas
-    'numSuscripcion':  new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'nomPri':  new FormControl(''),
-    'codUsuario':  new FormControl('', Validators.required),
-    'dirDomicilio':  new FormControl('', Validators.required),
-    'correoPersona':  new FormControl('', Validators.required),
-    'telfDomicilio':  new FormControl('', Validators.required),
-    'celPersona':  new FormControl('', Validators.required),
+    'numSuscripcion':  new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'nomPri':  new FormControl({ value: '', disabled: true }),
+    'codUsuario':  new FormControl({ value: '', disabled: true },  Validators.required),
+    'dirDomicilio':  new FormControl({ value: '', disabled: true }, Validators.required),
+    'correoPersona':  new FormControl({ value: '', disabled: true }, Validators.required),
+    'telfDomicilio':  new FormControl({ value: '', disabled: true }, Validators.required),
+    'celPersona':  new FormControl({ value: '', disabled: true }, Validators.required),
     'tipoVivienda':  new FormControl('', Validators.required),
     'numPersonas':  new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'autorizaCorreo':  new FormControl('', Validators.required),
-    'autorizaLlamada':  new FormControl('', Validators.required),
-    'autorizaTodas':  new FormControl('', Validators.required),
-    'autorizaMensaje':  new FormControl('', Validators.required),
-    'autorizaFisico':  new FormControl('', Validators.required),
+    'autorizaCorreo':  new FormControl(true),
+    'autorizaLlamada':  new FormControl(true),
+    'autorizaTodas':  new FormControl(true),
+    'autorizaMensaje':  new FormControl(true),
+    'autorizaFisico':  new FormControl(true),
     'firma':  new FormControl(''),
 
     
@@ -135,12 +139,66 @@ export class AutorizacionComponent {
             "dismissible": false
     
           });
-          this.router.navigate(['inicio']);
+          this.router.navigate(['accionistas/agregar/declaracion/' + this.autorizacionForm.get('codUsuario').value]);
         },
         (error) => {
-          console.error('Error en la petición:', error);
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Los datos no fueron enviados!",
+            "message": "Por favor revise si el diligenciamento de datos es correcto.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "warn"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "warn"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": true
+    
+          });
         }
       );
+    }
+  }
+
+  todasLasAnteriores() {
+    const todosLosAnteriores = this.autorizacionForm.get('autorizaTodas');
+    if (todosLosAnteriores.value) {
+      this.autorizacionForm.patchValue({
+        autorizaCorreo: true,
+        autorizaLlamada: true,
+        autorizaMensaje: true,
+        autorizaFisico: true,
+      });
+    } else {
+      this.autorizacionForm.patchValue({
+        autorizaCorreo: false,
+        autorizaLlamada: false,
+        autorizaMensaje: false,
+        autorizaFisico: false,
+      });
+    }
+  }
+
+  actualizarAutorizaTodas() {
+    const autorizaCorreo = this.autorizacionForm.get('autorizaCorreo').value;
+    const autorizaLlamada = this.autorizacionForm.get('autorizaLlamada').value;
+    const autorizaMensaje = this.autorizacionForm.get('autorizaMensaje').value;
+    const autorizaFisico = this.autorizacionForm.get('autorizaFisico').value;
+  
+    const todosLosAnteriores = this.autorizacionForm.get('autorizaTodas');
+  
+    if (!autorizaCorreo || !autorizaLlamada || !autorizaMensaje || !autorizaFisico) {
+      todosLosAnteriores.setValue(false);
     }
   }
 

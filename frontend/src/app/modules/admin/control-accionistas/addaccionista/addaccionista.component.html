@@ -39,8 +39,17 @@
                           [svgIcon]="'heroicons_solid:hashtag'"
                           matPrefix></mat-icon>
                     <input matInput type="text" id="codUsuario"  formControlName="codUsuario" (input)="onChange()" >
-                    <div *ngIf="accionistasForm.get('codUsuario').hasError('pattern')">Solo números.</div>
+                    <mat-error >Solo se permiten números.</mat-error>
                   </mat-form-field>
+
+                  <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Tipo de persona:</mat-label>
+                    <mat-select type="text" id="tipoPersona"  formControlName="tipoPersona">
+                      <mat-option value="NA">Natural</mat-option>
+                      <mat-option value="JU">Jurídica</mat-option>
+                      <mat-option value="JA">Junta de acción comunal</mat-option>
+                    </mat-select>
+                  </mat-form-field >
   
                   <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Primer nombre:</mat-label>
@@ -173,7 +182,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="celPersona"  formControlName="celPersona" required>
-                  <div *ngIf="accionistasForm.get('celPersona').hasError('pattern')">Solo números.</div>
+                  <mat-error >Solo se permiten números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -191,7 +200,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                  <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" required>
+                  <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
                     <mat-option value="11">Cultivos agrícolas transitorios.</mat-option>
                       <mat-option value="111">Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas.</mat-option>
                       <mat-option value="112">Cultivo de arroz.</mat-option>
@@ -937,7 +946,7 @@
                         [svgIcon]="'heroicons_solid:envelope'"
                         matPrefix></mat-icon>
                   <input matInput type="email" id="correoPersona"  formControlName="correoPersona" required>
-                  <div *ngIf="accionistasForm.get('correoPersona').hasError('pattern')">Ingrese un correo electrónico válido.</div>
+                  <mat-error >Ingrese un correo válido.</mat-error>
                 </mat-form-field>
 
                 <mat-divider class="mt-6 mb-5"></mat-divider>
@@ -972,24 +981,28 @@
                 <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-18 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
-                  <input matInput  id="numDomicilio" formControlName="numDomicilio">
+                  <mat-error >Solo se permiten números.</mat-error>
+                  <input matInput  id="numDomicilio" formControlName="numDomicilio"  >
                 </mat-form-field>
             
                 <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-16 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Letra</mat-label>
+                  <mat-error >Solo se permiten letras.</mat-error>
                   <input matInput type="text" id="letraDomicilio" formControlName="letraDomicilio">
                 </mat-form-field>
 
                 <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
+                  <mat-error >Solo se permiten números.</mat-error>
                   <input matInput type="text" id="num2Domicilio" formControlName="num2Domicilio" >
                 </mat-form-field>
           
                 <mat-form-field *ngIf="showAdditionalFieldUrb" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Letra</mat-label>
+                  <mat-error >Solo se permiten letras.</mat-error>
                   <input matInput type="text" id="letra2Domicilio" formControlName="letra2Domicilio"  >
                 </mat-form-field>
              
@@ -1061,7 +1074,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio"  required>
-                  <div *ngIf="accionistasForm.get('telfDomicilio').hasError('pattern')">Solo números.</div>
+                  <mat-error >Solo se permiten números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1070,6 +1083,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
+                  <mat-error >Solo se permiten números.</mat-error>
                   <input matInput type="text" id="indTelDomicilio"  formControlName="indTelDomicilio"  required>
                 </mat-form-field>
 
@@ -1093,7 +1107,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  required>
-                  <div *ngIf="accionistasForm.get('telfLaboral').hasError('pattern')">Solo números.</div>
+                  <mat-error >Solo se permiten números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1133,30 +1147,35 @@
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-18 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
+                  <mat-error >Solo se permiten números.</mat-error>
                   <input matInput type="text" id="numLaboral" formControlName="numLaboral"  >
                 </mat-form-field>
             
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-16 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Letra</mat-label>
+                  <mat-error >Solo se permiten letras.</mat-error>
                   <input matInput type="text" id="letraLaboral" formControlName="letraLaboral" >
                 </mat-form-field>
 
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
+                  <mat-error >Solo se permiten números.</mat-error>
                   <input matInput type="text" id="num2Laboral" formControlName="num2Laboral">
                 </mat-form-field>
           
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-22 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Letra</mat-label>
+                  <mat-error >Solo se permiten letras.</mat-error>
                   <input matInput type="text" id="letra2Laboral" formControlName="letra2Laboral">
                 </mat-form-field>
              
                 <mat-form-field *ngIf="showAdditionalFieldUrbLab" class="w-full sm:w-20 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
                   <mat-label>Número</mat-label>
+                  <mat-error >Solo se permiten números.</mat-error>
                   <input matInput type="text" id="num3Laboral" formControlName="num3Laboral">
                 </mat-form-field>
 
@@ -1231,7 +1250,32 @@
                   <input matInput type="text" id="otraDirLaboral"  formControlName="otraDirLaboral"  placeholder="(Indique barrio, municipio, departamento, pais)">
                 </mat-form-field><br>
 
-               
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">INFORMACION BANCARIA</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero de cuenta bancaria:</mat-label>
+                  <input matInput type="text" id="numCuentaBancaria"  formControlName="numCuentaBancaria" >
+                  <mat-error >Solo se permiten números.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Tipo de cuenta:</mat-label>
+                  <mat-select type="text" id="tipoCuentaBancaria"  formControlName="tipoCuentaBancaria">
+                    <mat-option value="AHORROS">Cuenta de ahorros</mat-option>
+                    <mat-option value="CORRIENTE">Cuenta corriente</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Entidad bancaria:</mat-label>
+                  <mat-select type="text" id="entidadBancaria"  formControlName="entidadBancaria">                    
+                    <mat-option *ngFor="let banco of bancos" value="{{banco.codBanco}}">
+                      {{banco.nomBanco}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field > <br><br>
 
                 <button class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir fotografia</button>
                 <input hidden (change)="onFileSelected($event)" #fileInput type="file" formControlName="file" required>
@@ -1278,12 +1322,12 @@
               </mat-form-field>
   
               <div class="button-container">
-                <button class="fuse-mat-button sm:w-50 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerFirma()">
+                <button class="fuse-mat-button sm:w-64 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerFirma()">
                   <mat-icon svgIcon="heroicons_outline:pencil-square"></mat-icon>
                   Iniciar registro de firma
                 </button>
 
-                <button class="fuse-mat-button sm:w-32 mt-4 sm:ml-18" mat-stroked-button [color]="'primary'" type="button" (click)="capturarFirma()">
+                <button class="fuse-mat-button sm:w-64 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="capturarFirma()">
                   <mat-icon svgIcon="mat_outline:save"></mat-icon>
                   Guardar firma
                 </button>
@@ -1303,11 +1347,11 @@
               </div>
 
               
-              <button class="fuse-mat-button w-24 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit"><mat-icon  svgIcon="navigate_next"></mat-icon>Siguiente</button>
+              <button class="fuse-mat-button w-24 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit"><mat-icon  svgIcon="navigate_next"></mat-icon>Enviar</button>
               <mat-divider class="mt-6 mb-10"></mat-divider>
 
             </form>
           </div>  
     </div>
 </div>
-  
+{{ accionistasForm.get('entidadBancaria').value }}

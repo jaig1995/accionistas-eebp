@@ -3,5 +3,5 @@ export interface infoAccionistas{
     correoPersona: string,
     nomPri: string,
     apePri: string,
-    
+    esAccionista: string,
 }

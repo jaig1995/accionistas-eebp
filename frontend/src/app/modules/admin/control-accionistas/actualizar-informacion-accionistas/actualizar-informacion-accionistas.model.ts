@@ -5,6 +5,7 @@ export interface Actualizar {
     apePri: string;
     apeSeg: string;
     codUsuario: string;
+    tipoPersona: string;
     departamentoExp: string;
     municipioExp: string;
     depNacimiento: string;
@@ -74,4 +75,7 @@ export interface Actualizar {
     firma: string;
     huella: string;
     huella2: string;
+    numCuentaBancaria: string;
+    tipoCuentaBancaria: string;
+    entidadBancaria: string;
 }

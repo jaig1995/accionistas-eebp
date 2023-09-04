@@ -15,7 +15,17 @@
                 <input matInput type="text" id="codUsuario" formControlName="codUsuario">
             </mat-form-field>
 
-            <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
+            <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>
+            
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'">
+                <mat-label>Tipo de accionista:</mat-label>
+                <mat-select type="text" id="tipoAccionista"  formControlName="tipoAccionista">
+                  <mat-option value="EMPLEADO">Empleado</mat-option>
+                  <mat-option value="PERTENECE">Pertenece a junta</mat-option> 
+                  <mat-option value="NINGUNO">Ninguno</mat-option> 
+                </mat-select>
+            </mat-form-field >
+        
         </form><br>
 
         <table mat-table [dataSource]="datosAccionista" class="mat-table">

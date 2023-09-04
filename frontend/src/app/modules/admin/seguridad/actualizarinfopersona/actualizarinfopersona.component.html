@@ -191,7 +191,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                        <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" required>
+                        <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
                           <mat-option value="11">Cultivos agrícolas transitorios.</mat-option>
                             <mat-option value="111">Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas.</mat-option>
                             <mat-option value="112">Cultivo de arroz.</mat-option>
@@ -1218,6 +1218,33 @@
                   <mat-label>Cual:</mat-label>
                   <input matInput type="text" id="otraDirLaboral"  formControlName="otraDirLaboral"  placeholder="(Indique barrio, municipio, departamento, pais)">
                 </mat-form-field>
+
+                <mat-divider class="mt-6 mb-5"></mat-divider>
+                  <p class="text-lg font-extrabold mt-6 ">INFORMACION BANCARIA</p>
+                <mat-divider class="mt-4 mb-10"></mat-divider>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Numero de cuenta bancaria:</mat-label>
+                  <input matInput type="text" id="numCuentaBancaria"  formControlName="numCuentaBancaria" >
+                  <mat-error >Solo se permiten números.</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Tipo de cuenta:</mat-label>
+                  <mat-select type="text" id="tipoCuentaBancaria"  formControlName="tipoCuentaBancaria">
+                    <mat-option value="AHORROS">Cuenta de ahorros</mat-option>
+                    <mat-option value="CORRIENTE">Cuenta corriente</mat-option>
+                  </mat-select>
+                </mat-form-field >
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Entidad bancaria:</mat-label>
+                  <mat-select type="text" id="entidadBancaria"  formControlName="entidadBancaria">                    
+                    <mat-option *ngFor="let banco of bancos" value="{{banco.codBanco}}">
+                      {{banco.nomBanco}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field > <br><br>
   
                 <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Suscripcion</mat-label>

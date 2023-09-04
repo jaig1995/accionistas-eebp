@@ -80,10 +80,17 @@ export class ActualizarinfopersonaComponent implements OnInit{
         console.log('Error al obtener departamentos desde la API');
       }
     );
+
+    this.accionistasService.obtenerBancos().subscribe(
+      (data) => {
+        this.bancos = data;
+      }
+    );
   }
     id: string;
     message: any;
 
+    bancos: any[];
     departamentos: any[];
     municipios: any[];
     municipiosDomicilio: any[];
@@ -100,9 +107,9 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'tipDocumento':  new FormControl('', Validators.required),
     'razonSocial':  new FormControl (''),
     'nomPri':  new FormControl('', Validators.required),
-    'nomSeg': new FormControl('', Validators.required),
+    'nomSeg': new FormControl(''),
     'apePri':new FormControl('', Validators.required),
-    'apeSeg':new FormControl('', Validators.required),
+    'apeSeg':new FormControl(''),
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'departamentoExp': new FormControl('', Validators.required),
     'municipioExp': new FormControl('', Validators.required),
@@ -113,7 +120,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'estCivPersona': new FormControl('', Validators.required),
     'celPersona': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'profPersona': new FormControl('', Validators.required),
-    'actEcoPersona': new FormControl('', Validators.required),
+    'actEcoPersona': new FormControl(''),
     'correoPersona': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
     'tipoDireccionDomicilio': new FormControl('', Validators.required),
     'calle': new FormControl(''),
@@ -146,7 +153,9 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'extLaboral': new FormControl('', Validators.required),
     'dirCorrespondencia': new FormControl('', Validators.required),
     'otraDirLaboral': new FormControl(''),
-    
+    'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'tipoCuentaBancaria': new FormControl('', Validators.required),
+    'entidadBancaria': new FormControl('', Validators.required),
     'numSuscripcion': new FormControl(''),
     'tipoVivienda': new FormControl(''),
     'numPersonas': new FormControl(''),
@@ -162,7 +171,11 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'huella2': new FormControl(''),
   });
 
-
+  onBancos(){
+    this.accionistasService.obtenerBancos().subscribe(data =>{
+      this.bancos = data;
+    });
+  }
 
 
   ngOnInit() {
@@ -235,7 +248,10 @@ export class ActualizarinfopersonaComponent implements OnInit{
           recursos: datos.recursos,
           ingresos: datos.ingresos,
           firma: datos.firma,
-          huella: datos.huella
+          huella: datos.huella,
+          numCuentaBancaria: datos.numCuentaBancaria,
+          tipoCuentaBancaria: datos.tipoCuentaBancaria,
+          entidadBancaria: datos.entidadBancaria
 
         });
         this.onDepartamentoChange(null);
@@ -354,6 +370,29 @@ export class ActualizarinfopersonaComponent implements OnInit{
         (error) => {
           // Manejo de errores si la petición falla
           console.error('Error en la petición:', error);
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Los datos no han sido actualizados",
+            "message": "Verifique que los campos esten diligenciasdos según corresponde.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "success"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "primary"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": false
+    
+          });
         }
       );
     }
@@ -406,20 +445,6 @@ export class ActualizarinfopersonaComponent implements OnInit{
     const apePriControl = this.accionistasForm.get('apePri');
     const apeSegControl = this.accionistasForm.get('apeSeg');
     const razonSocialControl = this.accionistasForm.get('razonSocial');
-    const opcPotestadControl = this.accionistasForm.get('opcPotestad');
-    const nomRepresentanteControl = this.accionistasForm.get('nomRepresentante');
-    const tipoDocRepresentanteControl = this.accionistasForm.get('tipoDocRepresentante');
-    const codRepresentantelControl = this.accionistasForm.get('codRepresentante');
-    const municipioRepresentanteControl = this.accionistasForm.get('municipioRepresentante');
-    const departamentoRepresentanteControl = this.accionistasForm.get('departamentoRepresentante');
-    const fecNacRepresentanteControl = this.accionistasForm.get('fecNacRepresentante');
-    const depNacRepresentanteControl = this.accionistasForm.get('depNacRepresentante');
-    const lugNacRepresentanteControl = this.accionistasForm.get('lugNacRepresentante');
-    const genRepresentanteSocialControl = this.accionistasForm.get('genRepresentante');
-    const estCivRepresentanteControl = this.accionistasForm.get('estCivRepresentante');
-    const celRepresentanteControl = this.accionistasForm.get('celRepresentante');
-    const profActRepresentanteControl = this.accionistasForm.get('profActRepresentante');
-    const correoRepresentanteControl = this.accionistasForm.get('correoRepresentante');
 
     tipDocumentoControl.valueChanges.subscribe((value) => {
       if (value === 'NIT') {
@@ -434,93 +459,62 @@ export class ActualizarinfopersonaComponent implements OnInit{
         apePriControl.enable();
         apeSegControl.enable();
         razonSocialControl.disable();
-      }if(value === 'NIT' || value==='CE' || value ==='CC' || value === 'RC'){
-
-        opcPotestadControl.disable();
-        nomRepresentanteControl.disable();
-        tipoDocRepresentanteControl.disable();
-        codRepresentantelControl.disable();
-        municipioRepresentanteControl.disable();
-        departamentoRepresentanteControl.disable();
-        fecNacRepresentanteControl.disable();
-        depNacRepresentanteControl.disable();
-        lugNacRepresentanteControl.disable();
-        genRepresentanteSocialControl.disable();
-        estCivRepresentanteControl.disable();
-        celRepresentanteControl.disable();
-        profActRepresentanteControl.disable();
-        correoRepresentanteControl.disable();
-      }else{
-        opcPotestadControl.enable();
-        nomRepresentanteControl.enable();;
-        tipoDocRepresentanteControl.enable();;
-        codRepresentantelControl.enable();;
-        municipioRepresentanteControl.enable();;
-        departamentoRepresentanteControl.enable();;
-        fecNacRepresentanteControl.enable();;
-        depNacRepresentanteControl.enable();;
-        lugNacRepresentanteControl.enable();;
-        genRepresentanteSocialControl.enable();;
-        estCivRepresentanteControl.enable();;
-        celRepresentanteControl.enable();;
-        profActRepresentanteControl.enable();;
-        correoRepresentanteControl.enable();;
       }
     });
   }
 
-  tarjetaIdentidad() {
-    const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
+  // tarjetaIdentidad() {
+  //   const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
 
-    tipDocumentoControl.valueChanges.subscribe((value) => {
-      if (value === 'TI') {
-        this.accionistasForm.get('opcPotestad').setValidators([Validators.required]);
-        this.accionistasForm.get('nomRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('tipoDocRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('codRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
-        this.accionistasForm.get('municipioRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('departamentoRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('fecNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('depNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('lugNacRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('genRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('estCivRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('celRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
-        this.accionistasForm.get('profActRepresentante').setValidators([Validators.required]);
-        this.accionistasForm.get('correoRepresentante').setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]);
-      } else {
-        this.accionistasForm.get('opcPotestad').clearValidators();
-        this.accionistasForm.get('nomRepresentante').clearValidators();
-        this.accionistasForm.get('tipoDocRepresentante').clearValidators();
-        this.accionistasForm.get('codRepresentante').clearValidators();
-        this.accionistasForm.get('municipioRepresentante').clearValidators();
-        this.accionistasForm.get('departamentoRepresentante').clearValidators();
-        this.accionistasForm.get('fecNacRepresentante').clearValidators();
-        this.accionistasForm.get('depNacRepresentante').clearValidators();
-        this.accionistasForm.get('lugNacRepresentante').clearValidators();
-        this.accionistasForm.get('genRepresentante').clearValidators();
-        this.accionistasForm.get('estCivRepresentante').clearValidators();
-        this.accionistasForm.get('celRepresentante').clearValidators();
-        this.accionistasForm.get('profActRepresentante').clearValidators();
-        this.accionistasForm.get('correoRepresentante').clearValidators();
-      }
+  //   tipDocumentoControl.valueChanges.subscribe((value) => {
+  //     if (value === 'TI') {
+  //       this.accionistasForm.get('opcPotestad').setValidators([Validators.required]);
+  //       this.accionistasForm.get('nomRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('tipoDocRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('codRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
+  //       this.accionistasForm.get('municipioRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('departamentoRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('fecNacRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('depNacRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('lugNacRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('genRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('estCivRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('celRepresentante').setValidators([Validators.required,Validators.pattern('^[0-9]*$')]);
+  //       this.accionistasForm.get('profActRepresentante').setValidators([Validators.required]);
+  //       this.accionistasForm.get('correoRepresentante').setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]);
+  //     } else {
+  //       this.accionistasForm.get('opcPotestad').clearValidators();
+  //       this.accionistasForm.get('nomRepresentante').clearValidators();
+  //       this.accionistasForm.get('tipoDocRepresentante').clearValidators();
+  //       this.accionistasForm.get('codRepresentante').clearValidators();
+  //       this.accionistasForm.get('municipioRepresentante').clearValidators();
+  //       this.accionistasForm.get('departamentoRepresentante').clearValidators();
+  //       this.accionistasForm.get('fecNacRepresentante').clearValidators();
+  //       this.accionistasForm.get('depNacRepresentante').clearValidators();
+  //       this.accionistasForm.get('lugNacRepresentante').clearValidators();
+  //       this.accionistasForm.get('genRepresentante').clearValidators();
+  //       this.accionistasForm.get('estCivRepresentante').clearValidators();
+  //       this.accionistasForm.get('celRepresentante').clearValidators();
+  //       this.accionistasForm.get('profActRepresentante').clearValidators();
+  //       this.accionistasForm.get('correoRepresentante').clearValidators();
+  //     }
 
-      this.accionistasForm.get('opcPotestad').updateValueAndValidity();
-      this.accionistasForm.get('nomRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('tipoDocRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('codRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('municipioRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('departamentoRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('fecNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('depNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('lugNacRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('genRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('estCivRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('celRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('profActRepresentante').updateValueAndValidity();
-      this.accionistasForm.get('correoRepresentante').updateValueAndValidity();
-    });
-  }
+  //     this.accionistasForm.get('opcPotestad').updateValueAndValidity();
+  //     this.accionistasForm.get('nomRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('tipoDocRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('codRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('municipioRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('departamentoRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('fecNacRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('depNacRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('lugNacRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('genRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('estCivRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('celRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('profActRepresentante').updateValueAndValidity();
+  //     this.accionistasForm.get('correoRepresentante').updateValueAndValidity();
+  //   });
+  // }
 
   opcDomicilio() {
     const tipDocumentoControl = this.accionistasForm.get('tipoDireccionDomicilio');
@@ -602,6 +596,47 @@ export class ActualizarinfopersonaComponent implements OnInit{
     const numero3Laboral = this.accionistasForm.get('num3Laboral').value;
     
     this.accionistasForm.get('dirLaboral').setValue(calleLaboral + ' ' + numeroLaboral + '' + letraLaboral + ' ' + numero2Laboral + '' + letra2Laboral+ '-' + numero3Laboral);
+  }
+
+  tarjetaIdentidad() {
+    const tipDocumentoControl = this.accionistasForm.get('tipDocumento');
+    const fieldsToDisable = [
+      'nomEmpresa',
+      'telfLaboral',
+      'extLaboral',
+      'tipoDireccionLaboral',
+      'dirLaboral',
+      'barrioLaboral',
+      'departamentoLaboral',
+      'municipioLaboral',
+      'paisLaboral',
+      'dirCorrespondencia',
+      'otraDirCorrespondencia',
+      
+      
+    ];
+  
+    tipDocumentoControl.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisable) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'TI') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.setValidators([Validators.required]);
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+  }
+  
+  updateValidatorsAndValidity(fieldsToUpdate: string[]) {
+    for (const field of fieldsToUpdate) {
+      this.accionistasForm.get(field).updateValueAndValidity();
+    }
   }
 
 }

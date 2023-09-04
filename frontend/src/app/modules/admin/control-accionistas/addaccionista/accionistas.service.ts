@@ -88,4 +88,8 @@ import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
       return this.http.get<HojaDeRuta[]>(this._baseUrl + '/api/accionista/ruta/' + id);
     }
 
+    obtenerBancos(): Observable<any[]> {
+      return this.http.get<any[]>(this._baseUrl + '/api/bancos');
+    }
+
   } 

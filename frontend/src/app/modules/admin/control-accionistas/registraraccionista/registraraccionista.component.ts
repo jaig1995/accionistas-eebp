@@ -12,6 +12,7 @@ import { RegAccionistas } from './registraraccionista.model';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { NgFor, NgIf } from '@angular/common';
 import { items } from 'app/mock-api/apps/file-manager/data';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'registroaccionista',
@@ -22,6 +23,7 @@ import { items } from 'app/mock-api/apps/file-manager/data';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     FormsModule,
     MatTableModule,
     MatIconModule,
@@ -42,6 +44,8 @@ export class RegistraraccionistaComponent{
   codigoUsuarioAccionista: string;
   codigoUsuarioRepresentante: string;
 
+  errorMessage: string | undefined; 
+
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
@@ -49,7 +53,8 @@ export class RegistraraccionistaComponent{
   
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')])
+    'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'tipoAccionista': new FormControl('', Validators.required),
   })
 
   onSubmit(){
@@ -87,10 +92,14 @@ export class RegistraraccionistaComponent{
     
           });
 
-          this.router.navigate(['accionistas/agregar/declaracion/' + this.registroForm.get('codUsuario').value]);
+          this.router.navigate(['accionistas/agregar/autorizacion/' + this.registroForm.get('codUsuario').value]);
         },
         (error) => {
-          console.error('Error en la petición - Accionista:', error);
+          if (error.error && error.error.message) {
+            this.errorMessage = error.error.message;
+          } else {
+            this.errorMessage = 'Error desconocido';
+          }
         }
       );
     }
@@ -106,6 +115,34 @@ export class RegistraraccionistaComponent{
         this.codigoUsuarioAccionista = codUsuario;
         this.datosAccionista = [data];
         this.mostrarCampoAdicionalFueraTabla = data.tipDocumento === 'TI';
+        if (data.esAccionista === 'S'){
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "El usuario que intenta consultar ya es Accionista",
+            "message": "Verifique el código de usuario.",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "warn"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "warn"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": true
+    
+          });
+          this.registroForm.get('codUsuario').setValue('');
+          this.datosAccionista = null;
+
+        }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -172,8 +209,35 @@ export class RegistraraccionistaComponent{
 
       this.accionistasService.obtenerDatosRegistro(codRepresentante).subscribe(
         (data: RegAccionistas) => {
-          this.codigoUsuarioRepresentante = codRepresentante;
-          this.datosRepresentante = [data];
+          if (data.tipDocumento === 'TI') {
+            // El tipo de documento es 'TI', realiza alguna acción o muestra un mensaje de error
+            const confirmation = this._fuseConfirmationService.open({
+              "title": "El representante no puede ser menor de edad.",
+              "message": "Asigne un representante mayor de edad.",
+              "icon": {
+                "show": true,
+                "name": "heroicons_outline:exclamation-triangle",
+                "color": "warn"
+              },
+              "actions": {
+                "confirm": {
+                  "show": true,
+                  "label": "Aceptar",
+                  "color": "warn"
+                },
+                "cancel": {
+                  "show": false,
+                  "label": "Cancel"
+                }
+              },
+              "dismissible": false
+            });
+            this.registroForm.get('codRepresentante').setValue('');
+          } else {
+            // 
+            this.codigoUsuarioRepresentante = codRepresentante;
+            this.datosRepresentante = [data];
+          }
         },
         (error) => {
           console.error('Error al obtener los datos:', error);

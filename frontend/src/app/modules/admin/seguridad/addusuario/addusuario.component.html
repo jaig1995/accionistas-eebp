@@ -18,8 +18,10 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_outline:tag'">
                 </mat-icon>
-                <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" required (ngModelChange)="onChange()">
-            </mat-form-field>
+                <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" required (ngModelChange)="onChange()" pattern="[0-9]*">
+                <mat-error>Solo se permiten números.</mat-error>
+              </mat-form-field>
+
             <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                 <mat-label>Correo electrónico</mat-label>
                 <mat-icon
@@ -27,8 +29,9 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_outline:tag'">
                 </mat-icon>
-                <input matInput id="email" name="email" [(ngModel)]="email" required>
-            </mat-form-field><br>
+                <input matInput id="email" name="email" [(ngModel)]="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                <mat-error>El correo electrónico no es válido.</mat-error>
+              </mat-form-field><br>
 
             <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
               <mat-label>Primer nombre:</mat-label>
@@ -47,7 +50,7 @@
               class="hidden sm:flex icon-size-5"
               [svgIcon]="'heroicons_solid:user-circle'">
             </mat-icon>
-            <input matInput id="nom_seg" name="nom_seg" [(ngModel)]="nom_seg" required>
+            <input matInput id="nom_seg" name="nom_seg" [(ngModel)]="nom_seg" >
             </mat-form-field>
 
             <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -67,7 +70,7 @@
                   class="hidden sm:flex icon-size-5"
                   [svgIcon]="'heroicons_solid:user-circle'">
                 </mat-icon>
-            <input matInput id="ape_seg" name="ape_seg" [(ngModel)]="ape_seg" required>
+            <input matInput id="ape_seg" name="ape_seg" [(ngModel)]="ape_seg" >
             </mat-form-field>
 
             <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
