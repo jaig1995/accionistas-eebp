@@ -1,5 +1,6 @@
-import { Component, ViewEncapsulation,OnInit } from '@angular/core';
+import { Component, ViewEncapsulation,OnInit, ViewChild } from '@angular/core';
 import {MatTableModule, MatTableDataSource} from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,12 +17,13 @@ import { ServicesConfig } from 'app/services.config';
 @Component({
     selector     : 'informacion-accionistas',
     standalone   : true,
-    imports: [MatDividerModule, MatIconModule, RouterModule, MatFormFieldModule, MatInputModule, MatTableModule, MatButtonModule, NgIf],
+    imports: [MatSortModule,MatDividerModule, MatIconModule, RouterModule, MatFormFieldModule, MatInputModule, MatTableModule, MatButtonModule, NgIf],
     templateUrl  : './informacion-accionistas.component.html',
     encapsulation: ViewEncapsulation.None,
 })
 export class InformacionAccionistasComponent implements OnInit
 {
+  @ViewChild(MatSort) sort: MatSort;
   private _baseUrl: string = ServicesConfig.apiUrl;
   datos: MatTableDataSource<infoAccionistas>;
   displayedColumns: string[] = [ 'avatar', 'accionista', 'codUsuario', 'nomPri', 'apePri', 'correoPersona',  'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion','actualizar'];
@@ -32,11 +34,18 @@ export class InformacionAccionistasComponent implements OnInit
     this.userDatos.obtenerUsuarios().subscribe(
       (datos: infoAccionistas[]) => {
         this.datos = new MatTableDataSource<infoAccionistas>(datos);
+        this.datos.sort = this.sort;
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
       }
     );
+  }
+
+  ngAfterViewInit() {
+    if (this.datos) {
+      this.datos.sort = this.sort;
+    }
   }
 
  
