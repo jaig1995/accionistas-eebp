@@ -2,8 +2,10 @@ package com.eebp.accionistas.backend.accionistas.controllers;
 
 import com.eebp.accionistas.backend.accionistas.entities.Accionista;
 import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
+import com.eebp.accionistas.backend.accionistas.entities.request.ActualizarRepresentanteRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.AprobarAccionistaRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.RechazarAccionistaRequest;
+import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepresentanteResponse;
 import com.eebp.accionistas.backend.accionistas.exceptions.AccionistaExistsException;
 import com.eebp.accionistas.backend.accionistas.services.AccionistaService;
 import com.eebp.accionistas.backend.accionistas.services.LogRegistroAccionistaService;
@@ -44,4 +46,16 @@ public class AccionistaController {
     public List<LogRegistroAccionistas> obtenerLogRegistroAccionista(@PathVariable String codUsuario) {
         return logRegistroAccionistaService.getLogByCodUsuario(codUsuario);
     }
+
+    @PostMapping("/actualizarRepresentante")
+    public void actualizarRepresentante(@RequestBody ActualizarRepresentanteRequest request) throws UserNotFoundException {
+        accionistaService.actualizarRepresentante(request);
+    }
+
+    @GetMapping("/accionistaRepresentante/{codUsuario}")
+    public Object getAccionistaRepresentante(@PathVariable String codUsuario) throws UserNotFoundException {
+        return accionistaService.getAccionistaRepresentante(codUsuario);
+    }
+
+
 }

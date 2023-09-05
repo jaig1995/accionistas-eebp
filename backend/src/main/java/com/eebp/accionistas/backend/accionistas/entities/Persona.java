@@ -165,5 +165,17 @@ public class Persona {
     @Column(name = "barriodomicilio")
     private String barrioDomicilio;
 
+    @Column(name = "numcuentabancaria")
+    private Integer numCuentaBancaria;
+
+    @Column(name = "tipocuentabancaria")
+    private String tipoCuentaBancaria;
+
+    @Column(name = "entidadbancaria")
+    private String entidadBancaria;
+
+    @Transient
+    private String esAccionista;
+
 }
 

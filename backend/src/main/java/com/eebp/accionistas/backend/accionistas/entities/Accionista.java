@@ -33,4 +33,7 @@ public class Accionista {
     @Column(name = "descripcionrechazo")
     private String descripcionRechazo;
 
+    @Column(name = "numcarnet")
+    private String numCarnet;
+
 }

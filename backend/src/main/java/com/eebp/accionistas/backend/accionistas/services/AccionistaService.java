@@ -3,8 +3,10 @@ package com.eebp.accionistas.backend.accionistas.services;
 import com.eebp.accionistas.backend.accionistas.entities.Accionista;
 import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
 import com.eebp.accionistas.backend.accionistas.entities.Persona;
+import com.eebp.accionistas.backend.accionistas.entities.request.ActualizarRepresentanteRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.AprobarAccionistaRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.RechazarAccionistaRequest;
+import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepresentanteResponse;
 import com.eebp.accionistas.backend.accionistas.exceptions.AccionistaExistsException;
 import com.eebp.accionistas.backend.accionistas.repositories.AccionistaRepository;
 import com.eebp.accionistas.backend.seguridad.entities.EmailDetails;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -46,10 +49,13 @@ public class AccionistaService {
     @Autowired
     LogRegistroAccionistaService logRegistroAccionistaService;
 
+    public Optional<Accionista> getAccionista(String codUsuario) {
+        return accionistaRepository.findById(codUsuario);
+    }
+
     public Accionista addAccionista(Accionista accionista) throws AccionistaExistsException, UserNotFoundException {
         if(accionistaRepository.findById(accionista.getCodUsuario()).isEmpty()) {
             accionista.setAprobado("N");
-            accionista.setTipoAccionista(1);
             Persona persona = personaService.getPersona(accionista.getCodUsuario()).get();
             emailService.sendSimpleMail(
                     EmailDetails.builder()
@@ -254,5 +260,30 @@ public class AccionistaService {
                 .fecha(LocalDateTime.now())
                 .build());
 
+    }
+
+    public void actualizarRepresentante(ActualizarRepresentanteRequest request) throws UserNotFoundException {
+        accionistaRepository.actualizarRepresentante(request.getCodUsuario(), request.getCodRepresentante());
+        Persona persona = personaService.getPersona(request.getCodRepresentante()).get();
+        logRegistroAccionistaService.add(LogRegistroAccionistas.builder()
+                .codUsuario(request.getCodUsuario())
+                .tipo("AGREGAR")
+                .accion(persona.getNomPri() + " " + persona.getNomSeg() + " " + persona.getApePri() +  " " + persona.getApeSeg()  + " fue actualizado como representante.")
+                .fecha(LocalDateTime.now())
+                .build());
+    }
+
+    public AccionistaRepresentanteResponse getAccionistaRepresentante(String codUsuario) throws UserNotFoundException {
+        Accionista accionista = accionistaRepository.findById(codUsuario).get();
+        Persona pAccionista = personaService.getPersona(accionista.getCodUsuario()).get();
+        Persona pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
+
+        return AccionistaRepresentanteResponse.builder()
+                .nomAccionista(pAccionista.getNomPri() + " " + pAccionista.getNomSeg() + " " + pAccionista.getApePri() +  " " + pAccionista.getApeSeg())
+                .nomRepresentante(pRepresentante.getNomPri() + " " + pRepresentante.getNomSeg() + " " + pRepresentante.getApePri() +  " " + pRepresentante.getApeSeg())
+                .codAccionista(accionista.getCodUsuario())
+                .codRepresentante(accionista.getCodRepresentante())
+                .esAccionista("S")
+                .build();
     }
 }

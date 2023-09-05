@@ -1,7 +1,9 @@
 package com.eebp.accionistas.backend.accionistas.services;
 
+import com.eebp.accionistas.backend.accionistas.entities.Accionista;
 import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
 import com.eebp.accionistas.backend.accionistas.entities.Persona;
+import com.eebp.accionistas.backend.accionistas.repositories.AccionistaRepository;
 import com.eebp.accionistas.backend.accionistas.repositories.PersonaRepository;
 import com.eebp.accionistas.backend.geo.MunicipioRepository;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
@@ -26,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonaService {
@@ -39,8 +42,18 @@ public class PersonaService {
     @Autowired
     LogRegistroAccionistaService logRegistroAccionistaService;
 
+    @Autowired
+    AccionistaRepository accionistaRepository;
+
     public List<Persona> getPersonas() {
-        return personaRepository.findAll();
+        return personaRepository.findAll().stream().map(persona -> {
+            if(accionistaRepository.findById(persona.getCodUsuario()).isPresent()) {
+                persona.setEsAccionista("S");
+            } else {
+                persona.setEsAccionista("N");
+            }
+            return persona;
+        }).collect(Collectors.toList());
     }
 
     public Persona addPersona(Persona persona) {
@@ -54,9 +67,14 @@ public class PersonaService {
     }
 
     public Optional<Persona> getPersona(String codUsuario) throws UserNotFoundException {
-        Optional<Persona> response =personaRepository.findById(codUsuario);
+        Optional<Persona> response = personaRepository.findById(codUsuario);
         if (response.isPresent()) {
-            return personaRepository.findById(codUsuario);
+            if(accionistaRepository.findById(codUsuario).isPresent()) {
+                response.get().setEsAccionista("S");
+            } else {
+                response.get().setEsAccionista("N");
+            }
+            return response;
         } else {
             throw new UserNotFoundException();
         }
