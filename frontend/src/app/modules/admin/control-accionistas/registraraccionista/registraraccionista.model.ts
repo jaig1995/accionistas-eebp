@@ -2,7 +2,9 @@ export interface RegAccionistas{
     tipDocumento: string;
     codUsuario: string;
     nomPri: string;
+    nomSeg: string;
     apePri: string;
+    apeSeg: string;
     estCivPersona: string;
     celPersona: string;
     profPersona: string;

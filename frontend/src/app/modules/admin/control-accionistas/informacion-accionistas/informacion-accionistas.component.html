@@ -35,17 +35,12 @@
       </ng-container>
 
       <ng-container matColumnDef="nomPri">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> NOMBRES </th>
-        <td mat-cell *matCellDef="let element"> {{element.nomPri}} {{element.nomSeg}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > NOMBRES </th>
+        <td mat-cell *matCellDef="let element"> {{element.nomPri}} {{element.nomSeg}} {{element.apePri}} {{element.apeSeg}}</td>
       </ng-container>
 
-      <ng-container matColumnDef="apePri">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> APELLIDOS </th>
-        <td mat-cell *matCellDef="let element"> {{element.apePri}} {{element.apeSeg}}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="correoPersona">
-          <th mat-header-cell *matHeaderCellDef> EMAIL </th>
+      <ng-container matColumnDef="modificarFormatos">
+          <th mat-header-cell *matHeaderCellDef> MODIFICAR FORMATOS</th>
           <td mat-cell *matCellDef="let element"> {{element.correoPersona.toUpperCase()}}
           </td>
       </ng-container>
@@ -53,21 +48,23 @@
       <ng-container matColumnDef="pdf_datos">
         <th mat-header-cell *matHeaderCellDef> DATOS PERSONALES </th>
         <td mat-cell *matCellDef="let element" style="text-align: center;"> 
-          <a href="{{_baseUrl}}/api/accionistas/pdfDatosPersonales/{{element.codUsuario}}" target="_blank"><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+          <a href="{{_baseUrl}}/api/accionistas/pdfDatosPersonales/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
         </td>
       </ng-container>
 
     <ng-container matColumnDef="pdf_autorizacion">
       <th mat-header-cell *matHeaderCellDef> AUTORIZACIÓN DE DATOS </th>
       <td mat-cell *matCellDef="let element" style="text-align: center;"> 
-        <a href="{{_baseUrl}}/api/accionistas/pdfAutorizacion/{{element.codUsuario}}" target="_blank"><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+        <a href="{{_baseUrl}}/api/accionistas/pdfAutorizacion/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+        <a class="sm:ml-4" href="accionistas/actualizar/autorizacion/{{element.codUsuario}}" target="_blank" title="Actualizar formato"><mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon></a>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="pdf_declaracion">
       <th mat-header-cell *matHeaderCellDef> DECLARACIÓN DE INGRESOS </th>
       <td mat-cell *matCellDef="let element" style="text-align: center;"> 
-        <a href="{{_baseUrl}}/api/accionistas/pdfDeclaracion/{{element.codUsuario}}" target="_blank" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+        <a href="{{_baseUrl}}/api/accionistas/pdfDeclaracion/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
+        <a class="sm:ml-4" href="accionistas/actualizar/declaracion/{{element.codUsuario}}" target="_blank" title="Actualizar formato" ><mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon></a>
       </td>
     </ng-container>
 

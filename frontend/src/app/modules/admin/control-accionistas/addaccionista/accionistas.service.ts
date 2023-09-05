@@ -8,6 +8,7 @@ import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-inf
 import { ServicesConfig } from 'app/services.config';
 import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
 import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
+import { modificarRepresentante } from '../modificarapoderado/modificarapoderado.model';
 
   @Injectable({
     providedIn: 'root'
@@ -90,6 +91,14 @@ import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
 
     obtenerBancos(): Observable<any[]> {
       return this.http.get<any[]>(this._baseUrl + '/api/bancos');
+    }
+
+    obtenerDatosModificacion(id: string): Observable<modificarRepresentante> {
+      return this.http.get<modificarRepresentante>(this._baseUrl + '/api/accionista/accionistaRepresentante/' + id);
+    }
+
+    enviarDatosModificacion(formDataAccionista: any): Observable<any> {
+      return this.http.post<any>(this._baseUrl + '/api/accionista/actualizarRepresentante', formDataAccionista);
     }
 
   } 

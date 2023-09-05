@@ -26,7 +26,7 @@ export class InformacionAccionistasComponent implements OnInit
   @ViewChild(MatSort) sort: MatSort;
   private _baseUrl: string = ServicesConfig.apiUrl;
   datos: MatTableDataSource<infoAccionistas>;
-  displayedColumns: string[] = [ 'avatar', 'accionista', 'codUsuario', 'nomPri', 'apePri', 'correoPersona',  'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion','actualizar'];
+  displayedColumns: string[] = [ 'avatar', 'accionista', 'codUsuario', 'nomPri', 'modificarFormatos',  'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion','actualizar'];
 
   constructor(private userDatos: InformacionAccionistasService) {}
 

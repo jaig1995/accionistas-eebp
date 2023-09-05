@@ -8,16 +8,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { RegAccionistas } from './registraraccionista.model';
 import { AccionistasService } from '../addaccionista/accionistas.service';
 import { NgFor, NgIf } from '@angular/common';
 import { items } from 'app/mock-api/apps/file-manager/data';
 import { MatSelectModule } from '@angular/material/select';
+import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
+import { modificarRepresentante } from './modificarapoderado.model';
 
 @Component({
-  selector: 'registroaccionista',
+  selector: 'modificarapoderado',
   standalone   : true,
-  templateUrl: './registraraccionista.component.html',
+  templateUrl: './modificarapoderado.component.html',
   imports: [MatDividerModule,
     RouterModule,
     ReactiveFormsModule,
@@ -32,51 +33,41 @@ import { MatSelectModule } from '@angular/material/select';
     NgIf
   ],
   encapsulation: ViewEncapsulation.None,
+  
 })
-export class RegistraraccionistaComponent{
+export class ModificarapoderadoComponent {
 
-  datosAccionista: RegAccionistas[];
-  datosRepresentante: RegAccionistas[];
-  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio', 'tipoVivienda'];
+  datosAccionista: modificarRepresentante[];
+  datosRepresentante: modificarRepresentante[];
+  datosRepresentanteNuevo: RegAccionistas[];
+  displayedColumns: string[] = ['avatar', 'codUsuario', 'nombreUsuario'];
   private _fuseConfirmationService;
-  mostrarCampoAdicionalFueraTabla: boolean = false;
 
   codigoUsuarioAccionista: string;
   codigoUsuarioRepresentante: string;
-  tipoAccionista: string;
-  numCarnet: string;
-
-  errorMessage: string | undefined; 
+  mostrarCampoAdicionalFueraTabla: boolean = false;
 
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
   }
-  
-  registroForm = new FormGroup({
+
+  modificacionForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
-    'tipoAccionista': new FormControl('', Validators.required),
-    'numCarnet': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
   })
-
+  
   onSubmit(){
       
     const formDataAccionista = {
-      codUsuario: this.registroForm.get('codUsuario').value,
-      codRepresentante: this.registroForm.get('codRepresentante').value,
-      tipoAccionista: this.registroForm.get('tipoAccionista').value,
-      numCarnet: this.registroForm.get('numCarnet').value,
+      codUsuario: this.codigoUsuarioAccionista,
+      codRepresentante: this.codigoUsuarioRepresentante,
     };
-    if (this.registroForm.get('codRepresentante').value !== '') {
-      formDataAccionista.codRepresentante = this.registroForm.get('codRepresentante').value;
-    } else {
-      formDataAccionista.codRepresentante = null;
-    }
-    console.log(formDataAccionista);
-    if (this.registroForm.valid) {
-      this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
+
+    if (this.modificacionForm.valid) {
+      this.accionistasService.enviarDatosModificacion(formDataAccionista).subscribe(
         (response) => {
+          console.log('Respuesta del servidor - Accionista: Datos enviados', response);
           const confirmation = this._fuseConfirmationService.open({
 
             "title": "Datos enviados exitosamente!",
@@ -101,33 +92,30 @@ export class RegistraraccionistaComponent{
     
           });
 
-          this.router.navigate(['accionistas/agregar/autorizacion/' + this.registroForm.get('codUsuario').value]);
+          this.router.navigate(['inicio']);
         },
         (error) => {
-          if (error.error && error.error.message) {
-            this.errorMessage = error.error.message;
-          } else {
-            this.errorMessage = 'Error desconocido';
-          }
+
         }
       );
     }
   }
-   
-
-
   consultarUsuario() {
-    const codUsuario = this.registroForm.get('codUsuario').value; // Obtener el valor del campo codUsuario
+    const codUsuario = this.modificacionForm.get('codUsuario').value; 
   
-    this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
-      (data: RegAccionistas) => {
-        this.codigoUsuarioAccionista = codUsuario;
-        this.datosAccionista = [data];
-        this.mostrarCampoAdicionalFueraTabla = data.tipDocumento === 'TI';
+    this.accionistasService.obtenerDatosModificacion(codUsuario).subscribe(
+      
+      (data: modificarRepresentante) => {
         if (data.esAccionista === 'S'){
+          console.log(data);
+          this.codigoUsuarioAccionista = codUsuario;
+          this.datosAccionista = [data];
+          this.datosRepresentante = [data];
+          this.mostrarCampoAdicionalFueraTabla = data.codUsuario !== null;
+        }else{
           const confirmation = this._fuseConfirmationService.open({
 
-            "title": "El usuario que intenta consultar ya es Accionista",
+            "title": "El usuario aún no es accionista.",
             "message": "Verifique el código de usuario.",
             "icon": {
               "show": true,
@@ -148,10 +136,8 @@ export class RegistraraccionistaComponent{
             "dismissible": true
     
           });
-          this.registroForm.get('codUsuario').setValue('');
-          this.datosAccionista = null;
-
         }
+        
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -178,18 +164,19 @@ export class RegistraraccionistaComponent{
           "dismissible": true
   
         });
-        this.registroForm.get('codUsuario').setValue('');
+        this.modificacionForm.get('codUsuario').setValue('');
       }
     );
   }
+
   consultarRepresentante() {
-    const codRepresentante = this.registroForm.get('codRepresentante').value; // Obtener el valor del campo codRepresentante
-    const codUsuario = this.registroForm.get('codUsuario').value;
+    const codRepresentante = this.modificacionForm.get('codRepresentante').value;
+    const codUsuario = this.modificacionForm.get('codUsuario').value;
     if (codRepresentante === codUsuario) {
 
       const confirmation = this._fuseConfirmationService.open({
   
-        "title": "El usuario menor de edad no puede ser su propio representante.",
+        "title": "El usuario no puede ser su propio representante.",
         "message": "Intente con otro código de usuario.",
         "icon": {
           "show": true,
@@ -211,15 +198,15 @@ export class RegistraraccionistaComponent{
 
       });
       
-      this.registroForm.get('codRepresentante').setValue('');
+      this.modificacionForm.get('codRepresentante').setValue('');
       
       
     }else{
 
       this.accionistasService.obtenerDatosRegistro(codRepresentante).subscribe(
         (data: RegAccionistas) => {
+          this.mostrarCampoAdicionalFueraTabla = data.codUsuario !== null;
           if (data.tipDocumento === 'TI') {
-            // El tipo de documento es 'TI', realiza alguna acción o muestra un mensaje de error
             const confirmation = this._fuseConfirmationService.open({
               "title": "El representante no puede ser menor de edad.",
               "message": "Asigne un representante mayor de edad.",
@@ -241,11 +228,11 @@ export class RegistraraccionistaComponent{
               },
               "dismissible": false
             });
-            this.registroForm.get('codRepresentante').setValue('');
+            this.modificacionForm.get('codRepresentante').setValue('');
           } else {
             // 
             this.codigoUsuarioRepresentante = codRepresentante;
-            this.datosRepresentante = [data];
+            this.datosRepresentanteNuevo = [data];
           }
         },
         (error) => {
@@ -273,7 +260,7 @@ export class RegistraraccionistaComponent{
             "dismissible": true
     
           });
-          this.registroForm.get('codRepresentante').setValue('');
+          this.modificacionForm.get('codRepresentante').setValue('');
         }
       );
 
@@ -281,5 +268,3 @@ export class RegistraraccionistaComponent{
     
   }
 }
-
-
