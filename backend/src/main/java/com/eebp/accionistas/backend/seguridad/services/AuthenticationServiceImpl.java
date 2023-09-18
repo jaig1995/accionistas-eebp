@@ -126,7 +126,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 "<p style='text-align: left;'>&nbsp;</p>\n" +
                                 "<p style='text-align: left;'><span style='text-decoration: underline;'>Se recomienda cambiar su contrase&ntilde;a desde el panel de usuario en Sistema de Accionistas.</span></p>\n" +
                                 "<p style='text-align: left;'>&nbsp;</p>\n" +
-                                "<p style='text-align: left;'>Acceso al sistema: <a href='http://localhost:4200'>http://localhost:4200</a></p>\n" +
                                 "</td>\n" +
                                 "</tr>\n" +
                                 "</tbody>\n" +

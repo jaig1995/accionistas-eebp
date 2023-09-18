@@ -101,4 +101,8 @@ import { modificarRepresentante } from '../modificarapoderado/modificarapoderado
       return this.http.post<any>(this._baseUrl + '/api/accionista/actualizarRepresentante', formDataAccionista);
     }
 
+    enviarArchivo(formDataArchivo: FormData): Observable<FormData> {
+      return this.http.post<any>(this._baseUrl + '/api/uploadFile', formDataArchivo);
+    }
+
   } 

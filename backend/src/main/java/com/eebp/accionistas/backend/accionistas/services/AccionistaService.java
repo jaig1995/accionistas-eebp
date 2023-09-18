@@ -88,7 +88,6 @@ public class AccionistaService {
                                     "\n" +
                                     "\t\t\t<p style=\"text-align:left\">&nbsp;</p>\n" +
                                     "\n" +
-                                    "\t\t\t<p style=\"text-align:left\">Acceso al sistema: <a href=\"http://localhost:4200\">http://localhost:4200</a></p>\n" +
                                     "\t\t\t</td>\n" +
                                     "\t\t</tr>\n" +
                                     "\t</tbody>\n" +

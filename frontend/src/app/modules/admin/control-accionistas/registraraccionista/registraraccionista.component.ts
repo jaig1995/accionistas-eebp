@@ -47,6 +47,7 @@ export class RegistraraccionistaComponent{
   numCarnet: string;
 
   errorMessage: string | undefined; 
+  selectedFileMultiple: File[] = [];
 
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
@@ -58,6 +59,7 @@ export class RegistraraccionistaComponent{
     'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
     'tipoAccionista': new FormControl('', Validators.required),
     'numCarnet': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'file': new FormControl(''),
   })
 
   onSubmit(){
@@ -77,6 +79,21 @@ export class RegistraraccionistaComponent{
     if (this.registroForm.valid) {
       this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
         (response) => {
+
+          for (const selectedFile of this.selectedFileMultiple) {
+            const formDataArchivo = new FormData();
+            formDataArchivo.append("file", selectedFile, "raccionista_" + formDataAccionista.codUsuario + "_" + selectedFile.name); 
+      
+            this.accionistasService.enviarArchivo(formDataArchivo).subscribe(
+              (response) => {
+                console.log(formDataArchivo);
+              },
+              (error) => {
+                console.error('Error al cargar la foto', error);
+              }
+            );
+          }
+
           const confirmation = this._fuseConfirmationService.open({
 
             "title": "Datos enviados exitosamente!",
@@ -279,6 +296,14 @@ export class RegistraraccionistaComponent{
 
     }
     
+  }
+
+  onFileSelectedMultiple(event: any) {
+    const files: FileList = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.selectedFileMultiple.push(files[i]);
+    }
+    console.log(files);
   }
 }
 
