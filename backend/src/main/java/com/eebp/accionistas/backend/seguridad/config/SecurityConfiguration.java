@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                                 "/api/geo/departamentos/*/municipios",
                                 "/api/accionistas/*",
                                 "/api/accionista",
+                                "/api/accionista/*",
                                 "/api/accionista/aprobar",
                                 "/api/accionista/rechazar",
                                 "/api/accionista/actualizarRepresentante",

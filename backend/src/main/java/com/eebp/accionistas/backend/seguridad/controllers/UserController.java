@@ -1,5 +1,7 @@
 package com.eebp.accionistas.backend.seguridad.controllers;
 
+import com.eebp.accionistas.backend.accionistas.entities.Persona;
+import com.eebp.accionistas.backend.accionistas.services.PersonaService;
 import com.eebp.accionistas.backend.seguridad.entities.User;
 import com.eebp.accionistas.backend.seguridad.exceptions.NewUserException;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
@@ -24,6 +26,9 @@ public class UserController {
     UserServiceImpl userService;
 
     @Autowired
+    PersonaService personaService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -33,6 +38,17 @@ public class UserController {
     public ResponseEntity<User> crearUsuario(@RequestBody User usuario) throws NewUserException {
         String tempPassword = passwordGenerator.generatePassword();
         usuario.setPassword(passwordEncoder.encode(tempPassword));
+        return ResponseEntity.ok(userService.crearUsuario(usuario, tempPassword));
+    }
+
+    @PostMapping("/administrativo")
+    public ResponseEntity<User> crearUsuarioDesdePersona(@RequestBody User usuario) throws NewUserException, UserNotFoundException {
+        String tempPassword = passwordGenerator.generatePassword();
+        usuario.setPassword(passwordEncoder.encode(tempPassword));
+        Persona persona = personaService.getPersona(usuario.getCodUsuario()).get();
+        usuario.setNombreUsuario(persona.getNomPri() + " " + persona.getNomSeg());
+        usuario.setApellidoUsuario(persona.getApePri() + " " + persona.getApeSeg());
+        usuario.setEmail(persona.getCorreoPersona());
         return ResponseEntity.ok(userService.crearUsuario(usuario, tempPassword));
     }
 

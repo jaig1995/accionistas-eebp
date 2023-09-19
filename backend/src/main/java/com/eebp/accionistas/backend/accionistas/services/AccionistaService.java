@@ -283,6 +283,8 @@ public class AccionistaService {
                 .codAccionista(accionista.getCodUsuario())
                 .codRepresentante(accionista.getCodRepresentante())
                 .esAccionista("S")
+                .tipoDocAccionista(pAccionista.getTipDocumento())
+                .tipoDocRepresentante(pRepresentante.getTipDocumento())
                 .build();
     }
 }

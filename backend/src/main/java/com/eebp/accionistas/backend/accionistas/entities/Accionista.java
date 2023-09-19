@@ -36,4 +36,7 @@ public class Accionista {
     @Column(name = "numcarnet")
     private String numCarnet;
 
+    @Column(name = "tiporepresentante")
+    private Integer tipoRepresentante;
+
 }

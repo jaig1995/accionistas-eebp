@@ -16,5 +16,7 @@ public class AccionistaRepresentanteResponse {
     private String codRepresentante;
     private String nomRepresentante;
     private String esAccionista;
+    private String tipoDocAccionista;
+    private String tipoDocRepresentante;
 
 }
