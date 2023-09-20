@@ -12,10 +12,10 @@
             <mat-form-field class="w-full sm:w-72" [subscriptSizing]="'dynamic'">
                 <mat-label for="codUsuario" (click)="auto.open()">Consultar por código (Identificación):</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
-                <input matInput type="text" id="codUsuario" formControlName="codUsuario" [matAutocomplete]="auto">
+                <input matInput type="text" id="codUsuario" formControlName="codUsuario"  [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let codigo of filteredCodigos | async" [value]="codigo">
-                    {{ codigo }}
+                  <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
+                    {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
                   </mat-option>
                 </mat-autocomplete>
                 <mat-error>Solo se permite números.</mat-error>

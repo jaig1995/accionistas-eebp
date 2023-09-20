@@ -59,8 +59,12 @@ export class RegistraraccionistaComponent implements OnInit{
   errorMessage: string | undefined; 
   selectedFileMultiple: File[] = [];
 
-  filteredCodigos: Observable<string[]>;
-  filteredCodigosRepresentante: Observable<string[]>;
+  datosAutocompletado: Actualizar[] = []; // Lista de objetos Actualizar para el autocompletado
+  valorSeleccionado: string = '';
+
+
+  opcionesFiltradas: Observable<Actualizar[]>;
+  opcionesFiltradasRepresentante: Observable<Actualizar[]>;
 
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
@@ -76,48 +80,33 @@ export class RegistraraccionistaComponent implements OnInit{
     'file': new FormControl(''),
   })
 
-  ngOnInit(): void {
-    this.accionistasService.obtenerCodigos().subscribe(data => {
-      console.log('Datos recibidos:', data);
-      const codigosYNombres: Actualizar[] = data; 
-      this.filteredCodigos = this.registroForm.get('codUsuario').valueChanges.pipe(
+  ngOnInit() {
+
+    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradas = this.registroForm.get('codUsuario').valueChanges.pipe(
         startWith(''), 
-        map(value => {
-          if (typeof value === 'string') {
-            return this._filterCodigos(value, codigosYNombres);
-          }
-          return [];
-        })
+        map(value => this._filtrarOpciones(value))
       );
     });
-    this.accionistasService.obtenerCodigos().subscribe(data => {
-      console.log('Datos recibidos:', data);
-      const codigosYNombres: Actualizar[] = data; 
-      this.filteredCodigosRepresentante = this.registroForm.get('codRepresentante').valueChanges.pipe(
+    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradasRepresentante = this.registroForm.get('codRepresentante').valueChanges.pipe(
         startWith(''), 
-        map(value => {
-          if (typeof value === 'string') {
-            return this._filterCodigosRepresentante(value, codigosYNombres);
-          }
-          return [];
-        })
+        map(value => this._filtrarOpcionesRepresentante(value))
       );
     });
   }
 
   
-  private _filterCodigos(value: string, codigosYNombres: Actualizar[]): string[] {
-    const filterValue = value.toLowerCase();
-    return codigosYNombres
-      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
-      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
+  private _filtrarOpciones(value: string): Actualizar[] {
+    const filtro = value.toLowerCase();
+    return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
   }
 
-  private _filterCodigosRepresentante(value: string, codigosYNombres: Actualizar[]): string[] {
-    const filterValue = value.toLowerCase();
-    return codigosYNombres
-      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
-      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
+  private _filtrarOpcionesRepresentante(value: string): Actualizar[] {
+    const filtro = value.toLowerCase();
+    return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
   }
 
   onSubmit(){

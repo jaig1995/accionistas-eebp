@@ -71,7 +71,7 @@ export class AddusuarioComponent {
     private _filtrarOpciones(value: string): Actualizar[] {
         const filtro = value.toLowerCase();
         return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
-      }
+    }
 
     onSubmit() {
         const data = {
