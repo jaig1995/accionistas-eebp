@@ -139,12 +139,15 @@ public class PersonaService {
         document.selectFirst("#paisDomicilio").text(datosPersona.getPaisDomicilio().toUpperCase());
         document.selectFirst("#telfDomicilio").text(datosPersona.getTelfDomicilio());
         document.selectFirst("#indDomicilio").text(datosPersona.getIndTelDomicilio());
-        document.selectFirst("#dirLaboral").text(datosPersona.getDirLaboral().toUpperCase());
-        document.selectFirst("#munLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#depLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getDepartamento().getNombreDepartamento().toUpperCase());
-        document.selectFirst("#paisLaboral").text(datosPersona.getPaisLaboral().toUpperCase());
-        document.selectFirst("#telLaboral").text(datosPersona.getTelfLaboral());
-        document.selectFirst("#extLaboral").text(datosPersona.getExtLaboral());
+        if (!datosPersona.getTipDocumento().equalsIgnoreCase("TI")) {
+            document.selectFirst("#dirLaboral").text(datosPersona.getDirLaboral().toUpperCase());
+            document.selectFirst("#munLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getNombreMunicipio().toUpperCase());
+            document.selectFirst("#depLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getDepartamento().getNombreDepartamento().toUpperCase());
+            document.selectFirst("#paisLaboral").text(datosPersona.getPaisLaboral().toUpperCase());
+            document.selectFirst("#telLaboral").text(datosPersona.getTelfLaboral());
+            document.selectFirst("#extLaboral").text(datosPersona.getExtLaboral());
+        }
+
         if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("laboral")) {
             document.selectFirst("#dirCorrespondenciaLaboral").text("X");
         }
