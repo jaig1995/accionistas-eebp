@@ -12,14 +12,19 @@
             <mat-divider class="mt-6 mb-10"></mat-divider>
 
             <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                <mat-label>Código de usuario (Identificacion):</mat-label>
-                <mat-icon
-                    matPrefix
-                    class="hidden sm:flex icon-size-5"
-                    [svgIcon]="'heroicons_outline:tag'">
-                </mat-icon>
-                <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" required (ngModelChange)="usuarioExistente()" pattern="[0-9]*">
-                <mat-error>Solo se permiten números.</mat-error>
+              <mat-label>Código de usuario (Identificación):</mat-label>
+              <mat-icon
+                matPrefix
+                class="hidden sm:flex icon-size-5"
+                [svgIcon]="'heroicons_outline:tag'">
+              </mat-icon>
+              <input matInput id="codUsuario" name="codUsuario"  [formControl]="filtroControl" required [matAutocomplete]="auto" pattern="[0-9]*">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
+                  {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error>Solo se permiten números.</mat-error>
             </mat-form-field>
 
             <button type="button" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>

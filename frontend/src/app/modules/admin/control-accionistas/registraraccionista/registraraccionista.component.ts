@@ -14,11 +14,21 @@ import { NgFor, NgIf } from '@angular/common';
 import { items } from 'app/mock-api/apps/file-manager/data';
 import { MatSelectModule } from '@angular/material/select';
 
+import { startWith, map, switchMap } from 'rxjs/operators';
+import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
+import { Observable } from 'rxjs';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'registroaccionista',
   standalone   : true,
   templateUrl: './registraraccionista.component.html',
   imports: [MatDividerModule,
+    CommonModule,
+    MatAutocompleteModule,
+    MatInputModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -33,7 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class RegistraraccionistaComponent{
+export class RegistraraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
   datosRepresentante: RegAccionistas[];
@@ -49,6 +59,9 @@ export class RegistraraccionistaComponent{
   errorMessage: string | undefined; 
   selectedFileMultiple: File[] = [];
 
+  filteredCodigos: Observable<string[]>;
+  filteredCodigosRepresentante: Observable<string[]>;
+
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
@@ -62,6 +75,50 @@ export class RegistraraccionistaComponent{
     'numCarnet': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'file': new FormControl(''),
   })
+
+  ngOnInit(): void {
+    this.accionistasService.obtenerCodigos().subscribe(data => {
+      console.log('Datos recibidos:', data);
+      const codigosYNombres: Actualizar[] = data; 
+      this.filteredCodigos = this.registroForm.get('codUsuario').valueChanges.pipe(
+        startWith(''), 
+        map(value => {
+          if (typeof value === 'string') {
+            return this._filterCodigos(value, codigosYNombres);
+          }
+          return [];
+        })
+      );
+    });
+    this.accionistasService.obtenerCodigos().subscribe(data => {
+      console.log('Datos recibidos:', data);
+      const codigosYNombres: Actualizar[] = data; 
+      this.filteredCodigosRepresentante = this.registroForm.get('codRepresentante').valueChanges.pipe(
+        startWith(''), 
+        map(value => {
+          if (typeof value === 'string') {
+            return this._filterCodigosRepresentante(value, codigosYNombres);
+          }
+          return [];
+        })
+      );
+    });
+  }
+
+  
+  private _filterCodigos(value: string, codigosYNombres: Actualizar[]): string[] {
+    const filterValue = value.toLowerCase();
+    return codigosYNombres
+      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
+      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
+  }
+
+  private _filterCodigosRepresentante(value: string, codigosYNombres: Actualizar[]): string[] {
+    const filterValue = value.toLowerCase();
+    return codigosYNombres
+      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
+      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
+  }
 
   onSubmit(){
       

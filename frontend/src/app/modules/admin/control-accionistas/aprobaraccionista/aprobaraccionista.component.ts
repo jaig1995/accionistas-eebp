@@ -15,12 +15,22 @@ import { InformacionAccionistasService } from '../informacion-accionistas/accion
 import { ServicesConfig } from 'app/services.config';
 import { NgClass } from '@angular/common';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { startWith, map, switchMap } from 'rxjs/operators';
+import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
+import { Observable } from 'rxjs';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'aprobaraccionista',
   standalone   : true,
   templateUrl: './aprobaraccionista.component.html',
   imports: [MatDividerModule,
+    CommonModule,
+    MatAutocompleteModule,
+    MatInputModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -35,7 +45,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class AprobaraccionistaComponent{
+export class AprobaraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
   mostrarCampos: boolean = false;
@@ -47,9 +57,34 @@ export class AprobaraccionistaComponent{
   codigoUsuarioAccionista: string;
   descripcionRechazo: string;
 
+  filteredCodigos: Observable<string[]>;
+
 
   constructor(private userDatos: InformacionAccionistasService,private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
+  }
+  ngOnInit(): void {
+    this.accionistasService.obtenerCodigos().subscribe(data => {
+      console.log('Datos recibidos:', data);
+      const codigosYNombres: Actualizar[] = data; 
+      this.filteredCodigos = this.registroForm.get('codUsuario').valueChanges.pipe(
+        startWith(''), 
+        map(value => {
+          if (typeof value === 'string') {
+            return this._filterCodigos(value, codigosYNombres);
+          }
+          return [];
+        })
+      );
+    });
+  }
+
+  // Función para filtrar los códigos y nombres
+  private _filterCodigos(value: string, codigosYNombres: Actualizar[]): string[] {
+    const filterValue = value.toLowerCase();
+    return codigosYNombres
+      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
+      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
   }
   
   registroForm = new FormGroup({

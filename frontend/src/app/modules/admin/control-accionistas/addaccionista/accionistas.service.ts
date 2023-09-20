@@ -119,4 +119,8 @@ import { Representante } from '../declaracion/representante.model';
       return this.http.get<Representante>(this._baseUrl + '/api/accionista/accionistaRepresentante/' + id);
     }
 
+    obtenerCodigos(): Observable<Actualizar[]> {
+      return this.http.get<Actualizar[]>(this._baseUrl + '/api/accionistas');
+    }
+
   } 

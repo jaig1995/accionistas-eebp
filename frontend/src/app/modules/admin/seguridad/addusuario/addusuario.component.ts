@@ -6,7 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { NgFor, NgIf } from '@angular/common';
-import {FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Router } from "@angular/router";
@@ -15,7 +15,10 @@ import { UserDataService } from '../permisos/user-data.service';
 import { AccionistasService } from '../../control-accionistas/addaccionista/accionistas.service';
 import { RegAccionistas } from '../../control-accionistas/registraraccionista/registraraccionista.model';
 import { Actualizar } from '../../control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'agregar-usuarios',
@@ -23,6 +26,8 @@ import { Actualizar } from '../../control-accionistas/actualizar-informacion-acc
     templateUrl: './addusuario.component.html',
     encapsulation: ViewEncapsulation.None,
     imports: [MatButtonModule,
+        CommonModule,
+        MatAutocompleteModule,
         MatFormFieldModule,
         MatInputModule,
         MatSelectModule,
@@ -41,11 +46,33 @@ export class AddusuarioComponent {
     perfil: number;
     usuarioEncontrado: any;
     private _fuseConfirmationService;
+    datosAutocompletado: Actualizar[] = []; // Lista de objetos Actualizar para el autocompletado
+    valorSeleccionado: string = '';
+
+    filtroControl = new FormControl(); // Control para filtrar
+    opcionesFiltradas: Observable<Actualizar[]>;
 
     constructor(private http: HttpClient, fuseConfirmationService: FuseConfirmationService, private router: Router, private userService: UserDataService, private accionistasService: AccionistasService) {
         this._fuseConfirmationService = fuseConfirmationService;
         
     }
+
+    ngOnInit() {
+
+        this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+          this.datosAutocompletado = datos;
+          this.opcionesFiltradas = this.filtroControl.valueChanges.pipe(
+            startWith(''), // Inicia con una cadena vacía
+            map(value => this._filtrarOpciones(value))
+          );
+        });
+    }
+
+    private _filtrarOpciones(value: string): Actualizar[] {
+        const filtro = value.toLowerCase();
+        return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
+      }
+
     onSubmit() {
         const data = {
             codUsuario: this.identificacion,
