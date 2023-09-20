@@ -148,15 +148,17 @@ public class PersonaService {
             document.selectFirst("#extLaboral").text(datosPersona.getExtLaboral());
         }
 
-        if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("laboral")) {
-            document.selectFirst("#dirCorrespondenciaLaboral").text("X");
-        }
-        if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("domicilio")) {
-            document.selectFirst("#dirCorrespondenciaDomicilio").text("X");
-        }
-        if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("otra")) {
-            document.selectFirst("#dirCorrespondenciaOtra").text("X");
-            document.selectFirst("#cualDirCorrespondencia").text(datosPersona.getOtraDirLaboral().toUpperCase());
+        if(datosPersona.getDirCorrespondencia() != null) {
+            if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("laboral")) {
+                document.selectFirst("#dirCorrespondenciaLaboral").text("X");
+            }
+            if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("domicilio")) {
+                document.selectFirst("#dirCorrespondenciaDomicilio").text("X");
+            }
+            if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("otra")) {
+                document.selectFirst("#dirCorrespondenciaOtra").text("X");
+                document.selectFirst("#cualDirCorrespondencia").text(datosPersona.getOtraDirLaboral().toUpperCase());
+            }
         }
 
         if (datosPersona.getTipDocumento().equalsIgnoreCase("TI")) {
