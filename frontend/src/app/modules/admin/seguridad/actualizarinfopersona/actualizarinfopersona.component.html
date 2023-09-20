@@ -49,7 +49,7 @@
                       class="hidden sm:flex icon-size-5"
                       [svgIcon]="'heroicons_solid:user-circle'">
                     </mat-icon>
-                    <input matInput type="text" id="nomPri"  formControlName="nomPri" >
+                    <input matInput type="text" id="nomPri"  formControlName="nomPri" (input)="convertToUpperCase()">
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -59,7 +59,7 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput type="text" id="nomSeg"  formControlName="nomSeg" >
+                  <input matInput type="text" id="nomSeg"  formControlName="nomSeg" (input)="convertToUpperCase()" >
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -69,7 +69,7 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput type="text" id="apePri"  formControlName="apePri" >
+                  <input matInput type="text" id="apePri"  formControlName="apePri" (input)="convertToUpperCase()">
                 </mat-form-field>
       
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -79,7 +79,7 @@
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'">
                   </mat-icon>
-                  <input matInput type="text" id="apeSeg"  formControlName="apeSeg" >
+                  <input matInput type="text" id="apeSeg"  formControlName="apeSeg" (input)="convertToUpperCase()">
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -158,11 +158,11 @@
                   <mat-label>Estado civil:</mat-label>
                   <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon>
                   <mat-select  id="estCivPersona" formControlName="estCivPersona">
-                    <mat-option value="SOLTERO">Soltero(a)</mat-option>
-                    <mat-option value="CASADO">Casado(a)</mat-option>
-                    <mat-option value="VIUDO">Viudo(a)</mat-option>
-                    <mat-option value="SEPARADO">Separado(a)</mat-option>
-                    <mat-option value="DIVORCIADO">Divorciado(a)</mat-option>
+                    <mat-option value="SOLTERO">SOLTERO(A)</mat-option>
+                    <mat-option value="CASADO">CASADO(A)</mat-option>
+                    <mat-option value="VIUDO">VIUDO(A)</mat-option>
+                    <mat-option value="SEPARADO">SEPARADO(A)</mat-option>
+                    <mat-option value="DIVORCIADO">DIVORCIADO(A)</mat-option>
                   </mat-select>
                 </mat-form-field>
   
@@ -182,7 +182,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:briefcase'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="profPersona"  formControlName="profPersona" required>
+                  <input matInput type="text" id="profPersona"  formControlName="profPersona" (input)="convertToUpperCase()" required>
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -951,8 +951,8 @@
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
                   <mat-select  id="tipoDireccionDomicilio" formControlName="tipoDireccionDomicilio" (selectionChange)="onSelectChangeDireccion($event)" >
-                    <mat-option value="Urbana">Urbana</mat-option>
-                    <mat-option value="Rural">Rural</mat-option>
+                    <mat-option value="Urbana">URBANA</mat-option>
+                    <mat-option value="Rural">RURAL</mat-option>
                   </mat-select>
                 </mat-form-field >
                 
@@ -1009,7 +1009,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="barrioDomicilio"  formControlName="barrioDomicilio">
+                  <input matInput type="text" id="barrioDomicilio"  formControlName="barrioDomicilio" (input)="convertToUpperCase()">
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1078,7 +1078,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="nomEmpresa"  formControlName="nomEmpresa"  required>
+                  <input matInput type="text" id="nomEmpresa"  formControlName="nomEmpresa" (input)="convertToUpperCase()" >
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1088,8 +1088,8 @@
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
                   <mat-select  id="tipoDireccionLaboral" formControlName="tipoDireccionLaboral" (selectionChange)="onSelectChangeDireccionLaboral($event)">
-                    <mat-option value="Urbana">Urbana</mat-option>
-                    <mat-option value="Rural">Rural</mat-option>
+                    <mat-option value="Urbana">URBANA</mat-option>
+                    <mat-option value="Rural">RURAL</mat-option>
                   </mat-select>
                 </mat-form-field >
                 
@@ -1146,7 +1146,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map-pin'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="barrioLaboral"  formControlName="barrioLaboral">
+                  <input matInput type="text" id="barrioLaboral"  formControlName="barrioLaboral" (input)="convertToUpperCase()">
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1181,7 +1181,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:user'"
                         matPrefix></mat-icon>
-                      <mat-select type="text" id="paisLaboral"  formControlName="paisLaboral" required>
+                      <mat-select type="text" id="paisLaboral"  formControlName="paisLaboral" >
                         <mat-option value="Colombia">Colombia</mat-option>
                       </mat-select>
                 </mat-form-field >
@@ -1192,7 +1192,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  required>
+                  <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral" >
                   <div *ngIf="accionistasForm.get('telfLaboral').hasError('pattern')">Solo números.</div>
                 </mat-form-field>
   
@@ -1202,15 +1202,15 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="extLaboral"  formControlName="extLaboral"  required>
+                  <input matInput type="text" id="extLaboral"  formControlName="extLaboral"  >
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Donde enviar correspondencia?:</mat-label>
                   <mat-select type="text" id="dirCorrespondencia"  formControlName="dirCorrespondencia" (selectionChange)="onSelectChangeCorrespondencia($event)">
-                    <mat-option value="laboral">Dirección laboral </mat-option>
-                    <mat-option value="domicilio">Dirección domicilio </mat-option>
-                    <mat-option value="otra">Otra</mat-option>
+                    <mat-option value="laboral">DIRECCION LABORAL</mat-option>
+                    <mat-option value="domicilio">DIRECCION DOMICILIO</mat-option>
+                    <mat-option value="otra">OTRA</mat-option>
                   </mat-select>
                 </mat-form-field >
   
@@ -1232,8 +1232,8 @@
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Tipo de cuenta:</mat-label>
                   <mat-select type="text" id="tipoCuentaBancaria"  formControlName="tipoCuentaBancaria">
-                    <mat-option value="AHORROS">Cuenta de ahorros</mat-option>
-                    <mat-option value="CORRIENTE">Cuenta corriente</mat-option>
+                    <mat-option value="AHORROS">CUENTA DE AHORRROS</mat-option>
+                    <mat-option value="CORRIENTE">CUENTA CORRIENTE</mat-option>
                   </mat-select>
                 </mat-form-field >
 

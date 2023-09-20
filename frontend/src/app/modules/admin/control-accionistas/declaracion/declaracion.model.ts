@@ -6,6 +6,7 @@ export interface Declaracion{
     nomSeg: string;
     apePri: string;
     apeSeg: string;
-    nomRepresenatane: string;
+    nomRepresentante: string;
     codRepresentante: string;
+    tipDocumento: string;
 }

@@ -13,6 +13,7 @@
                 <mat-label>Consultar por código (Identificación):</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
                 <input matInput type="text" id="codUsuario" formControlName="codUsuario">
+                <mat-error>Solo se permite números.</mat-error>
             </mat-form-field>
 
             <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>

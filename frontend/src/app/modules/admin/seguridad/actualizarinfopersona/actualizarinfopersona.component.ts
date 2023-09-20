@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { FormsModule, ReactiveFormsModule, Validators, FormControl, FormGroup} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators, FormControl, FormGroup, AbstractControl} from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -136,22 +136,22 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'paisDomicilio': new FormControl('', Validators.required),
     'telfDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'indTelDomicilio': new FormControl('', Validators.required),
-    'nomEmpresa': new FormControl('', Validators.required),
-    'tipoDireccionLaboral': new FormControl('', Validators.required),
+    'nomEmpresa': new FormControl(''),
+    'tipoDireccionLaboral': new FormControl(''),
     'calleLaboral': new FormControl(''),
     'numLaboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
     'letraLaboral': new FormControl('', [Validators.pattern(/^[A-Za-z]*$/)]),
     'num2Laboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
     'letra2Laboral': new FormControl('', [Validators.pattern(/^[A-Za-z]*$/)]),
     'num3Laboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
-    'dirLaboral': new FormControl('', Validators.required),
-    'barrioLaboral': new FormControl('', Validators.required),
-    'municipioLaboral': new FormControl('', Validators.required),
-    'departamentoLaboral': new FormControl('', Validators.required),
-    'paisLaboral': new FormControl('', Validators.required),
-    'telfLaboral': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'extLaboral': new FormControl('', Validators.required),
-    'dirCorrespondencia': new FormControl('', Validators.required),
+    'dirLaboral': new FormControl(''),
+    'barrioLaboral': new FormControl(''),
+    'municipioLaboral': new FormControl(''),
+    'departamentoLaboral': new FormControl(''),
+    'paisLaboral': new FormControl(''),
+    'telfLaboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'extLaboral': new FormControl(''),
+    'dirCorrespondencia': new FormControl(''),
     'otraDirLaboral': new FormControl(''),
     'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'tipoCuentaBancaria': new FormControl('', Validators.required),
@@ -603,7 +603,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     const fieldsToDisable = [
       'nomEmpresa',
       'telfLaboral',
-      'extLaboral',
+      'extLaboral',  // Quitamos 'extLaboral' de los campos requeridos
       'tipoDireccionLaboral',
       'dirLaboral',
       'barrioLaboral',
@@ -612,8 +612,6 @@ export class ActualizarinfopersonaComponent implements OnInit{
       'paisLaboral',
       'dirCorrespondencia',
       'otraDirCorrespondencia',
-      
-      
     ];
   
     tipDocumentoControl.valueChanges.subscribe((value) => {
@@ -625,7 +623,12 @@ export class ActualizarinfopersonaComponent implements OnInit{
             control.clearValidators();
           } else {
             control.enable();
-            control.setValidators([Validators.required]);
+            control.clearValidators();
+            // if (field === 'extLaboral') {
+            //   control.clearValidators();
+            // } else {
+            //   control.setValidators([Validators.required]);
+            // }
           }
           control.updateValueAndValidity();
         }
@@ -637,6 +640,46 @@ export class ActualizarinfopersonaComponent implements OnInit{
     for (const field of fieldsToUpdate) {
       this.accionistasForm.get(field).updateValueAndValidity();
     }
+  }
+
+  convertToUpperCase() {
+    this.accionistasForm.get('nomPri').setValue(this.accionistasForm.get('nomPri').value.toUpperCase());
+    this.accionistasForm.get('nomSeg').setValue(this.accionistasForm.get('nomSeg').value.toUpperCase());
+    this.accionistasForm.get('apePri').setValue(this.accionistasForm.get('apePri').value.toUpperCase());
+    this.accionistasForm.get('apeSeg').setValue(this.accionistasForm.get('apeSeg').value.toUpperCase());
+    this.accionistasForm.get('profPersona').setValue(this.accionistasForm.get('profPersona').value.toUpperCase());
+    this.accionistasForm.get('correoPersona').setValue(this.accionistasForm.get('correoPersona').value.toUpperCase());
+    //this.accionistasForm.get('letraDomicilio').setValue(this.accionistasForm.get('letraDomicilio').value.toUpperCase());
+    //this.accionistasForm.get('letra2Domicilio').setValue(this.accionistasForm.get('letra2Domicilio').value.toUpperCase());
+    this.accionistasForm.get('barrioDomicilio').setValue(this.accionistasForm.get('barrioDomicilio').value.toUpperCase());
+    this.accionistasForm.get('nomEmpresa').setValue(this.accionistasForm.get('nomEmpresa').value.toUpperCase());
+    //this.accionistasForm.get('letraLaboral').setValue(this.accionistasForm.get('letraLaboral').value.toUpperCase());
+    //this.accionistasForm.get('letra2Laboral').setValue(this.accionistasForm.get('letra2Laboral').value.toUpperCase());
+    this.accionistasForm.get('barrioLaboral').setValue(this.accionistasForm.get('barrioLaboral').value.toUpperCase());
+    this.accionistasForm.get('otraDirLaboral').setValue(this.accionistasForm.get('otraDirLaboral').value.toUpperCase());
+  }
+
+  maxLengthValidator(maxLength: number) {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+      if (value && value.length > maxLength) {
+        return { 'maxLengthExceeded': true };
+      }
+      return null;
+    };
+  }
+
+  dateOfBirthValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Establecer la hora actual a las 00:00:00 para comparaciones de fecha.
+
+    // Comprobar si la fecha seleccionada es mayor que la fecha actual
+    if (selectedDate > currentDate) {
+      return { 'invalidDateOfBirth': true };
+    }
+
+    return null; // La fecha es válida
   }
 
 }

@@ -11,67 +11,25 @@
             <p class="text-lg font-medium">DATOS PERSONALES</p>
             <mat-divider class="mt-6 mb-10"></mat-divider>
 
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                 <mat-label>Código de usuario (Identificacion):</mat-label>
                 <mat-icon
                     matPrefix
                     class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_outline:tag'">
                 </mat-icon>
-                <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" required (ngModelChange)="onChange()" pattern="[0-9]*">
+                <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" required (ngModelChange)="usuarioExistente()" pattern="[0-9]*">
                 <mat-error>Solo se permiten números.</mat-error>
-              </mat-form-field>
-
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                <mat-label>Correo electrónico</mat-label>
-                <mat-icon
-                    matPrefix
-                    class="hidden sm:flex icon-size-5"
-                    [svgIcon]="'heroicons_outline:tag'">
-                </mat-icon>
-                <input matInput id="email" name="email" [(ngModel)]="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
-                <mat-error>El correo electrónico no es válido.</mat-error>
-              </mat-form-field><br>
-
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
-              <mat-label>Primer nombre:</mat-label>
-              <mat-icon
-                matPrefix
-                class="hidden sm:flex icon-size-5"
-                [svgIcon]="'heroicons_solid:user-circle'">
-              </mat-icon>
-              <input matInput id="nom_pri" name="nom_pri" [(ngModel)]="nom_pri" required>
             </mat-form-field>
 
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
-            <mat-label>Segundo nombre:</mat-label>
-            <mat-icon
-              matPrefix
-              class="hidden sm:flex icon-size-5"
-              [svgIcon]="'heroicons_solid:user-circle'">
-            </mat-icon>
-            <input matInput id="nom_seg" name="nom_seg" [(ngModel)]="nom_seg" >
-            </mat-form-field>
+            <button type="button" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>
 
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
-            <mat-label>Primer apellido:</mat-label>
-            <mat-icon
-              matPrefix
-              class="hidden sm:flex icon-size-5"
-              [svgIcon]="'heroicons_solid:user-circle'">
-            </mat-icon>
-            <input matInput id="ape_pri" name="ape_pri" [(ngModel)]="ape_pri" required>
-            </mat-form-field>
-
-            <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-            <mat-label>Segundo apellido:</mat-label>
-            <mat-icon
-                  matPrefix
-                  class="hidden sm:flex icon-size-5"
-                  [svgIcon]="'heroicons_solid:user-circle'">
-                </mat-icon>
-            <input matInput id="ape_seg" name="ape_seg" [(ngModel)]="ape_seg" >
-            </mat-form-field>
+            <div *ngIf="usuarioEncontrado">
+              <mat-divider class="mt-6 mb-10"></mat-divider>
+              <p class="mt-4 sm:ml-4"><strong>IDENTIFIACIÓN: </strong>{{ usuarioEncontrado.codUsuario }}</p>
+              <p class=" sm:ml-4"><strong>NOMBRE DE LA PERSONA: </strong>{{ usuarioEncontrado.nomPri }} {{usuarioEncontrado.nomSeg}} {{usuarioEncontrado.apePri}} {{usuarioEncontrado.apeSeg}}</p>
+              <mat-divider class="mt-6 mb-10"></mat-divider>
+            </div>
 
             <mat-form-field class="w-full sm:w-1/5 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
               <mat-label>Perfil:</mat-label>
@@ -84,9 +42,7 @@
                 <mat-option value="1">ADMINISTRADOR</mat-option>
               </mat-select>
             </mat-form-field><br><br>
-            <button class="w-full sm:w-1/6 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir fotografia</button>
-            <input hidden (change)="onFileSelected($event)" #fileInput type="file" required>
-            <span class="file-name">{{selectedFile?.name}}</span><br>
+            
 
           <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit">Enviar</button>
         </form>

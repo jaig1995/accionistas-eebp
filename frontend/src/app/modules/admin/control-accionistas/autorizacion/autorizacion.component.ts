@@ -142,31 +142,33 @@ export class AutorizacionComponent  {
           this.router.navigate(['accionistas/agregar/declaracion/' + this.autorizacionForm.get('codUsuario').value]);
         },
         (error) => {
-          const confirmation = this._fuseConfirmationService.open({
-
-            "title": "Los datos no fueron enviados!",
-            "message": "Por favor revise si el diligenciamento de datos es correcto.",
-            "icon": {
-              "show": true,
-              "name": "heroicons_outline:exclamation-triangle",
-              "color": "warn"
-            },
-            "actions": {
-              "confirm": {
-                "show": true,
-                "label": "Aceptar",
-                "color": "warn"
-              },
-              "cancel": {
-                "show": false,
-                "label": "Cancel"
-              }
-            },
-            "dismissible": true
-    
-          });
+          
         }
       );
+    }else{
+      const confirmation = this._fuseConfirmationService.open({
+
+        "title": "Los datos no fueron enviados!",
+        "message": "Por favor revise si el diligenciamento de datos es correcto.",
+        "icon": {
+          "show": true,
+          "name": "heroicons_outline:exclamation-triangle",
+          "color": "warn"
+        },
+        "actions": {
+          "confirm": {
+            "show": true,
+            "label": "Aceptar",
+            "color": "warn"
+          },
+          "cancel": {
+            "show": false,
+            "label": "Cancel"
+          }
+        },
+        "dismissible": true
+
+      });
     }
   }
 

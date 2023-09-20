@@ -12,6 +12,9 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Router } from "@angular/router";
 import { ServicesConfig } from 'app/services.config';
 import { UserDataService } from '../permisos/user-data.service';
+import { AccionistasService } from '../../control-accionistas/addaccionista/accionistas.service';
+import { RegAccionistas } from '../../control-accionistas/registraraccionista/registraraccionista.model';
+import { Actualizar } from '../../control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 
 
 @Component({
@@ -34,36 +37,22 @@ export class AddusuarioComponent {
 
     private _baseUrl: string = ServicesConfig.apiUrl;
 
-    nom_pri: string;
-    nom_seg: string;
-    ape_pri: string;
-    ape_seg: string;
     identificacion: string;
     perfil: number;
-    email: string;
-    selectedFile: File;
+    usuarioEncontrado: any;
     private _fuseConfirmationService;
 
-    constructor(private http: HttpClient, fuseConfirmationService: FuseConfirmationService, private router: Router, private userService: UserDataService) {
+    constructor(private http: HttpClient, fuseConfirmationService: FuseConfirmationService, private router: Router, private userService: UserDataService, private accionistasService: AccionistasService) {
         this._fuseConfirmationService = fuseConfirmationService;
         
     }
     onSubmit() {
         const data = {
-            nombreUsuario: this.nom_pri + " " + this.nom_seg,
-            apellidoUsuario: this.ape_pri + " " + this.ape_seg,
             codUsuario: this.identificacion,
-            perfil: this.perfil,
-            email: this.email
+            perfil: this.perfil
         };
 
-        this.http.post(this._baseUrl + '/api/usuarios', data).subscribe(response => {
-
-            const formData = new FormData();
-            formData.append("file", this.selectedFile, this.identificacion.toString() + ".jpg");
-            this.http.post(this._baseUrl + '/api/uploadFile', formData).subscribe(response2 => {
-                console.log(response2)
-            });
+        this.http.post(this._baseUrl + '/api/usuarios/administrativo', data).subscribe(response => {
 
             const confirmation = this._fuseConfirmationService.open({
                 "title": "Usuario creado exitosamente!",
@@ -89,11 +78,6 @@ export class AddusuarioComponent {
             });
 
             this.identificacion = null;
-            this.email = null;
-            this.ape_pri = null;
-            this.ape_seg = null;
-            this.nom_pri = null;
-            this.nom_seg = null;
             this.perfil = null;
 
         }, error => {
@@ -121,7 +105,7 @@ export class AddusuarioComponent {
         });
     }
 
-    onChange(){
+    usuarioExistente(){
         console.log(this.identificacion);
         this.userService.obtenerUsuario(this.identificacion).subscribe(response => {
             const confirmation = this._fuseConfirmationService.open({
@@ -147,10 +131,46 @@ export class AddusuarioComponent {
             });
             this.identificacion = '';
         });
-
     }
 
-    onFileSelected(event: any): void {
-        this.selectedFile = event.target.files[0] ?? null;
-    }
+    consultarUsuario() {
+        this.accionistasService.obtenerPersona(this.identificacion).subscribe(
+          (data: Actualizar) => {
+            if (data.codUsuario != null){
+                this.usuarioEncontrado = data
+            }else{
+                this.usuarioEncontrado = null;
+            }
+          },
+          (error) => {
+            console.error('Error al obtener los datos:', error);
+            const confirmation = this._fuseConfirmationService.open({
+    
+              "title": "La persona no existe en el sistema",
+              "message": "Verifique el código de usuario.",
+              "icon": {
+                "show": true,
+                "name": "heroicons_outline:exclamation-triangle",
+                "color": "warn"
+              },
+              "actions": {
+                "confirm": {
+                  "show": true,
+                  "label": "Aceptar",
+                  "color": "warn"
+                },
+                "cancel": {
+                  "show": false,
+                  "label": "Cancel"
+                }
+              },
+              "dismissible": false
+      
+            });
+            this.identificacion = '';
+            this.usuarioEncontrado = null;
+          }
+        );
+      }
+
 }

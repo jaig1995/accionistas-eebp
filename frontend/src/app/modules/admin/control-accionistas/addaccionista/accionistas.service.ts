@@ -9,6 +9,8 @@ import { ServicesConfig } from 'app/services.config';
 import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
 import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
 import { modificarRepresentante } from '../modificarapoderado/modificarapoderado.model';
+import { Accionista } from '../aprobaraccionista/aprobaraccionista.model';
+import { Representante } from '../declaracion/representante.model';
 
   @Injectable({
     providedIn: 'root'
@@ -103,6 +105,18 @@ import { modificarRepresentante } from '../modificarapoderado/modificarapoderado
 
     enviarArchivo(formDataArchivo: FormData): Observable<FormData> {
       return this.http.post<any>(this._baseUrl + '/api/uploadFile', formDataArchivo);
+    }
+
+    obtenerPersona(id: string): Observable<Actualizar> {
+      return this.http.get<Actualizar>(this._baseUrl + '/api/accionistas/' + id);
+    }
+
+    obtenerAccionista(id: string): Observable<Accionista> {
+      return this.http.get<Accionista>(this._baseUrl + '/api/accionista/' + id);
+    }
+
+    obtenerRepresentante(id: string): Observable<Representante> {
+      return this.http.get<Representante>(this._baseUrl + '/api/accionista/accionistaRepresentante/' + id);
     }
 
   } 

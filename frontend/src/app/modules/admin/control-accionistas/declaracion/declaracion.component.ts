@@ -11,6 +11,7 @@ import { Declaracion } from './declaracion.model';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GeoService } from '../addaccionista/geo.service';
 import { Observable, map } from 'rxjs';
+import { Representante } from './representante.model';
 
 @Component({
   selector: 'autorizacion',
@@ -30,10 +31,12 @@ import { Observable, map } from 'rxjs';
 })
 export class DeclaracionComponent {
   datosDeclaracion: Declaracion;
+  datosRepresentante: Representante;
   private _fuseConfirmationService;
   id : string;
   public lugarExp: string;
   public nombreCompleto: string;
+  public nombreCompletoRepresentante: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService, private geoService: GeoService) {
     this._fuseConfirmationService = fuseConfirmationService;
@@ -41,14 +44,15 @@ export class DeclaracionComponent {
   }
 
   declaracionForm = new FormGroup({
-    // Agrega más campos si es necesario según tu interfaz Accionistas
+    
     'nomPri':  new FormControl({ value: '', disabled: true },),
     'codUsuario':  new FormControl({ value: '', disabled: true },),
+    'tipDocumento':  new FormControl({ value: '', disabled: true },),
     'departamentoExp':  new FormControl({ value: '', disabled: true },),
     'nomRepresentante':  new FormControl({ value: '', disabled: true },),
     'codRepresentante':  new FormControl({ value: '', disabled: true },),
     'recursos':  new FormControl('', Validators.required),
-    'ingresos':  new FormControl('', Validators.required),
+    'ingresos':  new FormControl(''),
   });
 
   ngOnInit() {
@@ -61,18 +65,40 @@ export class DeclaracionComponent {
       async (datos: Declaracion) => {
         this.datosDeclaracion = datos;
 
-        this.nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
+        //this.nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
         this.lugarExp = await this.obtenerMunicipioById(Number(datos.municipioExp)).toPromise();
         this.declaracionForm.patchValue({
-          codUsuario: datos.codUsuario,
-          nomPri: this.nombreCompleto,
+          // codUsuario: datos.codUsuario,
+          // nomPri: this.nombreCompleto,
           departamentoExp: this.lugarExp,
-          nomRepresentante: this.nombreCompleto,
-          codRepresentante: datos.codRepresentante,
+          // nomRepresentante: datos.nomRepresentante,
+          // codRepresentante: datos.codRepresentante,
+          // tipDocumento: datos.tipDocumento,
         });
       },
       error => {
         console.error('Error en la solicitud GET:', error);
+      }
+    );
+    this.accionistasService.obtenerRepresentante(this.id).subscribe(
+      (datos: Representante) => {
+        this.datosRepresentante = datos;
+        // if (datos.nomRepresentante !== null) {
+        //   this.declaracionForm.patchValue({
+        //     nomRepresentante: datos.nomRepresentante,
+        //   });
+        // } else {
+        //   this.declaracionForm.patchValue({
+        //     nomRepresentante: datos.nomAccionista,
+        //   });
+        // }
+        this.declaracionForm.patchValue({
+          nomPri: datos.nomAccionista,
+          codUsuario: datos.codAccionista,
+          tipDocumento: datos.tipoDocRepresentante,
+          nomRepresentante: datos.nomRepresentante,
+          codRepresentante: datos.codRepresentante,
+        });
       }
     );
   }
@@ -128,4 +154,9 @@ export class DeclaracionComponent {
     );
   }
 
-}
+  convertToUpperCase() {
+    this.declaracionForm.get('recursos').setValue(this.declaracionForm.get('recursos').value.toUpperCase());
+    this.declaracionForm.get('ingresos').setValue(this.declaracionForm.get('ingresos').value.toUpperCase());
+  }
+
+} 

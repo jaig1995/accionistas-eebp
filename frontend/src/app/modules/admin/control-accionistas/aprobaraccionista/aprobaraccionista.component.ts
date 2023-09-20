@@ -65,7 +65,6 @@ export class AprobaraccionistaComponent{
     if (this.registroForm.valid) {
       this.accionistasService.aprobar(this.codigoUsuarioAccionista).subscribe(
         (response) => {
-          console.log('Respuesta del servidor - Accionista: Datos enviados', response);
           this.router.navigate(['/accionista/aprobar']);
           const confirmation = this._fuseConfirmationService.open({
 
@@ -105,17 +104,78 @@ export class AprobaraccionistaComponent{
 
 
   consultarUsuario() {
-    const codUsuario = this.registroForm.get('codUsuario').value; 
+    const codUsuario = this.registroForm.get('codUsuario').value;
   
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
       (data: RegAccionistas) => {
         this.codigoUsuarioAccionista = codUsuario;
         this.datosAccionista = [data];
+  
+        // Verificar el estado de aprobación y rechazo
+        this.accionistasService.obtenerAccionista(codUsuario).subscribe(
+          (accionistaData) => {
+            if (accionistaData.aprobado === 'S') {
+              const confirmation = this._fuseConfirmationService.open({
+                "title": "Ya se encuentra aprobado.",
+                "message": "",
+                "icon": {
+                  "show": true,
+                  "name": "feather:alert-circle",
+                  "color": "success"
+                },
+                "actions": {
+                  "confirm": {
+                    "show": false,
+                    "label": "Remove",
+                    "color": "warn"
+                  },
+                  "cancel": {
+                    "show": false,
+                    "label": "Cancel"
+                  }
+                },
+                "dismissible": true
+              });
+              confirmation.afterClosed().subscribe(() => {
+                this.datosAccionista = null;
+              });
+              this.registroForm.get('codUsuario').setValue('');
+            } else if (accionistaData.descripcionRechazo !== null) {
+              const confirmation = this._fuseConfirmationService.open({
+                "title": "El usuario fue rechazado con la siguiente descripción:",
+                "message": accionistaData.descripcionRechazo,
+                "icon": {
+                  "show": true,
+                  "name": "heroicons_outline:exclamation-triangle",
+                  "color": "warn"
+                },
+                "actions": {
+                  "confirm": {
+                    "show": false,
+                    "label": "Remove",
+                    "color": "warn"
+                  },
+                  "cancel": {
+                    "show": false,
+                    "label": "Cancel"
+                  }
+                },
+                "dismissible": true
+              });
+              confirmation.afterClosed().subscribe(() => {
+                this.datosAccionista = null;
+              });
+              this.registroForm.get('codUsuario').setValue('');
+            } 
+          },
+          (error) => {
+            console.error('Error al obtener el estado de aprobación y rechazo:', error);
+          }
+        );
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
         const confirmation = this._fuseConfirmationService.open({
-
           "title": "Usuario no encontrado",
           "message": "Verifique el código de usuario.",
           "icon": {
@@ -135,7 +195,6 @@ export class AprobaraccionistaComponent{
             }
           },
           "dismissible": true
-  
         });
         confirmation.afterClosed().subscribe(() => {
           this.datosAccionista = null;

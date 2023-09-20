@@ -58,6 +58,7 @@ export class RegistraraccionistaComponent{
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
     'tipoAccionista': new FormControl('', Validators.required),
+    'tipoRepresentante': new FormControl(''),
     'numCarnet': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'file': new FormControl(''),
   })
@@ -69,11 +70,14 @@ export class RegistraraccionistaComponent{
       codRepresentante: this.registroForm.get('codRepresentante').value,
       tipoAccionista: this.registroForm.get('tipoAccionista').value,
       numCarnet: this.registroForm.get('numCarnet').value,
+      tipoRepresentante: this.registroForm.get('tipoRepresentante').value,
     };
-    if (this.registroForm.get('codRepresentante').value !== '') {
+    if (this.registroForm.get('codRepresentante').value !== '' && this.registroForm.get('tipoRepresentante').value) {
       formDataAccionista.codRepresentante = this.registroForm.get('codRepresentante').value;
+      formDataAccionista.tipoRepresentante = this.registroForm.get('tipoRepresentante').value
     } else {
       formDataAccionista.codRepresentante = null;
+      formDataAccionista.tipoRepresentante = null;
     }
     console.log(formDataAccionista);
     if (this.registroForm.valid) {
@@ -121,13 +125,33 @@ export class RegistraraccionistaComponent{
           this.router.navigate(['accionistas/agregar/autorizacion/' + this.registroForm.get('codUsuario').value]);
         },
         (error) => {
-          if (error.error && error.error.message) {
-            this.errorMessage = error.error.message;
-          } else {
-            this.errorMessage = 'Error desconocido';
-          }
+          console.log(error);
         }
       );
+    }else{
+      const confirmation = this._fuseConfirmationService.open({
+
+        "title": "Los datos no fueron enviados!",
+        "message": "Por favor revisa que los campos estén diligenciados de forma correcta.",
+        "icon": {
+          "show": true,
+          "name": "heroicons_outline:exclamation-triangle",
+          "color": "warn"
+        },
+        "actions": {
+          "confirm": {
+            "show": true,
+            "label": "Aceptar",
+            "color": "warn"
+          },
+          "cancel": {
+            "show": false,
+            "label": "Cancel"
+          }
+        },
+        "dismissible": false
+
+      });
     }
   }
    

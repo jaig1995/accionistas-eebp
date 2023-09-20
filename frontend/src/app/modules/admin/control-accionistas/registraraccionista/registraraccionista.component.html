@@ -32,7 +32,7 @@
                 <input matInput type="text" id="numCarnet" formControlName="numCarnet">
             </mat-form-field>
 
-            <button class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="heroicons_outline:camera"></mat-icon>Subir archivos</button>
+            <button class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Subir archivos</button>
             <input hidden (change)="onFileSelectedMultiple($event)" #fileInput multiple type="file" formControlName="file">
             <span class="file-name" *ngFor="let file of selectedFileMultiple"> {{file.name}} - </span><br>
         
@@ -122,7 +122,16 @@
                 <input matInput type="text" id="campoTI" formControlName="codRepresentante">
             </mat-form-field>
 
-            <button  *ngIf="mostrarCampoAdicionalFueraTabla" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarRepresentante()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
+            <button  *ngIf="mostrarCampoAdicionalFueraTabla" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarRepresentante()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'" *ngIf="mostrarCampoAdicionalFueraTabla">
+                <mat-label>Descripción tipo de poder:</mat-label>
+                <mat-select type="text" id="tipoRepresentante"  formControlName="tipoRepresentante">
+                  <mat-option value="1">Empleado</mat-option>
+                  <mat-option value="2">Pertenece a junta</mat-option> 
+                  <mat-option value="3">Ninguno</mat-option> 
+                </mat-select>
+            </mat-form-field >
         </form><br>
 
         <table *ngIf="mostrarCampoAdicionalFueraTabla" mat-table [dataSource]="datosRepresentante" class="mat-elevation-z2">
