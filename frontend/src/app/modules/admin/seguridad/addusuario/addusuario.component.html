@@ -18,7 +18,7 @@
                 class="hidden sm:flex icon-size-5"
                 [svgIcon]="'heroicons_outline:tag'">
               </mat-icon>
-              <input matInput id="codUsuario" name="codUsuario"  [formControl]="filtroControl" required [matAutocomplete]="auto" pattern="[0-9]*">
+              <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" (ngModelChange)="usuarioExistente()" [formControl]="filtroControl" required [matAutocomplete]="auto" pattern="[0-9]*">
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
                   {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
