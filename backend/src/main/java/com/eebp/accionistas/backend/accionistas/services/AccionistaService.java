@@ -274,14 +274,19 @@ public class AccionistaService {
 
     public AccionistaRepresentanteResponse getAccionistaRepresentante(String codUsuario) throws UserNotFoundException {
         Accionista accionista = accionistaRepository.findById(codUsuario).get();
+        Persona pRepresentante = Persona.builder().build();
+        if (accionista.getCodRepresentante() == null) {
+            pRepresentante = personaService.getPersona(accionista.getCodUsuario()).get();
+        } else {
+            pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
+        }
         Persona pAccionista = personaService.getPersona(accionista.getCodUsuario()).get();
-        Persona pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
 
         return AccionistaRepresentanteResponse.builder()
                 .nomAccionista(pAccionista.getNomPri() + " " + pAccionista.getNomSeg() + " " + pAccionista.getApePri() +  " " + pAccionista.getApeSeg())
                 .nomRepresentante(pRepresentante.getNomPri() + " " + pRepresentante.getNomSeg() + " " + pRepresentante.getApePri() +  " " + pRepresentante.getApeSeg())
                 .codAccionista(accionista.getCodUsuario())
-                .codRepresentante(accionista.getCodRepresentante())
+                .codRepresentante(pRepresentante.getCodUsuario())
                 .esAccionista("S")
                 .tipoDocAccionista(pAccionista.getTipDocumento())
                 .tipoDocRepresentante(pRepresentante.getTipDocumento())
