@@ -49,6 +49,7 @@ export class AprobaraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
   mostrarCampos: boolean = false;
+  mostrarBotones: boolean = false;
 
   displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion'];
   private _fuseConfirmationService;
@@ -140,8 +141,35 @@ export class AprobaraccionistaComponent implements OnInit{
       (data: RegAccionistas) => {
         this.codigoUsuarioAccionista = codUsuario;
         this.datosAccionista = [data];
+        if(data.esAccionista === 'N'){
+          const confirmation = this._fuseConfirmationService.open({
+            "title": "El usuario aún no es accionista.",
+            "message": "",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "warn"
+            },
+            "actions": {
+              "confirm": {
+                "show": false,
+                "label": "Remove",
+                "color": "warn"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": true
+          });
+          confirmation.afterClosed().subscribe(() => {
+            this.datosAccionista = null;
+          });
+          this.registroForm.get('codUsuario').setValue('');
+          this.mostrarBotones = false;
+        }
   
-        // Verificar el estado de aprobación y rechazo
         this.accionistasService.obtenerAccionista(codUsuario).subscribe(
           (accionistaData) => {
             if (accionistaData.aprobado === 'S') {
@@ -170,6 +198,7 @@ export class AprobaraccionistaComponent implements OnInit{
                 this.datosAccionista = null;
               });
               this.registroForm.get('codUsuario').setValue('');
+              this.mostrarBotones = false;
             } else if (accionistaData.descripcionRechazo !== null) {
               const confirmation = this._fuseConfirmationService.open({
                 "title": "El usuario fue rechazado con la siguiente descripción:",
@@ -196,6 +225,7 @@ export class AprobaraccionistaComponent implements OnInit{
                 this.datosAccionista = null;
               });
               this.registroForm.get('codUsuario').setValue('');
+              this.mostrarBotones = false;
             } 
           },
           (error) => {
@@ -229,12 +259,17 @@ export class AprobaraccionistaComponent implements OnInit{
         confirmation.afterClosed().subscribe(() => {
           this.datosAccionista = null;
         });
+        this.mostrarBotones = false;
       }
     );
   }
 
   camposRechazo() {
     this.mostrarCampos = true;
+  }
+
+  botones() {
+    this.mostrarBotones = true;
   }
 
   rechazarUsuario(){
@@ -272,6 +307,8 @@ export class AprobaraccionistaComponent implements OnInit{
           this.registroForm.get('codUsuario').setValue('');
           this.descripcionRechazo = null;
           this.datosAccionista = null;
+          this.mostrarCampos = null;
+          this.mostrarBotones = false;
 
         },
         (error) => {
@@ -281,6 +318,12 @@ export class AprobaraccionistaComponent implements OnInit{
     
   }
 
+  convertToUpperCase(event: Event) {
+    const valor = (event.target as HTMLTextAreaElement).value;
+
+    // Convertir el valor a mayúsculas y asignarlo de nuevo a la variable
+    this.descripcionRechazo = valor.toUpperCase();
+  }
   
 }
 

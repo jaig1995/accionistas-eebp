@@ -47,7 +47,7 @@ export class RegistraraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
   datosRepresentante: RegAccionistas[];
-  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio', 'tipoVivienda'];
+  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio'];
   private _fuseConfirmationService;
   mostrarCampoAdicionalFueraTabla: boolean = false;
 
@@ -73,9 +73,9 @@ export class RegistraraccionistaComponent implements OnInit{
   
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'codRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'tipoAccionista': new FormControl('', Validators.required),
-    'tipoRepresentante': new FormControl(''),
+    'tipoRepresentante': new FormControl('', Validators.required),
     'numCarnet': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'file': new FormControl(''),
   })
@@ -110,6 +110,12 @@ export class RegistraraccionistaComponent implements OnInit{
   }
 
   onSubmit(){
+
+    if (this.registroForm.get('codRepresentante').value === null || this.registroForm.get('tipoRepresentante').value === null) {
+      
+      console.error('CodRepresentante y TipoRepresentante deben estar seleccionados.');
+      return; 
+    }
       
     const formDataAccionista = {
       codUsuario: this.registroForm.get('codUsuario').value,
@@ -125,7 +131,7 @@ export class RegistraraccionistaComponent implements OnInit{
       formDataAccionista.codRepresentante = null;
       formDataAccionista.tipoRepresentante = null;
     }
-    console.log(formDataAccionista);
+    
     if (this.registroForm.valid) {
       this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
         (response) => {

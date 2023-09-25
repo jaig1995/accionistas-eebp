@@ -97,6 +97,8 @@ export class ActualizarinfopersonaComponent implements OnInit{
     municipiosLaboral: any[];
     
     municipiosPersona: any[];
+
+    selectedFile: File;
    
 
     selectDepartamento: FormControl = new FormControl('');
@@ -111,6 +113,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'apePri':new FormControl('', Validators.required),
     'apeSeg':new FormControl(''),
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'tipoPersona': new FormControl('', Validators.required),
     'departamentoExp': new FormControl('', Validators.required),
     'municipioExp': new FormControl('', Validators.required),
     'fecNacimiento': new FormControl('', Validators.required),
@@ -118,7 +121,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'depNacimiento': new FormControl('', Validators.required),
     'lugNacimiento': new FormControl('', Validators.required),
     'estCivPersona': new FormControl('', Validators.required),
-    'celPersona': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'celPersona': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'profPersona': new FormControl('', Validators.required),
     'actEcoPersona': new FormControl(''),
     'correoPersona': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
@@ -134,7 +137,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'departamentoDomicilio': new FormControl('', Validators.required),
     'municipioDomicilio': new FormControl('', Validators.required),
     'paisDomicilio': new FormControl('', Validators.required),
-    'telfDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'telfDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'indTelDomicilio': new FormControl('', Validators.required),
     'nomEmpresa': new FormControl(''),
     'tipoDireccionLaboral': new FormControl(''),
@@ -149,11 +152,11 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'municipioLaboral': new FormControl(''),
     'departamentoLaboral': new FormControl(''),
     'paisLaboral': new FormControl(''),
-    'telfLaboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'telfLaboral': new FormControl('', [Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'extLaboral': new FormControl(''),
     'dirCorrespondencia': new FormControl(''),
     'otraDirLaboral': new FormControl(''),
-    'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(16)]),
     'tipoCuentaBancaria': new FormControl('', Validators.required),
     'entidadBancaria': new FormControl('', Validators.required),
     'numSuscripcion': new FormControl(''),
@@ -167,6 +170,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'recursos': new FormControl(''),
     'ingresos': new FormControl(''),
     'firma': new FormControl(''),
+    'file': new FormControl(''),
     'huella': new FormControl(''),
     'huella2': new FormControl(''),
   });
@@ -186,8 +190,9 @@ export class ActualizarinfopersonaComponent implements OnInit{
   obtenerDatos() {
     this.accionistasService.obtenerDatosActualizar(this.id).subscribe(
       (datos: Actualizar) => {
+        console.log(datos);
         this.datosActualizar = datos;
-        // Establecer el valor de los campos con el valor obtenido de la API
+       
         this.accionistasForm.patchValue({
           tipDocumento: datos.tipDocumento,
           nomPri: datos.nomPri,
@@ -195,6 +200,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
           apePri: datos.apePri,
           apeSeg: datos.apeSeg,
           codUsuario: datos.codUsuario,
+          tipoPersona: datos.tipoPersona,
           departamentoExp: datos.departamentoExp,
           municipioExp: datos.municipioExp,
           fecNacimiento: datos.fecNacimiento,
@@ -642,7 +648,13 @@ export class ActualizarinfopersonaComponent implements OnInit{
     }
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] ?? null;
+    console.log(this.selectedFile);
+  }
+
   convertToUpperCase() {
+    this.accionistasForm.get('razonSocial').setValue(this.accionistasForm.get('razonSocial').value.toUpperCase());
     this.accionistasForm.get('nomPri').setValue(this.accionistasForm.get('nomPri').value.toUpperCase());
     this.accionistasForm.get('nomSeg').setValue(this.accionistasForm.get('nomSeg').value.toUpperCase());
     this.accionistasForm.get('apePri').setValue(this.accionistasForm.get('apePri').value.toUpperCase());

@@ -132,7 +132,7 @@ export class AddaccionistaComponent {
     'depNacimiento': new FormControl('', Validators.required),
     'lugNacimiento': new FormControl('', Validators.required),
     'estCivPersona': new FormControl('', Validators.required),
-    'celPersona': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'celPersona': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'profPersona': new FormControl('', Validators.required),
     'actEcoPersona': new FormControl('',),
     'correoPersona': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
@@ -148,7 +148,7 @@ export class AddaccionistaComponent {
     'departamentoDomicilio': new FormControl('', Validators.required),
     'municipioDomicilio': new FormControl('', Validators.required),
     'paisDomicilio': new FormControl('', Validators.required),
-    'telfDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
+    'telfDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'indTelDomicilio': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'nomEmpresa': new FormControl(''),
     'tipoDireccionLaboral': new FormControl('', ),
@@ -163,11 +163,11 @@ export class AddaccionistaComponent {
     'municipioLaboral': new FormControl('', ),
     'departamentoLaboral': new FormControl('', ),
     'paisLaboral': new FormControl('', ),
-    'telfLaboral': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'telfLaboral': new FormControl('', [Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
     'extLaboral': new FormControl(''),
     'dirCorrespondencia': new FormControl('', ),
     'otraDirLaboral': new FormControl(''),
-    'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(10)]),
+    'numCuentaBancaria': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$'), this.maxLengthValidator(16)]),
     'tipoCuentaBancaria': new FormControl('', Validators.required),
     'entidadBancaria': new FormControl('', Validators.required),
     'huella': new FormControl(''),
@@ -513,7 +513,7 @@ export class AddaccionistaComponent {
 
   onChange(){
     const codUsuarioValue = this.accionistasForm.get('codUsuario').value;
-    this.userService.obtenerUsuario(codUsuarioValue).subscribe(response => {
+    this.accionistasService.obtenerPersona(codUsuarioValue).subscribe(response => {
         const confirmation = this._fuseConfirmationService.open({
             "title": "La persona ya existe!",
             "message": "Verifica su identificación",
@@ -623,6 +623,7 @@ export class AddaccionistaComponent {
   }
 
   convertToUpperCase() {
+    this.accionistasForm.get('razonSocial').setValue(this.accionistasForm.get('razonSocial').value.toUpperCase());
     this.accionistasForm.get('nomPri').setValue(this.accionistasForm.get('nomPri').value.toUpperCase());
     this.accionistasForm.get('nomSeg').setValue(this.accionistasForm.get('nomSeg').value.toUpperCase());
     this.accionistasForm.get('apePri').setValue(this.accionistasForm.get('apePri').value.toUpperCase());

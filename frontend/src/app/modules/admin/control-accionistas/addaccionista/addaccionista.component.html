@@ -28,7 +28,7 @@
                   <div *ngIf="showAdditionalField">
                     <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                       <mat-label>Razón social:</mat-label>
-                      <input matInput type="text" id="razonSocial"  formControlName="razonSocial">
+                      <input matInput type="text" id="razonSocial"  formControlName="razonSocial" (input)="convertToUpperCase()">
                     </mat-form-field>
                   </div>
   
@@ -183,7 +183,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="celPersona"  formControlName="celPersona" required>
-                  <mat-error >Solo se permiten números.</mat-error>
+                  <mat-error *ngIf="accionistasForm.get('celPersona').hasError('maxLengthExceeded')">El número de celular no puede tener más de 10 dígitos y como entrada solo debe tener números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -202,7 +202,8 @@
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
                   <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
-                    <mat-option value="11">Cultivos agrícolas transitorios.</mat-option>
+                    <mat-option [value]="null">NINGUNO</mat-option>
+                      <mat-option value="11">Cultivos agrícolas transitorios.</mat-option>
                       <mat-option value="111">Cultivo de cereales (excepto arroz), legumbres y semillas oleaginosas.</mat-option>
                       <mat-option value="112">Cultivo de arroz.</mat-option>
                       <mat-option value="113">Cultivo de hortalizas, raíces y tubérculos.</mat-option>
@@ -938,9 +939,10 @@
                       <mat-option value="82"> Personas Naturales Subsidiadas por Terceros</mat-option>
                       <mat-option value="90"> Rentistas de Capital, solo para personas naturales.</mat-option>
                   </mat-select>
+                  <mat-error>Elige una opción.</mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field class="w-full sm:w-80 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Correo electronico:</mat-label>
                   <mat-icon
                         class="icon-size-5"
@@ -1075,7 +1077,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio"  required>
-                  <mat-error >Solo se permiten números.</mat-error>
+                  <mat-error *ngIf="accionistasForm.get('telfDomicilio').hasError('maxLengthExceeded')">El número de teléfono no puede tener más de 10 dígitos y como entrada solo debe tener números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1108,7 +1110,7 @@
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                   <input matInput type="text" id="telfLaboral"  formControlName="telfLaboral"  >
-                  <mat-error >Solo se permiten números.</mat-error>
+                  <mat-error *ngIf="accionistasForm.get('telfLaboral').hasError('maxLengthExceeded')">El número de teléfono no puede tener más de 10 dígitos y como entrada solo debe tener números.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -1258,7 +1260,7 @@
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Numero de cuenta bancaria:</mat-label>
                   <input matInput type="text" id="numCuentaBancaria"  formControlName="numCuentaBancaria" >
-                  <mat-error *ngIf="accionistasForm.get('numCuentaBancaria').hasError('maxLengthExceeded')">El número de cuenta no puede tener más de 10 dígitos.</mat-error>
+                  <mat-error *ngIf="accionistasForm.get('numCuentaBancaria').hasError('maxLengthExceeded')">El número de cuenta no puede tener más de 16 dígitos.</mat-error>
                 </mat-form-field>
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">

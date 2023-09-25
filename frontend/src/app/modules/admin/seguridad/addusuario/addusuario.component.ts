@@ -133,7 +133,6 @@ export class AddusuarioComponent {
     }
 
     usuarioExistente(){
-        console.log(this.identificacion);
         
         this.userService.obtenerUsuario(this.identificacion).subscribe(response => {
             const confirmation = this._fuseConfirmationService.open({
@@ -162,7 +161,6 @@ export class AddusuarioComponent {
     }
 
     consultarUsuario() {
-        console.log(this.identificacion);
         this.accionistasService.obtenerPersona(this.identificacion).subscribe(
           (data: Actualizar) => {
             if (data.codUsuario != null){
