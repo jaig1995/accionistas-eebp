@@ -35,6 +35,9 @@ public class Persona {
     @Column(name = "apeseg")
     private String apeSeg;
 
+    @Column(name = "tipopersona")
+    private String tipoPersona;
+
     @Column(name = "razonsocial")
     private String razonSocial;
 
