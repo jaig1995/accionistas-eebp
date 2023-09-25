@@ -71,7 +71,7 @@ export class AddusuarioComponent {
     private _filtrarOpciones(value: string): Actualizar[] {
         const filtro = value.toLowerCase();
         return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
-      }
+    }
 
     onSubmit() {
         const data = {
@@ -134,6 +134,7 @@ export class AddusuarioComponent {
 
     usuarioExistente(){
         console.log(this.identificacion);
+        
         this.userService.obtenerUsuario(this.identificacion).subscribe(response => {
             const confirmation = this._fuseConfirmationService.open({
                 "title": "El usuario ya existe!",
@@ -161,6 +162,7 @@ export class AddusuarioComponent {
     }
 
     consultarUsuario() {
+        console.log(this.identificacion);
         this.accionistasService.obtenerPersona(this.identificacion).subscribe(
           (data: Actualizar) => {
             if (data.codUsuario != null){

@@ -57,34 +57,29 @@ export class AprobaraccionistaComponent implements OnInit{
   codigoUsuarioAccionista: string;
   descripcionRechazo: string;
 
-  filteredCodigos: Observable<string[]>;
+  datosAutocompletado: Actualizar[] = []; 
+  valorSeleccionado: string = '';
 
+  
+  opcionesFiltradas: Observable<Actualizar[]>;
 
   constructor(private userDatos: InformacionAccionistasService,private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
   }
-  ngOnInit(): void {
-    this.accionistasService.obtenerCodigos().subscribe(data => {
-      console.log('Datos recibidos:', data);
-      const codigosYNombres: Actualizar[] = data; 
-      this.filteredCodigos = this.registroForm.get('codUsuario').valueChanges.pipe(
-        startWith(''), 
-        map(value => {
-          if (typeof value === 'string') {
-            return this._filterCodigos(value, codigosYNombres);
-          }
-          return [];
-        })
+  ngOnInit() {
+
+    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradas = this.registroForm.get('codUsuario').valueChanges.pipe(
+        startWith(''), // Inicia con una cadena vacía
+        map(value => this._filtrarOpciones(value))
       );
     });
   }
 
-  // Función para filtrar los códigos y nombres
-  private _filterCodigos(value: string, codigosYNombres: Actualizar[]): string[] {
-    const filterValue = value.toLowerCase();
-    return codigosYNombres
-      .filter(item => item.codUsuario.toLowerCase().includes(filterValue))
-      .map(item => `${item.codUsuario} - ${item.nomPri} ${item.nomSeg} ${item.apePri} ${item.apeSeg}`);
+  private _filtrarOpciones(value: string): Actualizar[] {
+      const filtro = value.toLowerCase();
+      return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
   }
   
   registroForm = new FormGroup({
