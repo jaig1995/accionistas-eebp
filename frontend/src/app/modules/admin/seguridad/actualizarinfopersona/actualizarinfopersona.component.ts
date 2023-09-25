@@ -340,12 +340,17 @@ export class ActualizarinfopersonaComponent implements OnInit{
   onSubmit() { 
     console.log(this.accionistasForm);
     if (this.accionistasForm.valid) {
-      console.log('Datos del formulario:', this.accionistasForm.value);
+      
       const formData = this.accionistasForm.value;
       this.accionistasService.enviarDatos(formData).subscribe(
         (response) => {
-          // Aquí puedes manejar la respuesta del servidor
-          console.log('Respuesta del servidor: Datos enviados', response);
+          const formDataFotografia = new FormData();
+          formDataFotografia.append("file", this.selectedFile, formData.codUsuario + ".jpg");
+          this.accionistasService.enviarFotografia(formDataFotografia).subscribe(
+            (response) => {
+              console.log('Respuesta del servidor: Foto Cargada', response);
+            }
+          );
 
           const confirmation = this._fuseConfirmationService.open({
 

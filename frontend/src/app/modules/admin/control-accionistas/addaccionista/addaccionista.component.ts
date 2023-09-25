@@ -243,14 +243,13 @@ export class AddaccionistaComponent {
   }
 
   onSubmit() { 
-    console.log(this.accionistasForm);
+
     if (this.accionistasForm.valid) {
-      console.log('Datos del formulario:', this.accionistasForm.value);
+      
       const formData = this.accionistasForm.value;
       this.accionistasService.enviarDatos(formData).subscribe(
         (response) => {
-          // Aquí puedes manejar la respuesta del servidor
-          console.log('Respuesta del servidor: Datos enviados', response);
+          
 
           const formDataFotografia = new FormData();
           formDataFotografia.append("file", this.selectedFile, formData.codUsuario + ".jpg");
