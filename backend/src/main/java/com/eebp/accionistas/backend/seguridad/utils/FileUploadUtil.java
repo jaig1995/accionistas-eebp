@@ -1,12 +1,17 @@
 package com.eebp.accionistas.backend.seguridad.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.eebp.accionistas.backend.seguridad.entities.Asset;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,5 +34,24 @@ public class FileUploadUtil {
         }
 
         return fileCode;
+    }
+
+    public static List<Asset> files(String codUsuario, String typeFile) {
+        String directoryPath = "../frontend/src/assets/images/avatars";
+        File directory = new File(directoryPath);
+        List<Asset> fileNames = new ArrayList<>();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        fileNames.add(Asset.builder().fileName(file.getName()).build());
+                    }
+                }
+            }
+        } else {
+            System.err.println("The specified directory does not exist or is not a directory.");
+        }
+        return fileNames.stream().filter(file -> file.getFileName().contains(typeFile + "_" + codUsuario)).collect(Collectors.toList());
     }
 }

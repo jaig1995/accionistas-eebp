@@ -9,12 +9,15 @@ import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepr
 import com.eebp.accionistas.backend.accionistas.exceptions.AccionistaExistsException;
 import com.eebp.accionistas.backend.accionistas.services.AccionistaService;
 import com.eebp.accionistas.backend.accionistas.services.LogRegistroAccionistaService;
+import com.eebp.accionistas.backend.seguridad.entities.Asset;
 import com.eebp.accionistas.backend.seguridad.exceptions.NewUserException;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
+import com.eebp.accionistas.backend.seguridad.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -60,6 +63,14 @@ public class AccionistaController {
     @GetMapping("/{codUsuario}")
     public Accionista getAccionista(@PathVariable String codUsuario) {
         return accionistaService.getAccionista(codUsuario).get();
+    }
+
+    @GetMapping("/aprobar/archivos/{codUsuario}")
+    public List<Asset> getAprobacionAccionistaFiles(@PathVariable String codUsuario) {
+        return FileUploadUtil.files(codUsuario, "raccionista").stream().map(file -> {
+            file.setUrl("/assets/images/avatars/" + file.getFileName());
+            return file;
+        }).collect(Collectors.toList());
     }
 
 
