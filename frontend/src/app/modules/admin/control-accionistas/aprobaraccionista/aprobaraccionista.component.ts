@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
+import { Archivos } from './archivos.model';
 
 
 @Component({
@@ -48,10 +49,13 @@ import { CommonModule } from '@angular/common';
 export class AprobaraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
+  archivosAccionista: Archivos[];
   mostrarCampos: boolean = false;
   mostrarBotones: boolean = false;
+  mostrarTablas: boolean = false;
 
   displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion'];
+  displayedColumnsArchivos: string[] = ['archivos', 'descarga'];
   private _fuseConfirmationService;
   private _baseUrl: string = ServicesConfig.apiUrl;
 
@@ -67,6 +71,7 @@ export class AprobaraccionistaComponent implements OnInit{
   constructor(private userDatos: InformacionAccionistasService,private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
   }
+  
   ngOnInit() {
 
     this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
@@ -136,11 +141,21 @@ export class AprobaraccionistaComponent implements OnInit{
 
   consultarUsuario() {
     const codUsuario = this.registroForm.get('codUsuario').value;
-  
+    
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
       (data: RegAccionistas) => {
         this.codigoUsuarioAccionista = codUsuario;
         this.datosAccionista = [data];
+        this.mostrarTablas = true;
+        this.accionistasService.obtenerArchivos(codUsuario).subscribe(
+          (dataArchivos: Archivos[]) => {
+           
+            this.archivosAccionista = dataArchivos;
+            console.log(this.archivosAccionista);
+          }
+          
+        );
+
         if(data.esAccionista === 'N'){
           const confirmation = this._fuseConfirmationService.open({
             "title": "El usuario aún no es accionista.",
@@ -168,6 +183,7 @@ export class AprobaraccionistaComponent implements OnInit{
           });
           this.registroForm.get('codUsuario').setValue('');
           this.mostrarBotones = false;
+          this.mostrarTablas = false;
         }
   
         this.accionistasService.obtenerAccionista(codUsuario).subscribe(
@@ -199,6 +215,7 @@ export class AprobaraccionistaComponent implements OnInit{
               });
               this.registroForm.get('codUsuario').setValue('');
               this.mostrarBotones = false;
+              this.mostrarTablas = false;
             } else if (accionistaData.descripcionRechazo !== null) {
               const confirmation = this._fuseConfirmationService.open({
                 "title": "El usuario fue rechazado con la siguiente descripción:",
@@ -226,6 +243,7 @@ export class AprobaraccionistaComponent implements OnInit{
               });
               this.registroForm.get('codUsuario').setValue('');
               this.mostrarBotones = false;
+              this.mostrarTablas = false;
             } 
           },
           (error) => {
@@ -270,6 +288,10 @@ export class AprobaraccionistaComponent implements OnInit{
 
   botones() {
     this.mostrarBotones = true;
+  }
+
+  tablas() {
+    this.mostrarTablas = true;
   }
 
   rechazarUsuario(){

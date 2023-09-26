@@ -11,6 +11,7 @@ import { HojaDeRuta } from '../hojaderuta/hojaderuta.model';
 import { modificarRepresentante } from '../modificarapoderado/modificarapoderado.model';
 import { Accionista } from '../aprobaraccionista/aprobaraccionista.model';
 import { Representante } from '../declaracion/representante.model';
+import { Archivos } from '../aprobaraccionista/archivos.model';
 
   @Injectable({
     providedIn: 'root'
@@ -121,6 +122,10 @@ import { Representante } from '../declaracion/representante.model';
 
     obtenerCodigos(): Observable<Actualizar[]> {
       return this.http.get<Actualizar[]>(this._baseUrl + '/api/accionistas');
+    }
+
+    obtenerArchivos(id: string): Observable<Archivos[]> {
+      return this.http.get<Archivos[]>(this._baseUrl + '/api/accionista/aprobar/archivos/' + id);
     }
 
   } 

@@ -59,7 +59,7 @@ export class RegistraraccionistaComponent implements OnInit{
   errorMessage: string | undefined; 
   selectedFileMultiple: File[] = [];
 
-  datosAutocompletado: Actualizar[] = []; // Lista de objetos Actualizar para el autocompletado
+  datosAutocompletado: Actualizar[] = []; 
   valorSeleccionado: string = '';
 
 

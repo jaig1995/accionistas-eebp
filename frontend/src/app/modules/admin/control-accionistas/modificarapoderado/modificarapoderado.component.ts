@@ -14,12 +14,20 @@ import { items } from 'app/mock-api/apps/file-manager/data';
 import { MatSelectModule } from '@angular/material/select';
 import { RegAccionistas } from '../registraraccionista/registraraccionista.model';
 import { modificarRepresentante } from './modificarapoderado.model';
+import { Actualizar } from '../actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
+import { startWith, map} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'modificarapoderado',
   standalone   : true,
   templateUrl: './modificarapoderado.component.html',
   imports: [MatDividerModule,
+    CommonModule,
+    MatAutocompleteModule,
+    MatDividerModule,
     RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -35,7 +43,7 @@ import { modificarRepresentante } from './modificarapoderado.model';
   encapsulation: ViewEncapsulation.None,
   
 })
-export class ModificarapoderadoComponent {
+export class ModificarapoderadoComponent implements OnInit {
 
   datosAccionista: modificarRepresentante[];
   datosRepresentante: modificarRepresentante[];
@@ -47,6 +55,11 @@ export class ModificarapoderadoComponent {
   codigoUsuarioRepresentante: string;
   mostrarCampoAdicionalFueraTabla: boolean = false;
 
+  datosAutocompletado: Actualizar[] = []; 
+  valorSeleccionado: string = '';
+  
+  opcionesFiltradas: Observable<Actualizar[]>;
+  opcionesFiltradasRepresentante: Observable<Actualizar[]>;
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
@@ -54,8 +67,10 @@ export class ModificarapoderadoComponent {
 
   modificacionForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'codRepresentante': new FormControl('', [Validators.pattern('^[0-9]*$')]),
+    'codRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
   })
+
+  
   
   onSubmit(){
       
@@ -100,6 +115,34 @@ export class ModificarapoderadoComponent {
       );
     }
   }
+
+  ngOnInit() {
+
+    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradas = this.modificacionForm.get('codUsuario').valueChanges.pipe(
+        startWith(''), 
+        map(value => this._filtrarOpciones(value))
+      );
+    });
+    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradasRepresentante = this.modificacionForm.get('codRepresentante').valueChanges.pipe(
+        startWith(''), 
+        map(value => this._filtrarOpcionesRepresentante(value))
+      );
+    });
+  }
+
+  private _filtrarOpciones(value: string): Actualizar[] {
+      const filtro = value.toLowerCase();
+      return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
+  }
+  private _filtrarOpcionesRepresentante(value: string): Actualizar[] {
+    const filtro = value.toLowerCase();
+    return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
+}
+
   consultarUsuario() {
     const codUsuario = this.modificacionForm.get('codUsuario').value; 
   
@@ -143,7 +186,7 @@ export class ModificarapoderadoComponent {
         console.error('Error al obtener los datos:', error);
         const confirmation = this._fuseConfirmationService.open({
 
-          "title": "Usuario no encontrado",
+          "title": "El usuario aún no es accionista",
           "message": "Verifique el código de usuario.",
           "icon": {
             "show": true,

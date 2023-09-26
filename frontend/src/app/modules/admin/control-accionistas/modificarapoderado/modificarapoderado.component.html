@@ -10,9 +10,14 @@
 
         <form  id="registro" [formGroup]="modificacionForm" >
             <mat-form-field class="w-full sm:w-90 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'" >
-                <mat-label>Consultar apoderado por código de Accionista:</mat-label>
+                <mat-label  for="codUsuario" (click)="auto.open()">Consultar apoderado por código de Accionista:</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
-                <input matInput type="text" id="codUsuario" formControlName="codUsuario">
+                <input matInput type="text" id="campoTI" formControlName="codUsuario" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
+                        {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
+                      </mat-option>
+                  </mat-autocomplete>
             </mat-form-field>
 
             <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button><br>
@@ -83,7 +88,12 @@
             <br>
                 <mat-label>Consultar nuevo Representante:</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
-                <input matInput type="text" id="campoTI" formControlName="codRepresentante">
+                <input matInput type="text" id="codRepresentante" formControlName="codRepresentante" [matAutocomplete]="autoR">
+                <mat-autocomplete #autoR="matAutocomplete">
+                    <mat-option *ngFor="let dato of opcionesFiltradasRepresentante | async" [value]="dato.codUsuario">
+                        {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
+                      </mat-option>
+                  </mat-autocomplete>
             </mat-form-field>
 
             <button  class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarRepresentante()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
