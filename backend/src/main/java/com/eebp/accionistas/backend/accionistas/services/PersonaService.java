@@ -3,6 +3,7 @@ package com.eebp.accionistas.backend.accionistas.services;
 import com.eebp.accionistas.backend.accionistas.entities.Accionista;
 import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
 import com.eebp.accionistas.backend.accionistas.entities.Persona;
+import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepresentanteResponse;
 import com.eebp.accionistas.backend.accionistas.repositories.AccionistaRepository;
 import com.eebp.accionistas.backend.accionistas.repositories.PersonaRepository;
 import com.eebp.accionistas.backend.geo.MunicipioRepository;
@@ -288,30 +289,46 @@ public class PersonaService {
         return os.toByteArray();
     }
 
-    public byte[] getPDFDeclaracion(String codUsuario) throws IOException {
+    public byte[] getPDFDeclaracion(String codUsuario) throws IOException, UserNotFoundException {
         Persona datosPersona = personaRepository.findById(codUsuario).get();
         File inputHTML = new File("src/main/resources/pdfDeclaracion.html");
         Document document = Jsoup.parse(inputHTML, "UTF-8");
 
         if (datosPersona.getNomPri() != null && !datosPersona.getNomPri().equalsIgnoreCase("")) {
-            document.selectFirst("#nombre").text(
-                    datosPersona.getNomPri().toUpperCase() + " " +
-                            datosPersona.getNomSeg().toUpperCase() + " " +
-                            datosPersona.getApePri().toUpperCase() + " " +
-                            datosPersona.getApeSeg().toUpperCase());
-            document.selectFirst("#representacion").text(
-                    datosPersona.getNomPri().toUpperCase() + " " +
-                            datosPersona.getNomSeg().toUpperCase() + " " +
-                            datosPersona.getApePri().toUpperCase() + " " +
-                            datosPersona.getApeSeg().toUpperCase());
+
+
+            Accionista accionista = accionistaRepository.findById(codUsuario).get();
+            Persona pRepresentante;
+            if (accionista.getCodRepresentante() == null) {
+                pRepresentante = getPersona(accionista.getCodUsuario()).get();
+            } else {
+                pRepresentante = getPersona(accionista.getCodRepresentante()).get();
+            }
+            Persona pAccionista = getPersona(accionista.getCodUsuario()).get();
+
+            AccionistaRepresentanteResponse accionistaRepresentante = AccionistaRepresentanteResponse.builder()
+                    .nomAccionista(pAccionista.getNomPri() + " " + pAccionista.getNomSeg() + " " + pAccionista.getApePri() +  " " + pAccionista.getApeSeg())
+                    .nomRepresentante(pRepresentante.getNomPri() + " " + pRepresentante.getNomSeg() + " " + pRepresentante.getApePri() +  " " + pRepresentante.getApeSeg())
+                    .codAccionista(accionista.getCodUsuario())
+                    .codRepresentante(pRepresentante.getCodUsuario())
+                    .esAccionista("S")
+                    .tipoDocAccionista(pAccionista.getTipDocumento())
+                    .tipoDocRepresentante(pRepresentante.getTipDocumento())
+                    .build();
+
+            document.selectFirst("#nombre").text(accionistaRepresentante.getNomRepresentante());
+
+            document.selectFirst("#representacion").text(accionistaRepresentante.getNomAccionista());
+            document.selectFirst("#codUsuario").text(accionistaRepresentante.getCodRepresentante());
+            document.selectFirst("#nit").text(accionistaRepresentante.getCodAccionista());
+
         } else {
             document.selectFirst("#nombre").text(datosPersona.getRazonSocial().toUpperCase());
             document.selectFirst("#representacion").text(datosPersona.getRazonSocial().toUpperCase());
         }
 
-        document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
+
         document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#nit").text(datosPersona.getCodUsuario());
         if (datosPersona.getRecursos() != null) {
             document.selectFirst("#recursos").text(datosPersona.getRecursos());
             document.selectFirst("#ingresos").text(datosPersona.getIngresos());

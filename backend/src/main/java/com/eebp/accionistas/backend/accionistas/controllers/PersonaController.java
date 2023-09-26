@@ -50,7 +50,7 @@ public class PersonaController {
     }
 
     @GetMapping(value = "/pdfDeclaracion/{codUsuario}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public @ResponseBody byte[] getPDFDeclaracion(@PathVariable String codUsuario) throws IOException {
+    public @ResponseBody byte[] getPDFDeclaracion(@PathVariable String codUsuario) throws IOException, UserNotFoundException {
         return personaService.getPDFDeclaracion(codUsuario);
     }
 
