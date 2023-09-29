@@ -128,6 +128,8 @@ export class AprobaraccionistaComponent implements OnInit{
 
           this.registroForm.get('codUsuario').setValue('');
           this.datosAccionista = null;
+          this.mostrarBotones = false;
+          this.mostrarTablas = false;
 
         },
         (error) => {
@@ -151,7 +153,7 @@ export class AprobaraccionistaComponent implements OnInit{
           (dataArchivos: Archivos[]) => {
            
             this.archivosAccionista = dataArchivos;
-            console.log(this.archivosAccionista);
+            //console.log(this.archivosAccionista);
           }
           
         );

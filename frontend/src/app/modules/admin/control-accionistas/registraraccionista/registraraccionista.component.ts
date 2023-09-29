@@ -124,14 +124,49 @@ export class RegistraraccionistaComponent implements OnInit{
       numCarnet: this.registroForm.get('numCarnet').value,
       tipoRepresentante: this.registroForm.get('tipoRepresentante').value,
     };
+
     if (this.registroForm.get('codRepresentante').value !== '' && this.registroForm.get('tipoRepresentante').value) {
       formDataAccionista.codRepresentante = this.registroForm.get('codRepresentante').value;
-      formDataAccionista.tipoRepresentante = this.registroForm.get('tipoRepresentante').value
+      formDataAccionista.tipoRepresentante = this.registroForm.get('tipoRepresentante').value;
+      
     } else {
+      this.registroForm.get('codRepresentante').clearValidators();
+      this.registroForm.get('tipoRepresentante').clearValidators();
+      this.registroForm.get('codRepresentante').updateValueAndValidity();
+      this.registroForm.get('tipoRepresentante').updateValueAndValidity();
       formDataAccionista.codRepresentante = null;
       formDataAccionista.tipoRepresentante = null;
     }
-    
+
+    if(this.registroForm.get('codRepresentante').value === this.registroForm.get('codUsuario').value){
+      const confirmation = this._fuseConfirmationService.open({
+  
+        "title": "El usuario menor de edad no puede ser su propio representante.",
+        "message": "Intente con otro código de usuario.",
+        "icon": {
+          "show": true,
+          "name": "heroicons_outline:exclamation-triangle",
+          "color": "warn"
+        },
+        "actions": {
+          "confirm": {
+            "show": true,
+            "label": "Aceptar",
+            "color": "warn"
+          },
+          "cancel": {
+            "show": false,
+            "label": "Cancel"
+          }
+        },
+        "dismissible": true
+
+      });
+      
+      this.registroForm.get('codRepresentante').setValue('');
+      this.registroForm.invalid;
+    }
+    console.log(this.registroForm)
     if (this.registroForm.valid) {
       this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
         (response) => {
@@ -210,13 +245,13 @@ export class RegistraraccionistaComponent implements OnInit{
 
 
   consultarUsuario() {
-    const codUsuario = this.registroForm.get('codUsuario').value; // Obtener el valor del campo codUsuario
+    const codUsuario = this.registroForm.get('codUsuario').value; 
   
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
       (data: RegAccionistas) => {
         this.codigoUsuarioAccionista = codUsuario;
         this.datosAccionista = [data];
-        this.mostrarCampoAdicionalFueraTabla = data.tipDocumento === 'TI';
+        this.mostrarCampoAdicionalFueraTabla = data.tipDocumento === 'TI' || data.tipDocumento ==='RC';
         if (data.esAccionista === 'S'){
           const confirmation = this._fuseConfirmationService.open({
 
@@ -276,7 +311,7 @@ export class RegistraraccionistaComponent implements OnInit{
     );
   }
   consultarRepresentante() {
-    const codRepresentante = this.registroForm.get('codRepresentante').value; // Obtener el valor del campo codRepresentante
+    const codRepresentante = this.registroForm.get('codRepresentante').value; 
     const codUsuario = this.registroForm.get('codUsuario').value;
     if (codRepresentante === codUsuario) {
 
@@ -311,8 +346,8 @@ export class RegistraraccionistaComponent implements OnInit{
 
       this.accionistasService.obtenerDatosRegistro(codRepresentante).subscribe(
         (data: RegAccionistas) => {
-          if (data.tipDocumento === 'TI') {
-            // El tipo de documento es 'TI', realiza alguna acción o muestra un mensaje de error
+          if (data.tipDocumento === 'TI' || data.tipDocumento === 'RC') {
+            
             const confirmation = this._fuseConfirmationService.open({
               "title": "El representante no puede ser menor de edad.",
               "message": "Asigne un representante mayor de edad.",

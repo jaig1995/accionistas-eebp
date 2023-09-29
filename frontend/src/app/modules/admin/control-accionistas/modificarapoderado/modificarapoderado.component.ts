@@ -19,6 +19,7 @@ import { startWith, map} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
+import { Accionista } from '../aprobaraccionista/aprobaraccionista.model';
 
 @Component({
   selector: 'modificarapoderado',
@@ -49,6 +50,7 @@ export class ModificarapoderadoComponent implements OnInit {
   datosRepresentante: modificarRepresentante[];
   datosRepresentanteNuevo: RegAccionistas[];
   displayedColumns: string[] = ['avatar', 'codUsuario', 'nombreUsuario'];
+  mostrarTablas: boolean = false;
   private _fuseConfirmationService;
 
   codigoUsuarioAccionista: string;
@@ -149,6 +151,33 @@ export class ModificarapoderadoComponent implements OnInit {
     this.accionistasService.obtenerDatosModificacion(codUsuario).subscribe(
       
       (data: modificarRepresentante) => {
+        if (data.tipoDocAccionista === 'CC' || data.tipoDocAccionista === 'CE' || data.tipoDocAccionista === 'NIT') {
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "El usuario no tiene representante",
+            "message": "",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "warn"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "warn"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": true
+    
+          });
+          this.modificacionForm.get('codUsuario').setValue('');
+          this.mostrarCampoAdicionalFueraTabla = null;
+        }
         if (data.esAccionista === 'S'){
           console.log(data);
           this.codigoUsuarioAccionista = codUsuario;
@@ -210,6 +239,38 @@ export class ModificarapoderadoComponent implements OnInit {
         this.modificacionForm.get('codUsuario').setValue('');
       }
     );
+    this.accionistasService.obtenerAccionista(codUsuario).subscribe(
+      (data: Accionista) => {
+        if(data.descripcionRechazo !== null){
+          const confirmation = this._fuseConfirmationService.open({
+
+            "title": "Usuario rechazado!",
+            "message": "",
+            "icon": {
+              "show": true,
+              "name": "heroicons_outline:exclamation-triangle",
+              "color": "warn"
+            },
+            "actions": {
+              "confirm": {
+                "show": true,
+                "label": "Aceptar",
+                "color": "warn"
+              },
+              "cancel": {
+                "show": false,
+                "label": "Cancel"
+              }
+            },
+            "dismissible": true
+    
+          });
+          this.modificacionForm.get('codUsuario').setValue('');
+          this.mostrarCampoAdicionalFueraTabla = null;
+        }
+        
+      }
+    );
   }
 
   consultarRepresentante() {
@@ -249,7 +310,7 @@ export class ModificarapoderadoComponent implements OnInit {
       this.accionistasService.obtenerDatosRegistro(codRepresentante).subscribe(
         (data: RegAccionistas) => {
           this.mostrarCampoAdicionalFueraTabla = data.codUsuario !== null;
-          if (data.tipDocumento === 'TI') {
+          if (data.tipDocumento === 'TI' || data.tipDocumento === 'RC') {
             const confirmation = this._fuseConfirmationService.open({
               "title": "El representante no puede ser menor de edad.",
               "message": "Asigne un representante mayor de edad.",
@@ -309,5 +370,9 @@ export class ModificarapoderadoComponent implements OnInit {
 
     }
     
+  }
+
+  tablas() {
+    this.mostrarTablas = true;
   }
 }
