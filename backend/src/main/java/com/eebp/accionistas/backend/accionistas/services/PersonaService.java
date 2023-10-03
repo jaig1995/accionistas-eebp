@@ -49,7 +49,7 @@ public class PersonaService {
     public List<Persona> getPersonas() {
         return personaRepository.findAll().stream().map(persona -> {
             if(accionistaRepository.findById(persona.getCodUsuario()).isPresent()) {
-                persona.setEsAccionista("S");
+                persona.setEsAccionista(accionistaRepository.findById(persona.getCodUsuario()).get().getAprobado());
             } else {
                 persona.setEsAccionista("N");
             }
@@ -132,7 +132,9 @@ public class PersonaService {
         document.selectFirst("#estCivPersona").text(datosPersona.getEstCivPersona().toUpperCase());
         document.selectFirst("#celPersona").text(datosPersona.getCelPersona());
         document.selectFirst("#profPersona").text(datosPersona.getProfPersona().toUpperCase());
-        document.selectFirst("#actEcoPersona").text(datosPersona.getActEcoPersona().toUpperCase());
+        if(datosPersona.getActEcoPersona() != null) {
+            document.selectFirst("#actEcoPersona").text(datosPersona.getActEcoPersona().toUpperCase());
+        }
         document.selectFirst("#correoPersona").text(datosPersona.getCorreoPersona().toUpperCase());
         document.selectFirst("#dirDomicilio").text(datosPersona.getDirDomicilio().toUpperCase());
         document.selectFirst("#munDomicilio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioDomicilio())).get().getNombreMunicipio().toUpperCase());
