@@ -36,7 +36,7 @@
 
       <ng-container matColumnDef="nomPri">
         <th mat-header-cell *matHeaderCellDef mat-sort-header > NOMBRES </th>
-        <td mat-cell *matCellDef="let element"> {{element.nomPri}} {{element.nomSeg}} {{element.apePri}} {{element.apeSeg}}</td>
+        <td mat-cell *matCellDef="let element"> {{ (element.nomPri || element.nomSeg || element.apePri || element.apeSeg) ? (element.nomPri + ' ' + element.nomSeg + ' ' + element.apePri + ' ' + element.apeSeg) : element.razonSocial }}</td>
       </ng-container>
 
       <ng-container matColumnDef="modificarFormatos">

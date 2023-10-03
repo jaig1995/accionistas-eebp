@@ -77,7 +77,7 @@ export class AprobaraccionistaComponent implements OnInit{
     this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
       this.datosAutocompletado = datos;
       this.opcionesFiltradas = this.registroForm.get('codUsuario').valueChanges.pipe(
-        startWith(''), // Inicia con una cadena vacía
+        startWith(''), 
         map(value => this._filtrarOpciones(value))
       );
     });

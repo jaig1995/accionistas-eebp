@@ -21,7 +21,7 @@
               <input matInput id="codUsuario" name="codUsuario" [(ngModel)]="identificacion" (ngModelChange)="usuarioExistente()" [formControl]="filtroControl" required [matAutocomplete]="auto" pattern="[0-9]*">
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codUsuario">
-                  {{ dato.codUsuario }} - {{ dato.nomPri }} {{ dato.nomSeg }} {{ dato.apePri }} {{dato.apeSeg}}
+                  {{ dato.codUsuario }} - {{ (dato.nomPri || dato.nomSeg || dato.apePri || dato.apeSeg) ? (dato.nomPri + ' ' + dato.nomSeg + ' ' + dato.apePri + ' ' + dato.apeSeg) : dato.razonSocial }}
                 </mat-option>
               </mat-autocomplete>
               <mat-error>Solo se permiten números.</mat-error>
