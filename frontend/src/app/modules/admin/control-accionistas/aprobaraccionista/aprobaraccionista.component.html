@@ -111,8 +111,8 @@
 
         <div class="button-container" *ngIf="mostrarBotones">
 
-            <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()"  ><mat-icon svgIcon="heroicons_outline:check"></mat-icon>Aprobar</button>
-            <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'warn'" (click)="camposRechazo()" ><mat-icon svgIcon="heroicons_solid:x-mark"></mat-icon>Rechazar</button>
+            <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()" [disabled]="botonDesactivado" ><mat-icon svgIcon="heroicons_outline:check"></mat-icon>Aprobar</button>
+            <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'warn'" (click)="camposRechazo()" [disabled]="botonDesactivado"><mat-icon svgIcon="heroicons_solid:x-mark"></mat-icon>Rechazar</button>
         </div>
 
         <div *ngIf="mostrarCampos">
@@ -134,7 +134,7 @@
 
            
 
-            <button class="fuse-mat-button w-30 mt-2" mat-mini-fab [color]="'warn'" (click)="rechazarUsuario()" >Confirmar</button>
+            <button class="fuse-mat-button w-30 mt-2" mat-mini-fab [color]="'warn'" (click)="rechazarUsuario()" [disabled]="botonDesactivado">Confirmar</button>
             
         </div>
 

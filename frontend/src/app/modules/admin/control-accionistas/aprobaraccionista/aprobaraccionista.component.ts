@@ -58,6 +58,7 @@ export class AprobaraccionistaComponent implements OnInit{
   displayedColumnsArchivos: string[] = ['archivos', 'descarga'];
   private _fuseConfirmationService;
   private _baseUrl: string = ServicesConfig.apiUrl;
+  botonDesactivado: boolean = false;
 
   codigoUsuarioAccionista: string;
   descripcionRechazo: string;
@@ -137,6 +138,7 @@ export class AprobaraccionistaComponent implements OnInit{
         }
       );
     }
+    this.botonDesactivado = true;
   }
    
 
@@ -292,6 +294,10 @@ export class AprobaraccionistaComponent implements OnInit{
     this.mostrarBotones = true;
   }
 
+  desactivarBotones(){
+    this.botonDesactivado = true;
+  }
+
   tablas() {
     this.mostrarTablas = true;
   }
@@ -332,6 +338,7 @@ export class AprobaraccionistaComponent implements OnInit{
           this.descripcionRechazo = null;
           this.datosAccionista = null;
           this.mostrarCampos = null;
+          this.mostrarTablas = null;
           this.mostrarBotones = false;
 
         },
@@ -339,7 +346,7 @@ export class AprobaraccionistaComponent implements OnInit{
           console.error('Error en la petición - Accionista:', error);
         }
       );
-    
+    this.botonDesactivado = true;
   }
 
   convertToUpperCase(event: Event) {
