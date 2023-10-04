@@ -724,7 +724,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     this.accionistasService.peticionGetHuella().subscribe(
       (response) => {
         const base64Data = response.fingerprint.message;
-        //this.message = 'data:image/png;base64,' + base64Data;
+        this.message = base64Data;
         this.base64 = base64Data;
         this.accionistasForm.get('huella').setValue(this.base64);
       },
@@ -738,7 +738,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     this.accionistasService.peticionGetHuella().subscribe(
       (response) => {
         const base64Data = response.fingerprint.message;
-        //this.message_2 = 'data:image/png;base64,' + base64Data;
+        this.message_2 = base64Data;
         this.base64_2 = base64Data;
         this.accionistasForm.get('huella2').setValue(this.base64_2);
       },
@@ -752,7 +752,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     this.accionistasService.peticionGetFirma().subscribe(
       (response) => {
         const base64DataFirma = response.sign.message;
-        //this.messageFirma = 'data:image/png;base64,' + base64DataFirma;
+        this.messageFirma =  base64DataFirma;
         this.base64Firma = base64DataFirma;
         this.accionistasForm.get('firma').setValue(this.base64Firma);
       },
