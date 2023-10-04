@@ -1076,7 +1076,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio"  required>
+                  <input matInput type="text" id="telfDomicilio"  formControlName="telfDomicilio">
                   <mat-error *ngIf="accionistasForm.get('telfDomicilio').hasError('maxLengthExceeded')">El número de teléfono no puede tener más de 10 dígitos y como entrada solo debe tener números.</mat-error>
                 </mat-form-field>
 
@@ -1087,7 +1087,7 @@
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
                   <mat-error >Solo se permiten números.</mat-error>
-                  <input matInput type="text" id="indTelDomicilio"  formControlName="indTelDomicilio"  required>
+                  <input matInput type="text" id="indTelDomicilio"  formControlName="indTelDomicilio">
                 </mat-form-field>
 
                 <mat-divider class="mt-6 mb-5"></mat-divider>
