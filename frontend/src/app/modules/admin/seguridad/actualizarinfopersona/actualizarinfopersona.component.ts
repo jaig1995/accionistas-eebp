@@ -88,7 +88,17 @@ export class ActualizarinfopersonaComponent implements OnInit{
     );
   }
     id: string;
-    message: any;
+    
+
+     //variable para la huella
+     message: any;
+     message_2: any;
+     base64: any;
+     base64_2: any;
+ 
+     //variables para la firma
+     messageFirma: any;
+     base64Firma: any;
 
     bancos: any[];
     departamentos: any[];
@@ -255,6 +265,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
           ingresos: datos.ingresos,
           firma: datos.firma,
           huella: datos.huella,
+          huella2:datos.huella2,
           numCuentaBancaria: datos.numCuentaBancaria,
           tipoCuentaBancaria: datos.tipoCuentaBancaria,
           entidadBancaria: datos.entidadBancaria
@@ -697,6 +708,52 @@ export class ActualizarinfopersonaComponent implements OnInit{
     }
 
     return null; // La fecha es válida
+  }
+
+  obtenerHuella() {
+    this.accionistasService.peticionGetHuella().subscribe(
+      (response) => {
+        const base64Data = response.fingerprint.message;
+        this.message = 'data:image/png;base64,' + base64Data;
+        this.base64 = base64Data;
+        this.accionistasForm.get('huella').setValue(this.base64);
+      },
+      (error) => {
+        console.error('Error en la petición:', error);
+      }
+    );
+  }
+
+  obtenerHuella2() {
+    this.accionistasService.peticionGetHuella().subscribe(
+      (response) => {
+        const base64Data = response.fingerprint.message;
+        this.message_2 = 'data:image/png;base64,' + base64Data;
+        this.base64_2 = base64Data;
+        this.accionistasForm.get('huella2').setValue(this.base64_2);
+      },
+      (error) => {
+        console.error('Error en la petición:', error);
+      }
+    );
+  }
+
+  obtenerFirma() {
+    this.accionistasService.peticionGetFirma().subscribe(
+      (response) => {
+        const base64DataFirma = response.sign.message;
+        this.messageFirma = 'data:image/png;base64,' + base64DataFirma;
+        this.base64Firma = base64DataFirma;
+        this.accionistasForm.get('firma').setValue(this.base64Firma);
+      },
+      (error) => {
+        console.error('Error en la petición:', error);
+      }
+    );
+  }
+
+  capturarFirma(){
+    this.accionistasService.peticionGetFirmaCaptura().subscribe();
   }
 
 }

@@ -1313,8 +1313,69 @@
                   <mat-label>Ingresos</mat-label>
                   <input matInput id="ingresos" formControlName="ingresos">
                 </mat-form-field>
+
+                <div class="button-container" >
+
+                  <div class=" sm:mt-2 sm:ml-4" *ngIf="message">
+                    <mat-label class="font-extrabold" >Huella Derecha:</mat-label>
+                    <img class="w-30 h-30" style="transform: rotate(90deg);" [src]="message" alt="Huella recibida">
+                  </div><br>
   
-                <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <div class=" sm:mt-2 sm:ml-4" *ngIf="message_2">
+                    <mat-label class="font-extrabold" >Huella Izquierda:</mat-label>
+                    <img class="w-30 h-30" style="transform: rotate(90deg);" [src]="message_2" alt="Huella recibid">
+                  </div><br>
+
+                </div>
+                
+                
+
+                <div class=" sm:mt-2 sm:ml-4" *ngIf="messageFirma">
+                  <mat-label class="font-extrabold" >Firma Recibida:</mat-label>
+                  <img class="w-100 h-30" [src]="messageFirma" alt="Firma recibida">
+                </div><br>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Huella</mat-label>
+                <input matInput id="huella" formControlName="huella">
+              </mat-form-field>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Huella2</mat-label>
+                <input matInput id="huella2" formControlName="huella2">
+              </mat-form-field>
+
+              <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Firma</mat-label>
+                <input matInput id="firma" formControlName="firma">
+              </mat-form-field>
+  
+              <div class="button-container">
+                <button class="fuse-mat-button sm:w-64 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerFirma()">
+                  <mat-icon svgIcon="heroicons_outline:pencil-square"></mat-icon>
+                  Iniciar registro de firma
+                </button>
+
+                <button class="fuse-mat-button sm:w-64 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="capturarFirma()">
+                  <mat-icon svgIcon="mat_outline:save"></mat-icon>
+                  Guardar firma
+                </button>
+                
+              </div>
+
+              <div class="button-container">
+                <button class="fuse-mat-button sm:w-64 sm:w-30 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerHuella()">
+                  <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
+                  Registrar huella índice derecho
+                </button>
+
+                <button class="fuse-mat-button sm:w-64 sm:w-30 mt-4 sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerHuella2()">
+                  <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
+                  Registrar huella índice izquierdo
+                </button>
+              </div>
+  
+                <!-- <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Firma</mat-label>
                   <input matInput id="firma" formControlName="firma">
                 </mat-form-field>
@@ -1327,7 +1388,7 @@
                 <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                   <mat-label>Huella2</mat-label>
                   <input matInput id="huella2" formControlName="huella2">
-                </mat-form-field>
+                </mat-form-field> -->
                 <br>
               <button class="fuse-mat-button w-30 mt-4 sm:ml-4" mat-mini-fab [color]="'accent'" type="submit"><mat-icon  svgIcon="navigate_next"></mat-icon>Actualizar</button>
   
