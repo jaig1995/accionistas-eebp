@@ -194,7 +194,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
 
   ngOnInit() {
       this.id = this.route.snapshot.paramMap.get('id');
-      this.obtenerDatos(); // Llama al método para obtener los datos
+      this.obtenerDatos(); 
   }
 
   obtenerDatos() {
@@ -355,13 +355,19 @@ export class ActualizarinfopersonaComponent implements OnInit{
       const formData = this.accionistasForm.value;
       this.accionistasService.enviarDatos(formData).subscribe(
         (response) => {
-          const formDataFotografia = new FormData();
-          formDataFotografia.append("file", this.selectedFile, formData.codUsuario + ".jpg");
-          this.accionistasService.enviarFotografia(formDataFotografia).subscribe(
+          console.log(this.selectedFile);
+          if (this.selectedFile != null){
+
+            const formDataFotografia = new FormData();
+            formDataFotografia.append("file", this.selectedFile, formData.codUsuario + ".jpg");
+            this.accionistasService.enviarFotografia(formDataFotografia).subscribe(
             (response) => {
               console.log('Respuesta del servidor: Foto Cargada', response);
             }
           );
+
+          }
+          
 
           const confirmation = this._fuseConfirmationService.open({
 
