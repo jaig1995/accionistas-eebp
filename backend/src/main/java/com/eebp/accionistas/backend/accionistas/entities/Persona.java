@@ -131,6 +131,9 @@ public class Persona {
     @Column(name = "huella")
     private byte[] huella;
 
+    @Column(name = "huella2")
+    private byte[] huella2;
+
     @Column(name = "firma")
     private byte[] firma;
 
