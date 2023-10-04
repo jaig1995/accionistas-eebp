@@ -1318,19 +1318,19 @@
 
                   <div class=" sm:mt-2 sm:ml-4" *ngIf="message">
                     <mat-label class="font-extrabold" >Huella Derecha:</mat-label>
-                    <img class="w-30 h-30" style="transform: rotate(90deg);" [src]="message" alt="Huella recibida">
+                    <img class="w-30 h-30" style="transform: rotate(90deg);" src="data:image/png;base64,{{message}}" alt="Huella recibida">
                   </div><br>
   
                   <div class=" sm:mt-2 sm:ml-4" *ngIf="message_2">
                     <mat-label class="font-extrabold" >Huella Izquierda:</mat-label>
-                    <img class="w-30 h-30" style="transform: rotate(90deg);" [src]="message_2" alt="Huella recibid">
+                    <img class="w-30 h-30" style="transform: rotate(90deg);" src="data:image/png;base64,{{message_2}}" alt="Huella recibid">
                   </div><br>
 
                 </div>
                 
                 <div class=" sm:mt-2 sm:ml-4" *ngIf="messageFirma">
                   <mat-label class="font-extrabold" >Firma Recibida:</mat-label>
-                  <img class="w-100 h-30" [src]="messageFirma" alt="Firma recibida">
+                  <img class="w-100 h-30" src="data:image/png;base64,{{messageFirma}}" alt="Firma recibida">
                 </div><br>
 
               <mat-form-field style="display: none;" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">

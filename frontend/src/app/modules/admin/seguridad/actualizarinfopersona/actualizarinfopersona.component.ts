@@ -271,6 +271,10 @@ export class ActualizarinfopersonaComponent implements OnInit{
           entidadBancaria: datos.entidadBancaria
 
         });
+        this.message = datos.huella;
+        this.message_2 = datos.huella2;
+        this.messageFirma = datos.firma;
+
         this.onDepartamentoChange(null);
         this.onDepartamentoNacimiento(null);
         
