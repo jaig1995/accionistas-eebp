@@ -246,31 +246,31 @@ public class PersonaService {
 
         document.selectFirst("#numPersonas").text(datosPersona.getNumPersonas().toString());
 
-        if (datosPersona.getAutorizaCorreo().equalsIgnoreCase("S")) {
+        if (datosPersona.getAutorizaCorreo()) {
             document.selectFirst("#autorizaCorreoSi").text("x");
         } else {
             document.selectFirst("#autorizaCorreoNo").text("x");
         }
 
-        if (datosPersona.getAutorizaMensaje().equalsIgnoreCase("S")) {
+        if (datosPersona.getAutorizaMensaje()) {
             document.selectFirst("#autorizaMensajeSi").text("x");
         } else {
             document.selectFirst("#autorizaMensajeNo").text("x");
         }
 
-        if (datosPersona.getAutorizaFisico().equalsIgnoreCase("S")) {
+        if (datosPersona.getAutorizaFisico()) {
             document.selectFirst("#autorizaFisicoSi").text("x");
         } else {
             document.selectFirst("#autorizaFisicoNo").text("x");
         }
 
-        if (datosPersona.getAutorizaLlamada().equalsIgnoreCase("S")) {
+        if (datosPersona.getAutorizaLlamada()) {
             document.selectFirst("#autorizaLlamadaSi").text("x");
         } else {
             document.selectFirst("#autorizaLlamadaNo").text("x");
         }
 
-        if (datosPersona.getAutorizaTodas().equalsIgnoreCase("S")) {
+        if (datosPersona.getAutorizaTodas()) {
             document.selectFirst("#autorizaTodasSi").text("x");
         } else {
             document.selectFirst("#autorizaTodasNo").text("x");
