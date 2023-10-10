@@ -144,19 +144,19 @@ public class Persona {
     private Integer numPersonas;
 
     @Column(name = "autorizacorreo")
-    private String autorizaCorreo;
+    private Boolean autorizaCorreo;
 
     @Column(name = "autorizallamada")
-    private String autorizaLlamada;
+    private Boolean autorizaLlamada;
 
     @Column(name = "autorizatodas")
-    private String autorizaTodas;
+    private Boolean autorizaTodas;
 
     @Column(name = "autorizamensaje")
-    private String autorizaMensaje;
+    private Boolean autorizaMensaje;
 
     @Column(name = "autorizafisico")
-    private String autorizaFisico;
+    private Boolean autorizaFisico;
 
     @Column(name = "recursos")
     private String recursos;
