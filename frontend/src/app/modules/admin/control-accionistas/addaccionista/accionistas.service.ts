@@ -12,6 +12,7 @@ import { modificarRepresentante } from '../modificarapoderado/modificarapoderado
 import { Accionista } from '../aprobaraccionista/aprobaraccionista.model';
 import { Representante } from '../declaracion/representante.model';
 import { Archivos } from '../aprobaraccionista/archivos.model';
+import { ActEcoPer } from './actEcoPer.model';
 
   @Injectable({
     providedIn: 'root'
@@ -94,6 +95,10 @@ import { Archivos } from '../aprobaraccionista/archivos.model';
 
     obtenerBancos(): Observable<any[]> {
       return this.http.get<any[]>(this._baseUrl + '/api/bancos');
+    }
+
+    obtenerActividadEconomica(): Observable<any[]> {
+      return this.http.get<any[]>(this._baseUrl + '/api/actividadEconomica');
     }
 
     obtenerDatosModificacion(id: string): Observable<modificarRepresentante> {

@@ -10,4 +10,11 @@ export interface Autorizacion{
   telfDomicilio: string;
   celPersona: string;
   firma: string;
+  tipoVivienda: string;
+  numPersonas: string;
+  autorizaCorreo: string;
+  autorizaLlamada: string;
+  autorizaTodas: string;
+  autorizaMensaje: string;
+  autorizaFisico: string;
 }

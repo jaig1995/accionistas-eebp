@@ -70,6 +70,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
 
     this.watchTipDocumentoChanges();
     this.tarjetaIdentidad();
+    this.barrioDisabled();
     this._fuseConfirmationService = fuseConfirmationService;
     // Se obtienen los departamentos 
     this.geoService.getDepartamentos().subscribe(
@@ -661,6 +662,47 @@ export class ActualizarinfopersonaComponent implements OnInit{
             // } else {
             //   control.setValidators([Validators.required]);
             // }
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+  }
+  barrioDisabled() {
+    const barrioControlDomicilio = this.accionistasForm.get('tipoDireccionDomicilio');
+    const barrioControlLaboral = this.accionistasForm.get('tipoDireccionLaboral');
+    const fieldsToDisable = [
+      'barrioDomicilio',
+    ];
+    const fieldsToDisableLaboral = [
+      'barrioLaboral',
+    ];
+  
+    barrioControlDomicilio.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisable) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'Rural') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.setValidators;
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+    barrioControlLaboral.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisableLaboral) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'Rural') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.clearValidators();
           }
           control.updateValueAndValidity();
         }

@@ -56,11 +56,11 @@ export class ActualizarautorizacionComponent {
     'celPersona':  new FormControl({ value: '', disabled: true }, Validators.required),
     'tipoVivienda':  new FormControl('', Validators.required),
     'numPersonas':  new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'autorizaCorreo':  new FormControl(true),
-    'autorizaLlamada':  new FormControl(true),
-    'autorizaTodas':  new FormControl(true),
-    'autorizaMensaje':  new FormControl(true),
-    'autorizaFisico':  new FormControl(true),
+    'autorizaCorreo':  new FormControl(),
+    'autorizaLlamada':  new FormControl(),
+    'autorizaTodas':  new FormControl(),
+    'autorizaMensaje':  new FormControl(),
+    'autorizaFisico':  new FormControl(),
     'firma':  new FormControl(''),
 
     
@@ -68,7 +68,7 @@ export class ActualizarautorizacionComponent {
 
   ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id');
-    this.obtenerDatos(); // Llamado del método al inicializar el componente
+    this.obtenerDatos();
   }
 
   obtenerDatos() {
@@ -78,7 +78,6 @@ export class ActualizarautorizacionComponent {
 
         const nombreCompleto = datos.nomPri + ' ' + datos.nomSeg + ' ' + datos.apePri + ' ' + datos.apeSeg;
 
-        // Establecer el valor de los campos con el valor obtenido de la API
         this.autorizacionForm.patchValue({
           codUsuario: datos.codUsuario,
           nomPri: nombreCompleto,
@@ -87,6 +86,13 @@ export class ActualizarautorizacionComponent {
           telfDomicilio: datos.telfDomicilio,
           celPersona: datos.celPersona,
           firma: datos.firma,
+          tipoVivienda: datos.tipoVivienda,
+          numPersonas: datos.numPersonas,
+          autorizaCorreo: datos.autorizaCorreo,
+          autorizaFisico: datos.autorizaFisico,
+          autorizaLlamada: datos.autorizaLlamada,
+          autorizaMensaje: datos.autorizaMensaje,
+          autorizaTodas: datos.autorizaTodas,
 
         });
 

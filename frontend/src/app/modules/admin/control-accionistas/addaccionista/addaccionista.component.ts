@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Router, RouterModule} from '@angular/router';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
@@ -15,12 +15,18 @@ import { AccionistasService } from './accionistas.service';
 import { GeoService } from './geo.service';
 import { UserDataService } from '../../seguridad/permisos/user-data.service';
 import { Usuario } from '../../seguridad/permisos/usuarios.model';
+import { ActEcoPer } from './actEcoPer.model';
+import { Observable, map, startWith } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'agregar-accionista',
   standalone   : true,
   templateUrl: './addaccionista.component.html',
   imports: [MatDatepickerModule,
+    CommonModule,
+    MatAutocompleteModule,
     RouterModule,
     MatNativeDateModule,
     MatButtonModule,
@@ -39,6 +45,8 @@ import { Usuario } from '../../seguridad/permisos/usuarios.model';
 
 export class AddaccionistaComponent {
 
+  
+  //actividadesEconomicas: ActEcoPer[];
   showAdditionalField: boolean = false;
   showAdditionalFieldDir: boolean = false;
   showAdditionalFieldUrb: boolean = false;
@@ -70,10 +78,11 @@ export class AddaccionistaComponent {
 
     this.watchTipDocumentoChanges();
     this.tarjetaIdentidad();
+    this.barrioDisabled();
     
 
     this._fuseConfirmationService = fuseConfirmationService;
-    // Se obtienen los departamentos 
+    
     this.geoService.getDepartamentos().subscribe(
       (data) => {
         this.departamentos = data;
@@ -86,6 +95,12 @@ export class AddaccionistaComponent {
     this.accionistasService.obtenerBancos().subscribe(
       (data) => {
         this.bancos = data;
+      }
+    );
+
+    this.accionistasService.obtenerActividadEconomica().subscribe(
+      (data) => {
+        this.actividades = data;
       }
     );
 
@@ -102,6 +117,7 @@ export class AddaccionistaComponent {
     base64Firma: any;
    
     bancos: any[];
+    actividades: any[];
     departamentos: any[];
     municipios: any[];
     municipiosDomicilio: any[];
@@ -116,7 +132,7 @@ export class AddaccionistaComponent {
     selectMunicipio: FormControl = new FormControl('');
 
    accionistasForm = new FormGroup({
-    // Agrega más campos si es necesario según tu interfaz Accionistas
+  
     'tipDocumento':  new FormControl('', Validators.required),
     'razonSocial':  new FormControl ('', Validators.required),
     'nomPri':  new FormControl('', Validators.required),
@@ -181,6 +197,12 @@ export class AddaccionistaComponent {
       this.bancos = data;
     });
   }
+
+   onActividadEconomica(){
+     this.accionistasService.obtenerActividadEconomica().subscribe(data =>{
+       this.actividades = data;
+     });
+   }
 
   onDepartamentoChange(event: MatSelectChange) {
     const departamentoId = +this.accionistasForm.value.departamentoExp;
@@ -603,6 +625,48 @@ export class AddaccionistaComponent {
             // } else {
             //   control.setValidators([Validators.required]);
             // }
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+  }
+
+  barrioDisabled() {
+    const barrioControlDomicilio = this.accionistasForm.get('tipoDireccionDomicilio');
+    const barrioControlLaboral = this.accionistasForm.get('tipoDireccionLaboral');
+    const fieldsToDisable = [
+      'barrioDomicilio',
+    ];
+    const fieldsToDisableLaboral = [
+      'barrioLaboral',
+    ];
+  
+    barrioControlDomicilio.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisable) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'Rural') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.clearValidators();
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+    barrioControlLaboral.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisableLaboral) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'Rural') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.clearValidators();
           }
           control.updateValueAndValidity();
         }
