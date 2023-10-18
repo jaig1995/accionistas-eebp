@@ -97,8 +97,8 @@ import { ActEcoPer } from './actEcoPer.model';
       return this.http.get<any[]>(this._baseUrl + '/api/bancos');
     }
 
-    obtenerActividadEconomica(): Observable<any[]> {
-      return this.http.get<any[]>(this._baseUrl + '/api/actividadEconomica');
+    obtenerActividadEconomica(): Observable<ActEcoPer[]> {
+      return this.http.get<ActEcoPer[]>(this._baseUrl + '/api/actividadEconomica');
     }
 
     obtenerDatosModificacion(id: string): Observable<modificarRepresentante> {

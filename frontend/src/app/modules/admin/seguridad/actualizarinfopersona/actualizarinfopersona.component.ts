@@ -15,11 +15,17 @@ import { AccionistasService } from '../../control-accionistas/addaccionista/acci
 import { GeoService } from '../../control-accionistas/addaccionista/geo.service';
 import { Actualizar } from '../../control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 import { forEach } from 'lodash';
+import { ActEcoPer } from '../../control-accionistas/addaccionista/actEcoPer.model';
+import { Observable, map, startWith } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'actualizarinfopersona',
   standalone   : true,
   imports: [MatDatepickerModule,
+    MatAutocompleteModule,
+    CommonModule,
     RouterModule,
     MatNativeDateModule,
     MatButtonModule,
@@ -110,6 +116,13 @@ export class ActualizarinfopersonaComponent implements OnInit{
     municipiosPersona: any[];
 
     selectedFile: File;
+
+    datosAutocompletado: ActEcoPer[] = []; 
+    valorSeleccionado: string = '';
+
+
+    opcionesFiltradas: Observable<ActEcoPer[]>;
+    opcionesFiltradasRepresentante: Observable<ActEcoPer[]>;
    
 
     selectDepartamento: FormControl = new FormControl('');
@@ -186,6 +199,24 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'huella2': new FormControl(''),
   });
 
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.obtenerDatos(); 
+    this.accionistasService.obtenerActividadEconomica().subscribe((datos: ActEcoPer[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradas = this.accionistasForm.get('actEcoPersona').valueChanges.pipe(
+        startWith(''), 
+        map(value => this._filtrarOpciones(value))
+      );
+    });
+  }
+
+  
+  private _filtrarOpciones(value: string): ActEcoPer[] {
+    const filtro = value.toLowerCase();
+    return this.datosAutocompletado.filter(opcion => opcion.nomActEco.toLowerCase().includes(filtro));
+  }
+
   onBancos(){
     this.accionistasService.obtenerBancos().subscribe(data =>{
       this.bancos = data;
@@ -193,10 +224,9 @@ export class ActualizarinfopersonaComponent implements OnInit{
   }
 
 
-  ngOnInit() {
-      this.id = this.route.snapshot.paramMap.get('id');
-      this.obtenerDatos(); 
-  }
+  // ngOnInit() {
+      
+  // }
 
   obtenerDatos() {
     this.accionistasService.obtenerDatosActualizar(this.id).subscribe(
@@ -668,6 +698,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
       }
     });
   }
+
   barrioDisabled() {
     const barrioControlDomicilio = this.accionistasForm.get('tipoDireccionDomicilio');
     const barrioControlLaboral = this.accionistasForm.get('tipoDireccionLaboral');

@@ -201,11 +201,13 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                  <mat-select type="text" id="actEcoPersona"  formControlName="actEcoPersona" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
-                    <mat-option *ngFor="let actividad of actividades" value="{{actividad.codActEco}}">
-                      {{actividad.nomActEco}}
-                    </mat-option>
-                  </mat-select>
+                  <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" [matAutocomplete]="auto" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option value="NINGUNO">NINGUNO</mat-option>
+                    <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codActEco">
+                        {{ dato.nomActEco }}
+                      </mat-option>
+                  </mat-autocomplete>
                   <mat-error>Elige una opción.</mat-error>
                 </mat-form-field>
 

@@ -98,11 +98,11 @@ export class AddaccionistaComponent {
       }
     );
 
-    this.accionistasService.obtenerActividadEconomica().subscribe(
-      (data) => {
-        this.actividades = data;
-      }
-    );
+    // this.accionistasService.obtenerActividadEconomica().subscribe(
+    //   (data) => {
+    //     this.actividades = data;
+    //   }
+    // );
 
    }
    codUsuarioPersona: string = '';
@@ -117,7 +117,7 @@ export class AddaccionistaComponent {
     base64Firma: any;
    
     bancos: any[];
-    actividades: any[];
+    // actividades: any[];
     departamentos: any[];
     municipios: any[];
     municipiosDomicilio: any[];
@@ -127,6 +127,13 @@ export class AddaccionistaComponent {
     municipiosRepresentanteNacimiento: any[];
 
     selectedFile: File;
+
+    datosAutocompletado: ActEcoPer[] = []; 
+    valorSeleccionado: string = '';
+
+
+    opcionesFiltradas: Observable<ActEcoPer[]>;
+    opcionesFiltradasRepresentante: Observable<ActEcoPer[]>;
 
     selectDepartamento: FormControl = new FormControl('');
     selectMunicipio: FormControl = new FormControl('');
@@ -192,17 +199,34 @@ export class AddaccionistaComponent {
     'file': new FormControl(''),
   });
 
+  ngOnInit() {
+
+    this.accionistasService.obtenerActividadEconomica().subscribe((datos: ActEcoPer[]) => {
+      this.datosAutocompletado = datos;
+      this.opcionesFiltradas = this.accionistasForm.get('actEcoPersona').valueChanges.pipe(
+        startWith(''), 
+        map(value => this._filtrarOpciones(value))
+      );
+    });
+  }
+
+  
+  private _filtrarOpciones(value: string): ActEcoPer[] {
+    const filtro = value.toLowerCase();
+    return this.datosAutocompletado.filter(opcion => opcion.nomActEco.toLowerCase().includes(filtro));
+  }
+
   onBancos(){
     this.accionistasService.obtenerBancos().subscribe(data =>{
       this.bancos = data;
     });
   }
 
-   onActividadEconomica(){
-     this.accionistasService.obtenerActividadEconomica().subscribe(data =>{
-       this.actividades = data;
-     });
-   }
+  //  onActividadEconomica(){
+  //    this.accionistasService.obtenerActividadEconomica().subscribe(data =>{
+  //      this.actividades = data;
+  //    });
+  //  }
 
   onDepartamentoChange(event: MatSelectChange) {
     const departamentoId = +this.accionistasForm.value.departamentoExp;
@@ -307,7 +331,7 @@ export class AddaccionistaComponent {
           this.router.navigate(['inicio']);
         },
         (error) => {
-          // Manejo de errores si la petición falla
+          
           console.error('Error en la petición:', error);
         }
       );
