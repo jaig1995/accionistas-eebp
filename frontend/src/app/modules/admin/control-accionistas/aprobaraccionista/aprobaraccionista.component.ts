@@ -54,7 +54,7 @@ export class AprobaraccionistaComponent implements OnInit{
   mostrarBotones: boolean = false;
   mostrarTablas: boolean = false;
 
-  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion'];
+  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'email', 'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion'];
   displayedColumnsArchivos: string[] = ['archivos', 'descarga'];
   private _fuseConfirmationService;
   private _baseUrl: string = ServicesConfig.apiUrl;

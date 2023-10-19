@@ -47,7 +47,7 @@ export class RegistraraccionistaComponent implements OnInit{
 
   datosAccionista: RegAccionistas[];
   datosRepresentante: RegAccionistas[];
-  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'apellidoUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio'];
+  displayedColumns: string[] = ['avatar', 'tipDocumento', 'codUsuario', 'nombreUsuario', 'email', 'estadoCivil', 'celular', 'profesion', 'direccionDomicilio'];
   private _fuseConfirmationService;
   mostrarCampoAdicionalFueraTabla: boolean = false;
 
