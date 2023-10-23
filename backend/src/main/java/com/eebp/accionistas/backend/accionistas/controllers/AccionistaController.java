@@ -60,6 +60,11 @@ public class AccionistaController {
         return accionistaService.getAccionistaRepresentante(codUsuario);
     }
 
+    @GetMapping
+    public List<AccionistaRepresentanteResponse> getAccionistas() throws UserNotFoundException {
+        return accionistaService.getAccionistas();
+    }
+
     @GetMapping("/{codUsuario}")
     public Accionista getAccionista(@PathVariable String codUsuario) {
         return accionistaService.getAccionista(codUsuario).get();

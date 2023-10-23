@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -291,5 +293,29 @@ public class AccionistaService {
                 .tipoDocAccionista(pAccionista.getTipDocumento())
                 .tipoDocRepresentante(pRepresentante.getTipDocumento())
                 .build();
+    }
+
+    public List<AccionistaRepresentanteResponse> getAccionistas() throws UserNotFoundException {
+        List<AccionistaRepresentanteResponse> lista = new ArrayList<>();
+        List<Accionista> accionistas = accionistaRepository.findAll();
+        for (Accionista accionista : accionistas) {
+            Persona pRepresentante = Persona.builder().build();
+            if (accionista.getCodRepresentante() == null) {
+                pRepresentante = personaService.getPersona(accionista.getCodUsuario()).get();
+            } else {
+                pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
+            }
+            Persona pAccionista = personaService.getPersona(accionista.getCodUsuario()).get();
+            lista.add(AccionistaRepresentanteResponse.builder()
+                    .nomAccionista(pAccionista.getNomPri() + " " + pAccionista.getNomSeg() + " " + pAccionista.getApePri() + " " + pAccionista.getApeSeg())
+                    .nomRepresentante(pRepresentante.getNomPri() + " " + pRepresentante.getNomSeg() + " " + pRepresentante.getApePri() + " " + pRepresentante.getApeSeg())
+                    .codAccionista(accionista.getCodUsuario())
+                    .codRepresentante(pRepresentante.getCodUsuario())
+                    .esAccionista("S")
+                    .tipoDocAccionista(pAccionista.getTipDocumento())
+                    .tipoDocRepresentante(pRepresentante.getTipDocumento())
+                    .build());
+        }
+        return lista;
     }
 }
