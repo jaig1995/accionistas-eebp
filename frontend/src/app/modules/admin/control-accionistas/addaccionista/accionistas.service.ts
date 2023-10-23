@@ -142,4 +142,8 @@ import { EsAccionistas } from '../modificaraccionista/modificaraccionista.model'
       return this.http.get<EsAccionistas[]>(this._baseUrl + '/api/accionista');
     }
 
+    enviarRegistroActualizado(formData: any): Observable<any> {
+      return this.http.post<any>(this._baseUrl + '/api/accionista/actualizarTipoAccionista', formData);
+    }
+
   } 

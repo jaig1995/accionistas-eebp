@@ -55,26 +55,16 @@ export class ModificaraccionistaComponent implements OnInit {
   private _fuseConfirmationService;
   mostrarCampoAdicionalFueraTabla: boolean = false;
   mostrarTablas: boolean = false;
-
   codigoUsuarioAccionista: string;
   codigoUsuarioRepresentante: string;
-  // tipoAccionista: string;
-  // numCarnet: string;
-
   errorMessage: string | undefined; 
   selectedFileMultiple: File[] = [];
-
   datosAutocompletado: EsAccionistas[] = []; 
   valorSeleccionado: string = '';
-
-
   opcionesFiltradas: Observable<EsAccionistas[]>;
   opcionesFiltradasRepresentante: Observable<Actualizar[]>;
   datosActualizar: Accionista;
   archivosAccionista: Archivos[];
-  
-  
-
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
@@ -82,9 +72,7 @@ export class ModificaraccionistaComponent implements OnInit {
   
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
-    'codRepresentante': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'tipoAccionista': new FormControl('', Validators.required),
-    'tipoRepresentante': new FormControl('', Validators.required),
     'numCarnet': new FormControl({ value: '', disabled: true },[Validators.required,Validators.pattern('^[0-9]*$')]),
     'file': new FormControl(''),
   })
@@ -111,74 +99,26 @@ export class ModificaraccionistaComponent implements OnInit {
 
 
   onSubmit(){
-
-    // if (this.registroForm.get('codRepresentante').value === null || this.registroForm.get('tipoRepresentante').value === null) {
-      
-    //   console.error('CodRepresentante y TipoRepresentante deben estar seleccionados.');
-    //   return; 
-    // }
       
     const formDataAccionista = {
+
       codUsuario: this.registroForm.get('codUsuario').value,
-      //codRepresentante: this.registroForm.get('codRepresentante').value,
       tipoAccionista: this.registroForm.get('tipoAccionista').value,
-      //numCarnet: this.registroForm.get('numCarnet').value,
-      //tipoRepresentante: this.registroForm.get('tipoRepresentante').value,
+      
     };
 
-    // if (this.registroForm.get('codRepresentante').value !== '' && this.registroForm.get('tipoRepresentante').value) {
-    //   formDataAccionista.codRepresentante = this.registroForm.get('codRepresentante').value;
-    //   formDataAccionista.tipoRepresentante = this.registroForm.get('tipoRepresentante').value;
-      
-    // } else {
-    //   this.registroForm.get('codRepresentante').clearValidators();
-    //   this.registroForm.get('tipoRepresentante').clearValidators();
-    //   this.registroForm.get('codRepresentante').updateValueAndValidity();
-    //   this.registroForm.get('tipoRepresentante').updateValueAndValidity();
-    //   formDataAccionista.codRepresentante = null;
-    //   formDataAccionista.tipoRepresentante = null;
-    // }
-
-    // if(this.registroForm.get('codRepresentante').value === this.registroForm.get('codUsuario').value){
-    //   const confirmation = this._fuseConfirmationService.open({
-  
-    //     "title": "El usuario menor de edad no puede ser su propio representante.",
-    //     "message": "Intente con otro código de usuario.",
-    //     "icon": {
-    //       "show": true,
-    //       "name": "heroicons_outline:exclamation-triangle",
-    //       "color": "warn"
-    //     },
-    //     "actions": {
-    //       "confirm": {
-    //         "show": true,
-    //         "label": "Aceptar",
-    //         "color": "warn"
-    //       },
-    //       "cancel": {
-    //         "show": false,
-    //         "label": "Cancel"
-    //       }
-    //     },
-    //     "dismissible": true
-
-    //   });
-      
-    //   this.registroForm.get('codRepresentante').setValue('');
-    //   this.registroForm.invalid;
-    // }
     console.log(this.registroForm)
     if (this.registroForm.valid) {
-      this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
+      this.accionistasService.enviarRegistroActualizado(formDataAccionista).subscribe(
         (response) => {
 
           for (const selectedFile of this.selectedFileMultiple) {
             const formDataArchivo = new FormData();
             formDataArchivo.append("file", selectedFile, "raccionista_" + formDataAccionista.codUsuario + "_" + selectedFile.name); 
-      
             this.accionistasService.enviarArchivo(formDataArchivo).subscribe(
               (response) => {
                 console.log(formDataArchivo);
+                
               },
               (error) => {
                 console.error('Error al cargar la foto', error);
@@ -188,7 +128,7 @@ export class ModificaraccionistaComponent implements OnInit {
 
           const confirmation = this._fuseConfirmationService.open({
 
-            "title": "Datos enviados exitosamente!",
+            "title": "Datos actualizados exitosamente!",
             "message": "Los datos fueron enviados.",
             "icon": {
               "show": true,
@@ -210,7 +150,8 @@ export class ModificaraccionistaComponent implements OnInit {
     
           });
 
-          // this.router.navigate(['accionistas/agregar/autorizacion/' + this.registroForm.get('codUsuario').value]);
+          this.mostrarTablas = false;
+          this.registroForm.get('codUsuario').setValue('');
         },
         (error) => {
           console.log(error);
