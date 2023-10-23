@@ -57,7 +57,8 @@ public class AccionistaService {
     }
 
     public Accionista addAccionista(Accionista accionista) throws AccionistaExistsException, UserNotFoundException {
-        if(accionistaRepository.findById(accionista.getCodUsuario()) == null) {
+        if(accionistaRepository.findById(accionista.getCodUsuario()).isPresent()) {
+
             accionista.setAprobado("N");
             Persona persona = personaService.getPersona(accionista.getCodUsuario()).get();
             emailService.sendSimpleMail(
