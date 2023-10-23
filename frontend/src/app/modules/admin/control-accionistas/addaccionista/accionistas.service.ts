@@ -13,6 +13,7 @@ import { Accionista } from '../aprobaraccionista/aprobaraccionista.model';
 import { Representante } from '../declaracion/representante.model';
 import { Archivos } from '../aprobaraccionista/archivos.model';
 import { ActEcoPer } from './actEcoPer.model';
+import { EsAccionistas } from '../modificaraccionista/modificaraccionista.model';
 
   @Injectable({
     providedIn: 'root'
@@ -131,6 +132,14 @@ import { ActEcoPer } from './actEcoPer.model';
 
     obtenerArchivos(id: string): Observable<Archivos[]> {
       return this.http.get<Archivos[]>(this._baseUrl + '/api/accionista/aprobar/archivos/' + id);
+    }
+
+    eliminarArchivo(fileName: string): Observable<Archivos[]> {
+      return this.http.get<Archivos[]>(this._baseUrl + '/api/accionista/aprobar/archivos/eliminar/' + fileName);
+    }
+
+    obtenerAccionistas(): Observable<EsAccionistas[]> {
+      return this.http.get<EsAccionistas[]>(this._baseUrl + '/api/accionista');
     }
 
   } 

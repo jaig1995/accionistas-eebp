@@ -78,4 +78,5 @@ export interface Actualizar {
     numCuentaBancaria: string;
     tipoCuentaBancaria: string;
     entidadBancaria: string;
+    esAccionista: string;
 }

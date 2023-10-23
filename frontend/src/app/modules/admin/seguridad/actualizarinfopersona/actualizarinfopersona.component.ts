@@ -77,6 +77,8 @@ export class ActualizarinfopersonaComponent implements OnInit{
     this.watchTipDocumentoChanges();
     this.tarjetaIdentidad();
     this.barrioDisabled();
+    this.personaJuridica();
+    
     this._fuseConfirmationService = fuseConfirmationService;
     // Se obtienen los departamentos 
     this.geoService.getDepartamentos().subscribe(
@@ -682,6 +684,41 @@ export class ActualizarinfopersonaComponent implements OnInit{
         const control = this.accionistasForm.get(field);
         if (control) {
           if (value === 'TI') {
+            control.disable();
+            control.clearValidators();
+          } else {
+            control.enable();
+            control.clearValidators();
+            // if (field === 'extLaboral') {
+            //   control.clearValidators();
+            // } else {
+            //   control.setValidators([Validators.required]);
+            // }
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
+  }
+
+  personaJuridica() {
+    const tipoPersonaControl = this.accionistasForm.get('tipoPersona');
+    const fieldsToDisable = [
+      'departamentoExp',
+      'municipioExp',
+      'fecNacimiento',  
+      'genPersona',
+      'depNacimiento',
+      'lugNacimiento',
+      'estCivPersona',
+      'profPersona',
+    ];
+  
+    tipoPersonaControl.valueChanges.subscribe((value) => {
+      for (const field of fieldsToDisable) {
+        const control = this.accionistasForm.get(field);
+        if (control) {
+          if (value === 'JU') {
             control.disable();
             control.clearValidators();
           } else {

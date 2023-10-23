@@ -13,5 +13,6 @@ export interface RegAccionistas{
     tipoVivienda: string;
     correoPersona: string;
     esAccionista: string;
-
+    tipoAccionista: string;
+    numCarnet: string;
 }
