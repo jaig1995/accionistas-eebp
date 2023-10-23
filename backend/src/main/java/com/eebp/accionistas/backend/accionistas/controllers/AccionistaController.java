@@ -73,5 +73,10 @@ public class AccionistaController {
         }).collect(Collectors.toList());
     }
 
+    @GetMapping("/aprobar/archivos/eliminar/{fileName}")
+    public boolean eliminarArchivo(@PathVariable String fileName) {
+        return FileUploadUtil.deleteFile(fileName);
+    }
+
 
 }

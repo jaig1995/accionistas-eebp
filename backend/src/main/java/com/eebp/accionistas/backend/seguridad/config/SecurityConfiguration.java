@@ -51,7 +51,8 @@ public class SecurityConfiguration {
                                 "/api/accionista/accionistaRepresentante/*",
                                 "/api/accionista/ruta/*",
                                 "/api/bancos",
-                                "/api/actividadEconomica")
+                                "/api/actividadEconomica",
+                                "/api/accionista/aprobar/archivos/eliminar/*")
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
