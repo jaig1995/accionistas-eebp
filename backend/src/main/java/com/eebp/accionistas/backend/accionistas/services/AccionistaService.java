@@ -56,7 +56,7 @@ public class AccionistaService {
     }
 
     public Accionista addAccionista(Accionista accionista) throws AccionistaExistsException, UserNotFoundException {
-        if(accionistaRepository.findById(accionista.getCodUsuario()).isEmpty()) {
+        if(accionistaRepository.findById(accionista.getCodUsuario()) == null) {
             accionista.setAprobado("N");
             Persona persona = personaService.getPersona(accionista.getCodUsuario()).get();
             emailService.sendSimpleMail(
@@ -100,7 +100,7 @@ public class AccionistaService {
             );
             log.info("Accionista registrado correctamente.");
 
-            if (persona.getNomPri().isEmpty()) {
+            if (persona.getNomPri() == null) {
                 persona.setNomPri(persona.getRazonSocial());
                 persona.setNomSeg("");
                 persona.setApePri("");
@@ -141,7 +141,7 @@ public class AccionistaService {
     public void aprobarAccionista(AprobarAccionistaRequest aprobarAccionistaRequest) throws NewUserException, UserNotFoundException {
         accionistaRepository.aprobarAccionista(aprobarAccionistaRequest.getCodUsuario());
         Persona persona = personaService.getPersona(aprobarAccionistaRequest.getCodUsuario()).get();
-        if (persona.getNomPri().isEmpty()) {
+        if (persona.getNomPri() == null) {
             persona.setNomPri(persona.getRazonSocial());
             persona.setNomSeg("");
             persona.setApePri("");
@@ -220,7 +220,7 @@ public class AccionistaService {
     public void rechazarAccionista(RechazarAccionistaRequest request) throws UserNotFoundException {
         accionistaRepository.rechazarAccionista(request.getCodUsuario(), request.getDescripcionRechazo());
         Persona persona = personaService.getPersona(request.getCodUsuario()).get();
-        if (persona.getNomPri().isEmpty()) {
+        if (persona.getNomPri() == null) {
             persona.setNomPri(persona.getRazonSocial());
             persona.setNomSeg("");
             persona.setApePri("");
@@ -285,7 +285,7 @@ public class AccionistaService {
     public void actualizarRepresentante(ActualizarRepresentanteRequest request) throws UserNotFoundException {
         accionistaRepository.actualizarRepresentante(request.getCodUsuario(), request.getCodRepresentante());
         Persona persona = personaService.getPersona(request.getCodRepresentante()).get();
-        if (persona.getNomPri().isEmpty()) {
+        if (persona.getNomPri() == null) {
             persona.setNomPri(persona.getRazonSocial());
             persona.setNomSeg("");
             persona.setApePri("");
@@ -331,7 +331,7 @@ public class AccionistaService {
                 pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
             }
             Persona pAccionista = personaService.getPersona(accionista.getCodUsuario()).get();
-            if (pAccionista.getNomPri().isEmpty()) {
+            if (pAccionista.getNomPri() == null) {
                 pAccionista.setNomPri(pAccionista.getRazonSocial());
                 pAccionista.setNomSeg("");
                 pAccionista.setApePri("");
