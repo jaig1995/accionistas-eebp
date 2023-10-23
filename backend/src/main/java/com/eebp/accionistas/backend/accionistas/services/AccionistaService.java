@@ -9,6 +9,7 @@ import com.eebp.accionistas.backend.accionistas.entities.request.RechazarAccioni
 import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepresentanteResponse;
 import com.eebp.accionistas.backend.accionistas.exceptions.AccionistaExistsException;
 import com.eebp.accionistas.backend.accionistas.repositories.AccionistaRepository;
+import com.eebp.accionistas.backend.accionistas.entities.request.ActualizarTipoAccionistaRequest;
 import com.eebp.accionistas.backend.seguridad.entities.EmailDetails;
 import com.eebp.accionistas.backend.seguridad.entities.User;
 import com.eebp.accionistas.backend.seguridad.exceptions.NewUserException;
@@ -297,6 +298,10 @@ public class AccionistaService {
                 .accion(persona.getNomPri() + " " + persona.getNomSeg() + " " + persona.getApePri() +  " " + persona.getApeSeg()  + " fue actualizado como representante.")
                 .fecha(LocalDateTime.now())
                 .build());
+    }
+
+    public void actualizarTipoAccionista(ActualizarTipoAccionistaRequest request) {
+        accionistaRepository.actualizarTipoAccionista(request.getCodUsuario(), request.getTipoAccionista());
     }
 
     public AccionistaRepresentanteResponse getAccionistaRepresentante(String codUsuario) throws UserNotFoundException {

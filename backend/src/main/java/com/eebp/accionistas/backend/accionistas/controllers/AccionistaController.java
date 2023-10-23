@@ -3,6 +3,7 @@ package com.eebp.accionistas.backend.accionistas.controllers;
 import com.eebp.accionistas.backend.accionistas.entities.Accionista;
 import com.eebp.accionistas.backend.accionistas.entities.LogRegistroAccionistas;
 import com.eebp.accionistas.backend.accionistas.entities.request.ActualizarRepresentanteRequest;
+import com.eebp.accionistas.backend.accionistas.entities.request.ActualizarTipoAccionistaRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.AprobarAccionistaRequest;
 import com.eebp.accionistas.backend.accionistas.entities.request.RechazarAccionistaRequest;
 import com.eebp.accionistas.backend.accionistas.entities.response.AccionistaRepresentanteResponse;
@@ -53,6 +54,11 @@ public class AccionistaController {
     @PostMapping("/actualizarRepresentante")
     public void actualizarRepresentante(@RequestBody ActualizarRepresentanteRequest request) throws UserNotFoundException {
         accionistaService.actualizarRepresentante(request);
+    }
+
+    @PostMapping("/actualizarTipoAccionista")
+    public void actualizarTipoAccionista(@RequestBody ActualizarTipoAccionistaRequest request) throws UserNotFoundException {
+        accionistaService.actualizarTipoAccionista(request);
     }
 
     @GetMapping("/accionistaRepresentante/{codUsuario}")
