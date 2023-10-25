@@ -119,7 +119,7 @@ public class PersonaService {
         document.selectFirst("#" + datosPersona.getTipDocumento()).text("X");
         document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
         document.selectFirst("#municipioExp").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
-        document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartamento().toUpperCase());
+        //document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartamento().toUpperCase());
         document.selectFirst("#fecNacimiento").text(datosPersona.getFecNacimiento().split("T")[0]);
         document.selectFirst("#lugNacimiento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getLugNacimiento())).get().getNombreMunicipio().toUpperCase());
 
@@ -129,11 +129,11 @@ public class PersonaService {
             document.selectFirst("#genPersonaM").text("X");
         }
 
-        document.selectFirst("#estCivPersona").text(datosPersona.getEstCivPersona().toUpperCase());
+        //document.selectFirst("#estCivPersona").text(datosPersona.getEstCivPersona().toUpperCase());
         document.selectFirst("#celPersona").text(datosPersona.getCelPersona());
-        document.selectFirst("#profPersona").text(datosPersona.getProfPersona().toUpperCase());
+        //document.selectFirst("#profPersona").text(datosPersona.getProfPersona().toUpperCase());
         if(datosPersona.getActEcoPersona() != null) {
-            document.selectFirst("#actEcoPersona").text(datosPersona.getActEcoPersona().toUpperCase());
+            //document.selectFirst("#actEcoPersona").text(datosPersona.getActEcoPersona().toUpperCase());
         }
         document.selectFirst("#correoPersona").text(datosPersona.getCorreoPersona().toUpperCase());
         document.selectFirst("#dirDomicilio").text(datosPersona.getDirDomicilio().toUpperCase());
@@ -141,7 +141,7 @@ public class PersonaService {
         document.selectFirst("#departamentoDomicilio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioDomicilio())).get().getDepartamento().getNombreDepartamento().toUpperCase());
         document.selectFirst("#paisDomicilio").text(datosPersona.getPaisDomicilio().toUpperCase());
         document.selectFirst("#telfDomicilio").text(datosPersona.getTelfDomicilio());
-        document.selectFirst("#indDomicilio").text(datosPersona.getIndTelDomicilio());
+        //document.selectFirst("#indDomicilio").text(datosPersona.getIndTelDomicilio());
         if (!datosPersona.getTipDocumento().equalsIgnoreCase("TI")) {
             document.selectFirst("#dirLaboral").text(datosPersona.getDirLaboral().toUpperCase());
             document.selectFirst("#munLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getNombreMunicipio().toUpperCase());
@@ -159,8 +159,8 @@ public class PersonaService {
                 document.selectFirst("#dirCorrespondenciaDomicilio").text("X");
             }
             if (datosPersona.getDirCorrespondencia().equalsIgnoreCase("otra")) {
-                document.selectFirst("#dirCorrespondenciaOtra").text("X");
-                document.selectFirst("#cualDirCorrespondencia").text(datosPersona.getOtraDirLaboral().toUpperCase());
+                //document.selectFirst("#dirCorrespondenciaOtra").text("X");
+                //document.selectFirst("#cualDirCorrespondencia").text(datosPersona.getOtraDirLaboral().toUpperCase());
             }
         }
 
