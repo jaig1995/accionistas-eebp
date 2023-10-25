@@ -145,7 +145,7 @@ public class PersonaService {
         if (!datosPersona.getTipDocumento().equalsIgnoreCase("TI")) {
 
             document.selectFirst("#dirLaboral").text(datosPersona.getDirLaboral());
-            if(datosPersona.getMunicipioLaboral() != null && datosPersona.getMunicipioLaboral() != "") {
+            if(datosPersona.getMunicipioLaboral().isEmpty()) {
                 document.selectFirst("#munLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getNombreMunicipio().toUpperCase());
                 document.selectFirst("#depLaboral").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioLaboral())).get().getDepartamento().getNombreDepartamento().toUpperCase());
             }
