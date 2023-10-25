@@ -152,7 +152,6 @@ public class PersonaService {
 
             document.selectFirst("#paisLaboral").text(datosPersona.getPaisLaboral());
             document.selectFirst("#telLaboral").text(datosPersona.getTelfLaboral());
-            document.selectFirst("#extLaboral").text(datosPersona.getExtLaboral());
         }
 
         if(datosPersona.getDirCorrespondencia() != null) {
