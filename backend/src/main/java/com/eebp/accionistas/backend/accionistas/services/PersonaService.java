@@ -118,15 +118,17 @@ public class PersonaService {
         }
         document.selectFirst("#" + datosPersona.getTipDocumento()).text("X");
         document.selectFirst("#codUsuario").text(datosPersona.getCodUsuario());
-        document.selectFirst("#municipioExp").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
-        //document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartamento().toUpperCase());
-        document.selectFirst("#fecNacimiento").text(datosPersona.getFecNacimiento().split("T")[0]);
-        document.selectFirst("#lugNacimiento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getLugNacimiento())).get().getNombreMunicipio().toUpperCase());
+        if(datosPersona.getMunicipioExp() != null) {
+            document.selectFirst("#municipioExp").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
+            //document.selectFirst("#departamento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getDepartamento().getNombreDepartamento().toUpperCase());
+            document.selectFirst("#fecNacimiento").text(datosPersona.getFecNacimiento().split("T")[0]);
+            document.selectFirst("#lugNacimiento").text(municipioRepository.findById(Integer.parseInt(datosPersona.getLugNacimiento())).get().getNombreMunicipio().toUpperCase());
 
-        if (datosPersona.getGenPersona().equalsIgnoreCase("M")) {
-            document.selectFirst("#genPersonaM").text("X");
-        } else {
-            document.selectFirst("#genPersonaM").text("X");
+            if (datosPersona.getGenPersona().equalsIgnoreCase("M")) {
+                document.selectFirst("#genPersonaM").text("X");
+            } else {
+                document.selectFirst("#genPersonaM").text("X");
+            }
         }
 
         //document.selectFirst("#estCivPersona").text(datosPersona.getEstCivPersona().toUpperCase());
