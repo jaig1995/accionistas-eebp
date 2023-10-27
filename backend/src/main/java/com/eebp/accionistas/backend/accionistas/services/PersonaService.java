@@ -336,6 +336,7 @@ public class PersonaService {
 
         if(datosPersona.getMunicipioExp() != null) {
             document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
+            document.selectFirst("#expedicion").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
         }
         if (datosPersona.getRecursos() != null) {
             document.selectFirst("#recursos").text(datosPersona.getRecursos());
@@ -374,8 +375,6 @@ public class PersonaService {
         } catch (Exception e) {
 
         }
-
-        document.selectFirst("#expedicion").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
         document.selectFirst("#cc").text(datosPersona.getCodUsuario());
 
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
