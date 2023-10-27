@@ -334,8 +334,9 @@ public class PersonaService {
             document.selectFirst("#representacion").text(datosPersona.getRazonSocial().toUpperCase());
         }
 
-
-        document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
+        if(datosPersona.getMunicipioExp() != null) {
+            document.selectFirst("#municipio").text(municipioRepository.findById(Integer.parseInt(datosPersona.getMunicipioExp())).get().getNombreMunicipio().toUpperCase());
+        }
         if (datosPersona.getRecursos() != null) {
             document.selectFirst("#recursos").text(datosPersona.getRecursos());
             document.selectFirst("#ingresos").text(datosPersona.getIngresos());
