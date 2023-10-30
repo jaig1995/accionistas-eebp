@@ -386,6 +386,7 @@ public class AccionistaService {
                     .esAccionista(accionista.getAprobado())
                     .tipoDocAccionista(pAccionista.getTipDocumento())
                     .tipoDocRepresentante(pRepresentante.getTipDocumento())
+                    .descripcionRechazo(accionista.getDescripcionRechazo())
                     .build());
         }
         return lista;
@@ -405,7 +406,7 @@ public class AccionistaService {
         // Add header row
         table.addCell("IDENTIFICACION");
         table.addCell("NOMBRE");
-        lista.stream().filter(accionista -> accionista.getEsAccionista().equalsIgnoreCase("N"))
+        lista.stream().filter(accionista -> accionista.getEsAccionista().equalsIgnoreCase("N") && accionista.getDescripcionRechazo() == null)
                 .forEach(accionista -> {
                     table.addCell(accionista.getTipoDocAccionista() + " " + accionista.getCodAccionista());
                     table.addCell(accionista.getNomAccionista());

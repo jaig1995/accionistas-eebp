@@ -18,5 +18,6 @@ public class AccionistaRepresentanteResponse {
     private String esAccionista;
     private String tipoDocAccionista;
     private String tipoDocRepresentante;
+    private String descripcionRechazo;
 
 }
