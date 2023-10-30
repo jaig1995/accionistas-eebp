@@ -22,7 +22,10 @@
               </mat-form-field>
 
             <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()" (click)="botones()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
-        </form><br>
+            <a class="sm:ml-4 ml-1 font-medium text-primary" mat-stroked-button href="http://192.168.0.59:8081/api/accionista/pdfPendientesAprobar" target="_blank">
+              <mat-icon color="primary" svgIcon="feather:file-text"></mat-icon>
+              Reporte pendientes por aprobar</a>
+          </form><br>
 
         <table *ngIf="mostrarTablas" mat-table [dataSource]="datosAccionista" class="mat-table">
 
