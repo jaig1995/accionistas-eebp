@@ -17,15 +17,20 @@ import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
 import com.eebp.accionistas.backend.seguridad.services.EmailServiceImpl;
 import com.eebp.accionistas.backend.seguridad.services.UserServiceImpl;
 import com.eebp.accionistas.backend.seguridad.utils.PasswordGenerator;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Log4j2
 @Service
@@ -354,5 +359,59 @@ public class AccionistaService {
                     .build());
         }
         return lista;
+    }
+
+    public List<AccionistaRepresentanteResponse> getListaAccionistasPendientesAprobar() throws UserNotFoundException {
+        List<AccionistaRepresentanteResponse> lista = new ArrayList<>();
+        List<Accionista> accionistas = accionistaRepository.findAll();
+        for (Accionista accionista : accionistas) {
+            Persona pRepresentante = Persona.builder().build();
+            if (accionista.getCodRepresentante() == null) {
+                pRepresentante = personaService.getPersona(accionista.getCodUsuario()).get();
+            } else {
+                pRepresentante = personaService.getPersona(accionista.getCodRepresentante()).get();
+            }
+            Persona pAccionista = personaService.getPersona(accionista.getCodUsuario()).get();
+            if (pAccionista.getNomPri() == null) {
+                pAccionista.setNomPri(pAccionista.getRazonSocial());
+                pAccionista.setNomSeg("");
+                pAccionista.setApePri("");
+                pAccionista.setApeSeg("");
+            }
+            lista.add(AccionistaRepresentanteResponse.builder()
+                    .nomAccionista(pAccionista.getNomPri() + " " + pAccionista.getNomSeg() + " " + pAccionista.getApePri() + " " + pAccionista.getApeSeg())
+                    .nomRepresentante(pRepresentante.getNomPri() + " " + pRepresentante.getNomSeg() + " " + pRepresentante.getApePri() + " " + pRepresentante.getApeSeg())
+                    .codAccionista(accionista.getCodUsuario())
+                    .codRepresentante(pRepresentante.getCodUsuario())
+                    .esAccionista(accionista.getAprobado())
+                    .tipoDocAccionista(pAccionista.getTipDocumento())
+                    .tipoDocRepresentante(pRepresentante.getTipDocumento())
+                    .build());
+        }
+        return lista;
+    }
+
+    public byte[] getAccionistasPendientesPorAprobar() throws DocumentException, UserNotFoundException {
+        List<AccionistaRepresentanteResponse> lista = getListaAccionistasPendientesAprobar();
+        Document document = new Document();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, outputStream);
+        document.open();
+        PdfPTable table = new PdfPTable(2);
+
+        Font boldFont = new Font(Font.FontFamily.HELVETICA, 15, Font.BOLD);
+        Paragraph paragraph = new Paragraph("ACCIONISTAS PENDIENTES POR APROBAR - EEBP\n\n", boldFont);
+        document.add(paragraph);
+        // Add header row
+        table.addCell("IDENTIFICACION");
+        table.addCell("NOMBRE");
+        lista.stream().filter(accionista -> accionista.getEsAccionista().equalsIgnoreCase("N"))
+                .forEach(accionista -> {
+                    table.addCell(accionista.getTipoDocAccionista() + " " + accionista.getCodAccionista());
+                    table.addCell(accionista.getNomAccionista());
+                });
+        document.add(table);
+        document.close();
+        return outputStream.toByteArray();
     }
 }

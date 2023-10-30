@@ -14,9 +14,12 @@ import com.eebp.accionistas.backend.seguridad.entities.Asset;
 import com.eebp.accionistas.backend.seguridad.exceptions.NewUserException;
 import com.eebp.accionistas.backend.seguridad.exceptions.UserNotFoundException;
 import com.eebp.accionistas.backend.seguridad.utils.FileUploadUtil;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,6 +90,11 @@ public class AccionistaController {
     @GetMapping("/aprobar/archivos/eliminar/{fileName}")
     public boolean eliminarArchivo(@PathVariable String fileName) {
         return FileUploadUtil.deleteFile(fileName);
+    }
+
+    @GetMapping(value = "/pdfPendientesAprobar", produces = MediaType.APPLICATION_PDF_VALUE)
+    public @ResponseBody byte[] getPDFPendientesAprobar() throws DocumentException, UserNotFoundException {
+        return accionistaService.getAccionistasPendientesPorAprobar();
     }
 
 

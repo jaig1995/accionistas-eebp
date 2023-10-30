@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                                 "/api/accionistas/*",
                                 "/api/accionista",
                                 "/api/accionista/*",
+                                "/api/accionista/pdfPendientesAprobar",
                                 "/api/accionista/aprobar",
                                 "/api/accionista/aprobar/archivos/*",
                                 "/api/accionista/rechazar",
