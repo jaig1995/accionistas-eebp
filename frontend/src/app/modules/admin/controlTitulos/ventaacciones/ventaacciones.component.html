@@ -1,0 +1,60 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+      
+        <div class="text-4xl font-extrabold tracking-tight leading-none">Control de titulos</div>
+        <div class="ml-0.5 text-4xl font-medium text-secondary">Venta de acciones</div>
+
+        <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"  id="registro">
+            
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'" >
+                <mat-label>Consultar por código (Identificación):</mat-label>
+                <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
+                <input matInput type="text" id="codUsuario" formControlName="codUsuario" >
+            </mat-form-field>
+
+            <button class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" ><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</button>
+            
+            <p class="mb-10"></p>
+        </form><br>
+
+        <div class="font-extrabold tracking-tight leading-none ">El accionista posee 5 titulos.</div><br>
+
+        <div class="bg-card shadow rounded overflow-hidden font-extrabold tracking-tight leading-none">
+            <mat-checkbox class="font-extrabold tracking-tight leading-none" >
+                Titulo 1 con 5 Acciones 
+            </mat-checkbox><br>
+              
+            <mat-checkbox   >
+                Titulo 2 con 3 Acciones 
+            </mat-checkbox><br>
+            
+            <mat-checkbox  >
+                Titulo 3 con 7 Acciones 
+            </mat-checkbox><br>
+            
+            <mat-checkbox  >
+                Titulo 4 con 10 Acciones 
+            </mat-checkbox><br>
+            
+            <mat-checkbox >
+                Titulo 5 con 15 Acciones 
+            </mat-checkbox><br>
+
+            <mat-form-field class="w-full sm:w-52 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'" >
+                <mat-label>Número de acciones a vender: </mat-label>
+                <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
+                <input matInput type="text" id="numAcciones" formControlName="numAccioens">
+            </mat-form-field>
+
+            <button class="fuse-mat-button w-30 sm:ml-4" mat-mini-fab [color]="'accent'" ><mat-icon svgIcon="mat_outline:local_offer"></mat-icon>Vender</button>
+
+            <mat-divider class=" mt-4 mb-10"></mat-divider>
+
+        </div>
+        
+        
+
+    </div>
+</div>

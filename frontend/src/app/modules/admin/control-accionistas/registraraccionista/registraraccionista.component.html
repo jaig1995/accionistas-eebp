@@ -8,7 +8,7 @@
 
         <mat-divider class="mt-4 mb-4"></mat-divider><br>
 
-        <form  id="registro" [formGroup]="registroForm" >
+        <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden"  id="registro" [formGroup]="registroForm" >
             <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'" >
                 <mat-label>Consultar por código (Identificación):</mat-label>
                 <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
@@ -210,7 +210,7 @@
     
         </table><br>
 
-        <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()" ><mat-icon class=" sm:ml-4" svgIcon="navigate_next"></mat-icon>Siguiente</button>
+        <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()"  [disabled]="selectedFileMultiple.length <= 0"><mat-icon class=" sm:ml-4" svgIcon="navigate_next" ></mat-icon>Siguiente</button>
 
     </div>
 </div>

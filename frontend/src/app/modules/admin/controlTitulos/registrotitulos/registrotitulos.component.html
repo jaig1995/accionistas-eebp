@@ -1,0 +1,87 @@
+<div class="mt-2 text-7xl font-extrabold flex flex-col flex-auto items-center justify-center ">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10 ">
+      
+        <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Control de titulos</div>
+        <div class="ml-0.5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">Registro de titulos</div>
+        <mat-divider class="mt-6 mb-10"></mat-divider>
+
+        <form class="flex-auto px-32 pt-10 bg-card shadow rounded overflow-hidden" mat-elevation-z8 id="titulos">
+
+            <mat-form-field class="w-full mt-4 sm:mt-4 sm:ml-2"  [subscriptSizing]="'dynamic'">
+
+                <mat-label>Seleccionar accionistas</mat-label>
+                <input matInput type="text" id="selectAccionistas"  formControlName="selectAccionistas">
+
+            </mat-form-field><br>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2"  [subscriptSizing]="'dynamic'">
+
+                <mat-label>Número de acciones</mat-label>
+                <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
+                <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2"  [subscriptSizing]="'dynamic'">
+
+                <mat-label>Valor de Acción</mat-label>
+                <mat-icon svgIcon="mat_outline:attach_money"></mat-icon>
+                <input matInput type="text" id="valorAccion"  formControlName="valorAccion">
+
+            </mat-form-field><br>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2"  [subscriptSizing]="'dynamic'">
+
+                <mat-label>Clase de acciones</mat-label>
+                <mat-icon svgIcon="mat_solid:sort"></mat-icon>
+                <mat-select id="claseAcciones" formControlName="claseAcciones">
+                    <mat-option value="A">Clase A</mat-option>
+                    <mat-option value="B">Clase B</mat-option>
+                </mat-select>
+
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2"  [subscriptSizing]="'dynamic'">
+
+                <mat-label>Tipo de acciones</mat-label>
+                <mat-icon svgIcon="mat_solid:sort"></mat-icon>
+                <mat-select id="claseAcciones" formControlName="claseAcciones">
+                    <mat-option value="O">Ordinarias</mat-option>
+                    <mat-option value="P">Privilegiadas</mat-option>
+                </mat-select>
+
+            </mat-form-field><br>
+
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2" [subscriptSizing]="'dynamic'">
+                <mat-label>Fecha de creación:</mat-label>
+                <input matInput  id="fecCreacion" formControlName="fecCreacion" matInput [matDatepicker]="pickerCreacion">
+                <mat-datepicker-toggle matSuffix [for]="pickerCreacion"></mat-datepicker-toggle>
+                <mat-datepicker #pickerCreacion></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2" [subscriptSizing]="'dynamic'">
+                <mat-label>Hora de creación:</mat-label>
+                <input matInput formControlName="horaCreacion" type="time">
+            </mat-form-field><br>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2" [subscriptSizing]="'dynamic'">
+                <mat-label>Fecha de finalización:</mat-label>
+                <input matInput  id="fecfinalizacion" formControlName="fecfinalizacion" matInput [matDatepicker]="pickerFinalizacion">
+                <mat-datepicker-toggle matSuffix [for]="pickerFinalizacion"></mat-datepicker-toggle>
+                <mat-datepicker #pickerFinalizacion></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2 mb-10" [subscriptSizing]="'dynamic'">
+                <mat-label>Hora de fiinalización:</mat-label>
+                <input matInput formControlName="horaFinalizacion" type="time">
+            </mat-form-field><br>
+
+            
+        </form>
+
+
+    </div>
+</div>
