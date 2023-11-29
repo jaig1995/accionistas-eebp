@@ -93,8 +93,9 @@ export const appRoutes: Route[] = [
             {path: 'accionistas/actualizar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizardeclaracion/actualizardeclaracion.routes')},
             {path: 'accionistas/actualizar', loadChildren: () => import('app/modules/admin/control-accionistas/modificaraccionista/modificaraccionista.routes')},
             {path: 'titulo/registro', loadChildren: () => import('app/modules/admin/controlTitulos/registrotitulos/registrotitulos.routes')},
-            {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/ventaacciones/ventaacciones.routes')},
-            {path: 'acciones/compra', loadChildren: () => import('app/modules/admin/controlTitulos/compraacciones/compraacciones.routes')},
+            // {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/ventaacciones/ventaacciones.routes')},
+            // {path: 'acciones/compra', loadChildren: () => import('app/modules/admin/controlTitulos/compraacciones/compraacciones.routes')},
+            {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/transacciones/tramitetransacciones/tramitetransacciones.routes')},
         ]   
     }
 ];

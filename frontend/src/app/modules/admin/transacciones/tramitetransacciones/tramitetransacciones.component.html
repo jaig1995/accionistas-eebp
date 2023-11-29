@@ -1,0 +1,95 @@
+<div class="flex flex-auto min-w-0 bg-card shadow rounded overflow-hidden">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+      
+      <div class="text-4xl font-extrabold tracking-tight leading-none">Transacciones</div>
+        <div class="ml-0.5 font-medium text-secondary"></div><br>
+  
+            <!-- Filters -->
+            <form class="flex-auto mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden" id="transacciones" [formGroup]="transaccionesForm" (ngSubmit)="onSubmit()" >
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Id transaccion:</mat-label>
+                    <input matInput type="text" id="idTransaccion"  formControlName="idTransaccion">
+                    
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Tipo transacción LV</mat-label>
+                    <mat-select type="text" id="tipoTransaccionLV"  formControlName="tipoTransaccionLV">
+                        <mat-option value="VE">Transacción de venta</mat-option>
+                        <mat-option value="CO">Transacción de compra</mat-option>
+                        <mat-option value="DO">Transacción de donación</mat-option>
+                        <mat-option value="EN">Transacción de endoso</mat-option>
+                        <mat-option value="SU">Transacción de sucesión</mat-option>
+                        <mat-option value="EM">Transacción de embargo</mat-option>  
+                    </mat-select>
+                    <mat-error>El campo es obligatorio</mat-error>
+                </mat-form-field><br>
+
+                <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Fecha de transaccion:</mat-label>
+                    <input matInput type="text" id="fechaTransaccion"  formControlName="fechaTransaccion">
+                </mat-form-field>
+
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Id solicitante:</mat-label>
+                    <input matInput type="text" id="idSolicitante"  formControlName="idSolicitante" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codAccionista">
+                            {{ dato.codAccionista }} - {{ (dato.nomAccionista) }}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error>El campo es obligatorio</mat-error>
+                </mat-form-field>
+
+                <a class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</a><br>
+                
+                
+
+                <mat-divider class="mt-4 mb-4"></mat-divider>
+            </form>
+
+            <p *ngIf="mostrarTabla" class="w-full mt-4 sm:mt-4 sm:ml-4">Los Titulos pertenecen a <strong>PRUEBA JUAN CAMILO</strong></p>
+
+            <app-tablaventa *ngIf="mostrarTabla"></app-tablaventa>
+
+            <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'">
+                    
+                <mat-label>Número de Acciones a vender:</mat-label>
+                <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+                
+            </mat-form-field><br>
+            <!-- <app-tablacompra *ngIf="mostrarTabla"></app-tablacompra> -->
+
+            
+
+            <button class="w-full sm:w-72 mt-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()" ><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Documentos anexos a la solicitud</button>
+            <input hidden (change)="onFileSelectedMultiple($event)" #fileInput multiple type="file" formControlName="file">
+            <span class="file-name" *ngFor="let file of selectedFileMultiple"> {{file.name}} - </span><br>
+            <mat-error *ngIf="selectedFileMultiple.length <= 0">Debes cargar los documentos anexos a la solicitud.</mat-error>
+
+            <div *ngIf="['CO', 'DO', 'EN', 'SU'].includes(transaccionesForm.get('tipoTransaccionLV')?.value)">
+                
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Id del tomador</mat-label>
+                  <input matInput type="text" id="idTomador" formControlName="idTomador">
+                </mat-form-field>
+              
+                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                  <mat-label>Nombre del tomador</mat-label>
+                  <input matInput type="text" id="nomTomador" formControlName="nomTomador">
+                </mat-form-field>
+              
+                <button class="mt-2 sm:mt-2 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="agregarTomador()">Añadir Tomador</button>
+                
+                <div *ngFor="let tomador of transaccionesForm.get('tomadores').controls">
+                  <div>{{ tomador.get('idTomador')?.value }} - {{ tomador.get('nomTomador')?.value }}</div>
+                </div>
+
+            </div>
+            
+            <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'primary'" (click)="onSubmit()" [disabled]="selectedFileMultiple.length <= 0">Tramitar</button>
+    </div>
+</div>
