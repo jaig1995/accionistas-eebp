@@ -15,7 +15,7 @@ export class TablacompraComponent {
     
     constructor(private sharedDataService: SharedDataService){}
     
-    datosTabla: TramiteTransaccion[];
+    datosCompra: TramiteTransaccion[];
     displayedColumns: string[] = ['titulo', 'cantidad', 'valor', 'total'];
     
     private datosTablaSubscription: Subscription;
@@ -27,7 +27,7 @@ export class TablacompraComponent {
       this.datosTablaSubscription = this.sharedDataService.datosTabla$.subscribe(
         (datos) => {
           
-          this.datosTabla = datos;
+          this.datosCompra = datos;
           console.log(datos);
           
         }

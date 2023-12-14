@@ -56,6 +56,7 @@ export class TramitetransaccionesComponent {
   datosTabla: TramiteTransaccion[];
   datosCompra: any[];
   mostrarTabla: boolean = false;
+  mostrarTablaCompra: boolean = false;
 
   opcionesFiltradas: Observable<EsAccionistas[]>;
   datosAutocompletado: EsAccionistas[] = []; 
@@ -64,7 +65,7 @@ export class TramitetransaccionesComponent {
   constructor(private sharedDataService: SharedDataService, private accionistasService: AccionistasService, private transaccionesService: TransaccionesService, fuseConfirmationService: FuseConfirmationService,){
     this._fuseConfirmationService = fuseConfirmationService;
     this.setearFechaActual();
-    // this.configurarCamposTomador();
+    this.configurarCamposTomador();
   }
 
   transaccionesForm = new FormGroup({
@@ -79,37 +80,23 @@ export class TramitetransaccionesComponent {
     'tomadores': new FormArray([]),
   });
 
-  configurarCamposTomador() {
-    const mostrarCamposTomador = ['CO', 'DO', 'EN', 'SU'].includes(this.transaccionesForm.get('tipoTransaccionLV')?.value);
-    if (mostrarCamposTomador) {
-      this.transaccionesForm.get('idTomador')?.enable();
-      this.transaccionesForm.get('nomTomador')?.enable();
-    } else {
-      this.transaccionesForm.get('idTomador')?.disable();
-      this.transaccionesForm.get('nomTomador')?.disable();
-    }
+  get tomadoresFormArray() {
+    return this.transaccionesForm.get('tomadores') as FormArray;
+  }
+
+  configurarCamposTomador(): boolean {
+    const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccionLV')?.value;
+    return tipoTransaccionLV === 'CO' || tipoTransaccionLV === 'EN' || tipoTransaccionLV === 'DO' || tipoTransaccionLV === 'SU';
   }
 
   agregarTomador() {
-    const idTomador = this.transaccionesForm.get('idTomador')?.value;
-    const nomTomador = this.transaccionesForm.get('nomTomador')?.value;
-
-    if (idTomador && nomTomador) {
-      const tomadoresArray = this.transaccionesForm.get('tomadores') as FormArray;
-      const tomadorGroup = new FormGroup({
-        idTomador: new FormControl(idTomador),
-        nomTomador: new FormControl(nomTomador),
-      });
-
-      tomadoresArray.push(tomadorGroup);
-      console.log(tomadorGroup);
-      console.log(tomadoresArray);
-
-      this.transaccionesForm.get('idTomador')?.reset('');
-      this.transaccionesForm.get('nomTomador')?.reset('');
-    }
-  }
+    const nuevoTomador = new FormGroup({
+      idTomador: new FormControl(''),
+      nomTomador: new FormControl(''),
+    });
   
+    this.tomadoresFormArray.push(nuevoTomador);
+  }
 
   onSubmit(){
 
@@ -502,12 +489,13 @@ export class TramitetransaccionesComponent {
       );
     }else if(tipoTransaccionLV === 'CO'){
 
+
       this.transaccionesService.obtenerTitulosCompra().subscribe(
         (data) => {
           this.datosCompra = data;
           console.log("hola" + data);
           this.sharedDataService.actualizarDatosTabla(data);
-          this.mostrarTabla = true;
+          this.mostrarTablaCompra = true;
         },
         (error) => {
           console.error('Error al obtener los datos:', error);
@@ -519,6 +507,10 @@ export class TramitetransaccionesComponent {
 
   tablas(){
     this.mostrarTabla = true;
+  }
+
+  tablaCompra(){
+    this.mostrarTablaCompra = true;
   }
 
 }
