@@ -17,7 +17,7 @@
 
                 <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Tipo transacción LV</mat-label>
-                    <mat-select type="text" id="tipoTransaccionLV"  formControlName="tipoTransaccionLV">
+                    <mat-select type="text" id="tipoTransaccion"  formControlName="tipoTransaccion">
                         <mat-option value="VE">Transacción de venta</mat-option>
                         <mat-option value="CO">Transacción de compra</mat-option>
                         <mat-option value="DO">Transacción de donación</mat-option>
@@ -52,14 +52,50 @@
             <p *ngIf="mostrarTabla" class="w-full mt-4 sm:mt-4 sm:ml-4">Los Titulos pertenecen a </p>
 
             <app-tablaventa *ngIf="mostrarTabla"></app-tablaventa>
-
-            <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'">
-                    
-                <mat-label>Número de Acciones a vender:</mat-label>
-                <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+            <form class="mt-4 sm:mt-4" id="transacciones" [formGroup]="transaccionesForm">
+                <!-- <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Título a vender:</mat-label>
+                    <input matInput type="text" id="idTitulo" formControlName="idTitulo" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let titulo of titulosDisponibles" [value]="titulo.idTitulo">
+                        {{ titulo.idTitulo }}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error>El campo es obligatorio.</mat-error>
+                </mat-form-field>
                 
-            </mat-form-field><br>
+                <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4 " [subscriptSizing]="'dynamic'">
+                        
+                    <mat-label>Número de Acciones a vender:</mat-label>
+                    <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+                    <mat-error>El campo es obligatorio.</mat-error>
+                </mat-form-field> -->
 
+                <a *ngIf="mostrarTabla" class="fuse-mat-button w-72 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="ventaDeAcciones()">Añadir accion</a><br>
+
+                <div *ngFor="let accion of accionesFormArray.controls; let i = index" formArrayName="acciones">
+                    <div [formGroupName]="i">
+                        <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                            <mat-label>Título a vender:</mat-label>
+                            <input matInput type="text" id="idTitulo" formControlName="idTitulo" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let titulo of titulosDisponibles" [value]="titulo.idTitulo">
+                                {{ titulo.idTitulo }}
+                            </mat-option>
+                            </mat-autocomplete>
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+                        
+                        <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4 " [subscriptSizing]="'dynamic'">
+                            
+                            <mat-label>Número de Acciones a vender:</mat-label>
+                            <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+                    </div>    
+                </div>
+            </form>
+            
             <app-tablacompra *ngIf="mostrarTablaCompra"></app-tablacompra>
 
             <button class="w-full sm:w-72 mt-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()" ><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Documentos anexos a la solicitud</button>

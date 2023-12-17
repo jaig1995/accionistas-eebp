@@ -59,25 +59,32 @@ export class TramitetransaccionesComponent {
   mostrarTablaCompra: boolean = false;
 
   opcionesFiltradas: Observable<EsAccionistas[]>;
-  datosAutocompletado: EsAccionistas[] = []; 
+  datosAutocompletado: EsAccionistas[] = [];
+  
+  opcionesFiltradasTitulos: Observable<TramiteTransaccion[]>;
+  datosAutocompletadoTitulos: TramiteTransaccion[] = [];
+  titulosDisponibles: TramiteTransaccion[];
   
   
   constructor(private sharedDataService: SharedDataService, private accionistasService: AccionistasService, private transaccionesService: TransaccionesService, fuseConfirmationService: FuseConfirmationService,){
     this._fuseConfirmationService = fuseConfirmationService;
     this.setearFechaActual();
     this.configurarCamposTomador();
+    this.ventaDeAcciones();
   }
 
   transaccionesForm = new FormGroup({
 
     'idTransaccion':  new FormControl({ value: '', disabled: true }),
-    'tipoTransaccionLV': new FormControl('', Validators.required),
+    'tipoTransaccion': new FormControl('', Validators.required),
     'fechaTransaccion': new FormControl({ value: '', disabled: true }),
     'idSolicitante': new FormControl('', Validators.required),
-    'numAcciones': new FormControl(''),
+    // 'numAcciones': new FormControl('', Validators.required),
+    // 'idTitulo': new FormControl('', Validators.required),
     'idTomador': new FormControl(''),
     'nomTomador': new FormControl(''),
     'tomadores': new FormArray([]),
+    'acciones': new FormArray([]),
   });
 
   get tomadoresFormArray() {
@@ -85,7 +92,7 @@ export class TramitetransaccionesComponent {
   }
 
   configurarCamposTomador(): boolean {
-    const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccionLV')?.value;
+    const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccion')?.value;
     return tipoTransaccionLV === 'CO' || tipoTransaccionLV === 'EN' || tipoTransaccionLV === 'DO' || tipoTransaccionLV === 'SU';
   }
 
@@ -98,16 +105,50 @@ export class TramitetransaccionesComponent {
     this.tomadoresFormArray.push(nuevoTomador);
   }
 
+  get accionesFormArray() {
+    return this.transaccionesForm.get('acciones') as FormArray;
+  }
+
+  ventaDeAcciones() {
+    const nuevaAccion = new FormGroup({
+      idTitulo: new FormControl(''),  
+      numAcciones: new FormControl(''),
+    });
+  
+    this.accionesFormArray.push(nuevaAccion);
+    console.log(this.accionesFormArray.value);
+  }
+
   onSubmit(){
 
     if (this.transaccionesForm.valid) {
-      const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccionLV')?.value;
+      const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccion')?.value;
 
       console.log(this.transaccionesForm)
       if(tipoTransaccionLV === 'VE'){
-        this.transaccionesService.enviarDatosTramiteVenta(this.transaccionesForm.value).subscribe(
+
+        const formDataVenta = {
+
+          idTransaccion: this.transaccionesForm.get('idTransaccion').value,
+          tipoTransaccion: this.transaccionesForm.get('tipoTransaccion').value,
+          fechaTransaccion: this.transaccionesForm.get('fechaTransaccion').value,
+          idSolicitante: this.transaccionesForm.get('idSolicitante').value,
+          // idTitulo: this.transaccionesForm.get('idTitulo').value,
+          // numAcciones: this.transaccionesForm.get('numAcciones').value,
+
+           // Agregar los datos de tomadoresFormArray
+          acciones: this.accionesFormArray.controls.map((control: FormGroup) => ({
+            idTitulo: control.get('idTitulo')?.value,
+            numAcciones: control.get('numAcciones')?.value,
+          })),
+          
+        };
+        console.log(formDataVenta);
+
+        this.transaccionesService.enviarDatosTramiteVenta(formDataVenta).subscribe(
           (response) => {
-  
+            console.log(formDataVenta);
+            console.log('Datos del formulario de venta:', formDataVenta);
             for (const selectedFile of this.selectedFileMultiple) {
               const formDataArchivo = new FormData();
               formDataArchivo.append("file", selectedFile, "raccionista_" + this.transaccionesForm.get('idSolicitante').value + "_" + selectedFile.name); 
@@ -472,7 +513,7 @@ export class TramitetransaccionesComponent {
 
   consultarUsuario() {
     const codUsuario = this.transaccionesForm.get('idSolicitante').value;
-    const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccionLV')?.value;
+    const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccion')?.value;
     
     if(tipoTransaccionLV === 'VE'){
       this.transaccionesService.obtenerTitulosVenta(codUsuario).subscribe(
@@ -481,7 +522,12 @@ export class TramitetransaccionesComponent {
           console.log("hola" + data);
           this.sharedDataService.actualizarDatosTabla(data);
           this.mostrarTabla = true;
-          
+
+          // Actualizar las opciones del autocompletado
+          this.titulosDisponibles = data;
+          // const primerTitulo = data.length > 0 ? data[0].idTitulo : '';
+          // this.transaccionesForm.get('idTitulo')?.setValue(primerTitulo);
+                
         },
         (error) => {
           console.error('Error al obtener los datos:', error);
