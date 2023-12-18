@@ -35,7 +35,6 @@ export class TablacompraComponent {
     }
   
     ngOnDestroy(): void {
-      
       this.datosTablaSubscription.unsubscribe();
     }
   }

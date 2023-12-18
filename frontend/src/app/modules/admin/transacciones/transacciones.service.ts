@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ServicesConfig } from 'app/services.config';
 import { TramiteTransaccion } from './tramitetransacciones/tramitetransacciones.model';
 import { Observable } from 'rxjs';
+import { transaccionesPendientes } from './aprobacionespendientes/aprobacionespendientes.model';
 
 
   @Injectable({
@@ -31,6 +32,14 @@ import { Observable } from 'rxjs';
     obtenerTitulosCompra(): Observable<any[]> {
       return this.http.get<any[]>(this._baseUrl + '/api/titulos');
     }
+
+    obtenerTransaccionesPendientes(): Observable<transaccionesPendientes[]> {
+      return this.http.get<transaccionesPendientes[]>(this._baseUrl + "/api/transacciones/pendientesAprobacion");
+    }
+
+    // obtenerDatosAprobacion(id: string): Observable<Actualizar> {
+    //   return this.http.get<Actualizar>(this._baseUrl + '/api/accionistas/' + id);
+    // }
 
     //enviar información
 

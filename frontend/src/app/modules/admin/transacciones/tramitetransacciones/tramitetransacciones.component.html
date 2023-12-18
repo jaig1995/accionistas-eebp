@@ -30,10 +30,10 @@
 
                 <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Fecha de transaccion:</mat-label>
-                    <input matInput type="text" id="fechaTransaccion"  formControlName="fechaTransaccion">
+                    <input matInput type="text" id="fecTrans"  formControlName="fecTrans">
                 </mat-form-field>
 
-                <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-form-field *ngIf="showIdSolicitante" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Id solicitante:</mat-label>
                     <input matInput type="text" id="idSolicitante"  formControlName="idSolicitante" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
@@ -44,15 +44,16 @@
                     <mat-error>El campo es obligatorio</mat-error>
                 </mat-form-field>
 
-                <a class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</a><br>
+                <a *ngIf="showIdSolicitante" class="fuse-mat-button w-30 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="consultarUsuario()"><mat-icon svgIcon="mat_outline:find_in_page"></mat-icon>Consultar</a><br>
                 
                 <mat-divider class="mt-4 mb-4"></mat-divider>
             </form>
 
-            <p *ngIf="mostrarTabla" class="w-full mt-4 sm:mt-4 sm:ml-4">Los Titulos pertenecen a </p>
+            <p *ngIf="mostrarTabla" class="w-full mt-4 sm:mt-4 sm:ml-4">Los Titulos pertenecen a  {{ transaccionesForm.get('idSolicitante').value }} </p>
 
             <app-tablaventa *ngIf="mostrarTabla"></app-tablaventa>
-            <form class="mt-4 sm:mt-4" id="transacciones" [formGroup]="transaccionesForm">
+
+            <form *ngIf="mostrarTabla" class="flex-auto mt-4 bg-card shadow rounded overflow-hidden" id="transacciones" [formGroup]="transaccionesForm">
                 <!-- <mat-form-field *ngIf="mostrarTabla" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Título a vender:</mat-label>
                     <input matInput type="text" id="idTitulo" formControlName="idTitulo" [matAutocomplete]="auto">
@@ -71,7 +72,7 @@
                     <mat-error>El campo es obligatorio.</mat-error>
                 </mat-form-field> -->
 
-                <a *ngIf="mostrarTabla" class="fuse-mat-button w-72 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="ventaDeAcciones()">Añadir accion</a><br>
+                <a *ngIf="mostrarTabla" class="fuse-mat-button w-40 " mat-raised-button [color]="'accent'" (click)="ventaDeAcciones()">Vender acción<mat-icon svgIcon="mat_outline:local_offer"></mat-icon></a><br>
 
                 <div *ngFor="let accion of accionesFormArray.controls; let i = index" formArrayName="acciones">
                     <div [formGroupName]="i">
@@ -94,6 +95,7 @@
                         </mat-form-field>
                     </div>    
                 </div>
+                <mat-divider class="mt-4 mb-4"></mat-divider>
             </form>
             
             <app-tablacompra *ngIf="mostrarTablaCompra"></app-tablacompra>
@@ -103,30 +105,66 @@
             <span class="file-name" *ngFor="let file of selectedFileMultiple"> {{file.name}} - </span><br>
             <mat-error *ngIf="selectedFileMultiple.length <= 0">Debes cargar los documentos anexos a la solicitud.</mat-error>
 
-            <mat-form-field *ngIf="configurarCamposTomador()" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                <mat-label>Id del tomador</mat-label>
-                <input matInput type="text" id="idTomador" formControlName="idTomador" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codAccionista">
-                        {{ dato.codAccionista }} - {{ (dato.nomAccionista) }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            
-            <mat-form-field *ngIf="configurarCamposTomador()" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
-                <mat-label>Nombre del tomador</mat-label>
-                <input matInput type="text" id="nomTomador" formControlName="nomTomador" [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.nomAccionista">
-                        {{ dato.codAccionista }} - {{ (dato.nomAccionista) }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-            
-            <button *ngIf="configurarCamposTomador()" class="fuse-mat-button w-32 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="agregarTomador()">Agregar Tomador</button><br>
+            <form  class="flex-auto mt-4 bg-card shadow rounded overflow-hidden" id="transacciones" [formGroup]="transaccionesForm">
+                <a *ngIf="configurarCamposTomador()" class="fuse-mat-button w-32 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="compraDeAcciones()">Comprar Accion</a>
+                <a *ngIf="configurarCamposTomador()" class="fuse-mat-button w-32 sm:ml-4" mat-stroked-button [color]="'primary'" (click)="agregarTomador()">Agregar Tomador</a>
+                <div *ngFor="let tomador of tomadoresFormArray.controls; let i = index" formArrayName="tomadores">
+                    <div [formGroupName]="i">
+
+                        <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                            <mat-label>Id tomador:</mat-label>
+                            <input matInput type="text" id="idTomador" formControlName="idTomador" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codAccionista">
+                                    {{ dato.codAccionista }} - {{ (dato.nomAccionista) }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+                        
+                        <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4 " [subscriptSizing]="'dynamic'">
+                            
+                            <mat-label>Nombre del tomador:</mat-label>
+                            <input matInput type="text" id="nomTomador"  formControlName="nomTomador" [matAutocomplete]="autoT">
+                            <mat-autocomplete #autoT="matAutocomplete">
+                                <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.nomAccionista">
+                                    {{ dato.codAccionista }} - {{ (dato.nomAccionista) }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+
+                <div *ngFor="let compra of accionesCompraFormArray.controls; let i = index" formArrayName="accionesCompra">
+                    <div [formGroupName]="i">
+
+                        <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                            <mat-label>Título a vender:</mat-label>
+                            <input matInput type="text" id="idTitulo" formControlName="idTitulo" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let titulo of titulosDisponibles" [value]="titulo.idTitulo">
+                                    {{ titulo.idTitulo }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field  class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4 " [subscriptSizing]="'dynamic'">
+                            
+                            <mat-label>Número de Acciones a vender:</mat-label>
+                            <input matInput type="text" id="numAcciones"  formControlName="numAcciones">
+                            <mat-error>El campo es obligatorio.</mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+                <mat-divider class="mt-4 mb-4"></mat-divider>
+            </form>
             
               
-            <div *ngFor="let tomador of tomadoresFormArray.controls; let i = index">
+            <!-- <div *ngFor="let tomador of tomadoresFormArray.controls; let i = index">
             <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                 <mat-label>Id del tomador</mat-label>
                 <input matInput type="text" [formControl]="tomador.get('idTomador')">
@@ -136,7 +174,7 @@
                 <mat-label>Nombre del tomador</mat-label>
                 <input matInput type="text" [formControl]="tomador.get('nomTomador')">
             </mat-form-field>
-            </div>
+            </div> -->
 
             <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'primary'" (click)="onSubmit()" [disabled]="selectedFileMultiple.length <= 0">Tramitar</button>
     </div>

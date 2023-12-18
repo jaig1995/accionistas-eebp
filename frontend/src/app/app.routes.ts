@@ -96,6 +96,8 @@ export const appRoutes: Route[] = [
             // {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/ventaacciones/ventaacciones.routes')},
             // {path: 'acciones/compra', loadChildren: () => import('app/modules/admin/controlTitulos/compraacciones/compraacciones.routes')},
             {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/transacciones/tramitetransacciones/tramitetransacciones.routes')},
+            {path: 'transacciones/pendientes', loadChildren: () => import('app/modules/admin/transacciones/aprobacionespendientes/aprobacionespendientes.routes')},
+            {path: 'transacciones/pendientes/:id', loadChildren: () => import('app/modules/admin/transacciones/aprobaciones/aprobaciones.routes')},
         ]   
     }
 ];

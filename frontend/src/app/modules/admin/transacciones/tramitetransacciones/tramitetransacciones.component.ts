@@ -60,40 +60,47 @@ export class TramitetransaccionesComponent {
 
   opcionesFiltradas: Observable<EsAccionistas[]>;
   datosAutocompletado: EsAccionistas[] = [];
+
+  opcionesFiltradasTomadores: Observable<EsAccionistas[]>;
+  datosAutocompletadoTomadores: EsAccionistas[] = [];
   
   opcionesFiltradasTitulos: Observable<TramiteTransaccion[]>;
   datosAutocompletadoTitulos: TramiteTransaccion[] = [];
   titulosDisponibles: TramiteTransaccion[];
+
+  showIdSolicitante: boolean = true;
   
   
   constructor(private sharedDataService: SharedDataService, private accionistasService: AccionistasService, private transaccionesService: TransaccionesService, fuseConfirmationService: FuseConfirmationService,){
     this._fuseConfirmationService = fuseConfirmationService;
     this.setearFechaActual();
     this.configurarCamposTomador();
-    this.ventaDeAcciones();
+    //this.ventaDeAcciones();
+    this.idSolicitante();
   }
 
   transaccionesForm = new FormGroup({
 
     'idTransaccion':  new FormControl({ value: '', disabled: true }),
     'tipoTransaccion': new FormControl('', Validators.required),
-    'fechaTransaccion': new FormControl({ value: '', disabled: true }),
+    'fecTrans': new FormControl({ value: '', disabled: true }),
     'idSolicitante': new FormControl('', Validators.required),
     // 'numAcciones': new FormControl('', Validators.required),
     // 'idTitulo': new FormControl('', Validators.required),
-    'idTomador': new FormControl(''),
-    'nomTomador': new FormControl(''),
+    // 'idTomador': new FormControl(''),
+    // 'nomTomador': new FormControl(''),
     'tomadores': new FormArray([]),
     'acciones': new FormArray([]),
+    'accionesCompra': new FormArray([]),
   });
-
-  get tomadoresFormArray() {
-    return this.transaccionesForm.get('tomadores') as FormArray;
-  }
 
   configurarCamposTomador(): boolean {
     const tipoTransaccionLV = this.transaccionesForm.get('tipoTransaccion')?.value;
     return tipoTransaccionLV === 'CO' || tipoTransaccionLV === 'EN' || tipoTransaccionLV === 'DO' || tipoTransaccionLV === 'SU';
+  }
+
+  get tomadoresFormArray() {
+    return this.transaccionesForm.get('tomadores') as FormArray;
   }
 
   agregarTomador() {
@@ -103,6 +110,21 @@ export class TramitetransaccionesComponent {
     });
   
     this.tomadoresFormArray.push(nuevoTomador);
+    console.log(this.tomadoresFormArray.value);
+  }
+
+  get accionesCompraFormArray() {
+    return this.transaccionesForm.get('accionesCompra') as FormArray;
+  }
+
+  compraDeAcciones() {
+    const compraAccion = new FormGroup({
+      idTitulo: new FormControl(''),  
+      numAcciones: new FormControl(''),
+    });
+  
+    this.accionesCompraFormArray.push(compraAccion);
+    //console.log(this.accionesFormArray.value);
   }
 
   get accionesFormArray() {
@@ -111,12 +133,12 @@ export class TramitetransaccionesComponent {
 
   ventaDeAcciones() {
     const nuevaAccion = new FormGroup({
-      idTitulo: new FormControl(''),  
-      numAcciones: new FormControl(''),
+      idTitulo: new FormControl('', Validators.required),  
+      numAcciones: new FormControl('', Validators.required),
     });
   
     this.accionesFormArray.push(nuevaAccion);
-    console.log(this.accionesFormArray.value);
+    //console.log(this.accionesFormArray.value);
   }
 
   onSubmit(){
@@ -131,7 +153,7 @@ export class TramitetransaccionesComponent {
 
           idTransaccion: this.transaccionesForm.get('idTransaccion').value,
           tipoTransaccion: this.transaccionesForm.get('tipoTransaccion').value,
-          fechaTransaccion: this.transaccionesForm.get('fechaTransaccion').value,
+          fecTrans: this.transaccionesForm.get('fecTrans').value,
           idSolicitante: this.transaccionesForm.get('idSolicitante').value,
           // idTitulo: this.transaccionesForm.get('idTitulo').value,
           // numAcciones: this.transaccionesForm.get('numAcciones').value,
@@ -192,9 +214,35 @@ export class TramitetransaccionesComponent {
           }
         );
       }else if(tipoTransaccionLV === 'CO'){
-        this.transaccionesService.enviarDatosTramiteCompra(this.transaccionesForm.value).subscribe(
+
+        const formDataCompra = {
+
+          idTransaccion: this.transaccionesForm.get('idTransaccion').value,
+          tipoTransaccion: this.transaccionesForm.get('tipoTransaccion').value,
+          fecTrans: this.transaccionesForm.get('fecTrans').value,
+          idSolicitante: this.transaccionesForm.get('idSolicitante').value,
+          // idTitulo: this.transaccionesForm.get('idTitulo').value,
+          // numAcciones: this.transaccionesForm.get('numAcciones').value,
+
+          tomadores: this.tomadoresFormArray.controls.map((control: FormGroup) => ({
+            idTomador: control.get('idTomador')?.value,
+            nomTomador: control.get('nomTomador')?.value,
+          })),
+
+          compraAcciones: this.accionesCompraFormArray.controls.map((control: FormGroup) => ({
+
+            idTitulo: control.get('idTitulo')?.value,
+            numAcciones: control.get('numAcciones')?.value,
+
+          })),
+          
+        };
+        console.log(formDataCompra);
+
+        this.transaccionesService.enviarDatosTramiteCompra(formDataCompra).subscribe(
           (response) => {
-  
+            console.log(formDataCompra);
+            console.log('Datos del formulario de venta:', formDataCompra);
             for (const selectedFile of this.selectedFileMultiple) {
               const formDataArchivo = new FormData();
               formDataArchivo.append("file", selectedFile, "raccionista_" + this.transaccionesForm.get('idSolicitante').value + "_" + selectedFile.name); 
@@ -496,7 +544,7 @@ export class TramitetransaccionesComponent {
   setearFechaActual() {
     const fechaActual = new Date();
     const fechaFormateada = this.formatoFecha(fechaActual);
-    this.transaccionesForm.get('fechaTransaccion').setValue(fechaFormateada);
+    this.transaccionesForm.get('fecTrans').setValue(fechaFormateada);
   }
 
   formatoFecha(fecha: Date): string {
@@ -542,6 +590,8 @@ export class TramitetransaccionesComponent {
           console.log("hola" + data);
           this.sharedDataService.actualizarDatosTabla(data);
           this.mostrarTablaCompra = true;
+
+          this.titulosDisponibles = data;
         },
         (error) => {
           console.error('Error al obtener los datos:', error);
@@ -557,6 +607,29 @@ export class TramitetransaccionesComponent {
 
   tablaCompra(){
     this.mostrarTablaCompra = true;
+  }
+
+  idSolicitante() {
+    const tipoTransaccion = this.transaccionesForm.get('tipoTransaccion');
+    const fieldsToShow = [
+      'idSolicitante',
+    ];
+  
+    tipoTransaccion.valueChanges.subscribe((value) => {
+      for (const field of fieldsToShow) {
+        const control = this.transaccionesForm.get(field);
+        if (control) {
+          if (value === 'CO') {
+            this.showIdSolicitante = false;
+            control.clearValidators();
+          } else {
+            this.showIdSolicitante = true;
+            control.clearValidators();
+          }
+          control.updateValueAndValidity();
+        }
+      }
+    });
   }
 
 }
