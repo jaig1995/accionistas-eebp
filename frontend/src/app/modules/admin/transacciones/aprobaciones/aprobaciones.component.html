@@ -1,1 +1,83 @@
-<p>aprobaciones works!</p>
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <div class="text-4xl font-extrabold tracking-tight leading-none">Actualizar accionista</div>
+        <div class="ml-0.5 font-medium text-secondary">Manejo de accionistas</div><br>
+
+        <!-- <mat-divider class="mt-4 mb-4"></mat-divider><br> -->
+
+        <form  id="transacciones" [formGroup]="transaccionesForm">
+            <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Id transaccion:</mat-label>
+                <input matInput type="text" id="idTransaccion"  formControlName="idTransaccion">
+                
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Tipo transacción LV</mat-label>
+                <mat-select type="text" id="tipoTransaccion"  formControlName="tipoTransaccion">
+                    <mat-option value="VE">Transacción de venta</mat-option>
+                    <mat-option value="CO">Transacción de compra</mat-option>
+                    <mat-option value="DO">Transacción de donación</mat-option>
+                    <mat-option value="EN">Transacción de endoso</mat-option>
+                    <mat-option value="SU">Transacción de sucesión</mat-option>
+                    <mat-option value="EM">Transacción de embargo</mat-option>  
+                </mat-select>
+                <mat-error>El campo es obligatorio</mat-error>
+            </mat-form-field><br>
+
+            <mat-form-field class="w-full sm:w-40 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Fecha de transaccion:</mat-label>
+                <input matInput type="text" id="fecTrans"  formControlName="fecTrans">
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Id solicitante:</mat-label>
+                <input matInput type="text" id="idSolicitante"  formControlName="idSolicitante">
+                <mat-error>El campo es obligatorio</mat-error>
+            </mat-form-field>
+           
+        </form><br>
+
+        <table mat-table [dataSource]="titulos" class="mat-elevation-z4">
+
+            <ng-container class=" sm:w-72 " matColumnDef="titulo">
+                <th mat-header-cell *matHeaderCellDef> TITULOS </th>
+                <td mat-cell *matCellDef="let element"> {{element.idTitulo}} </td>
+            </ng-container>
+        
+            <ng-container class=" sm:w-72 " matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef> CANTIDAD </th>
+                <td mat-cell *matCellDef="let element"> {{element.numAcciones}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+        </table><br>
+        <div [style.width]="'800px'" style="margin: 0 auto;">
+            <table  mat-table [dataSource]="archivosAccionista" class="mat-elevation-z4" >
+
+                <ng-container class=" sm:w-72 " matColumnDef="archivos">
+                    <th mat-header-cell *matHeaderCellDef [style.text-align]="'center'" >ARCHIVOS</th>
+                    <td mat-cell *matCellDef="let element" [style.text-align]="'center'"> {{element.fileName}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="descarga">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">  <a  [href]="element.url" target="_blank"><mat-icon svgIcon="feather:download"></mat-icon> Descargar archivo</a> </td>
+                </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsArchivos"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsArchivos;"></tr>
+    
+          </table><br>
+        </div>
+        <div [style.text-align]="'center'">
+            <button class="fuse-mat-button w-30 mt-4 " mat-mini-fab [color]="'accent'" (click)="onSubmit()">Aprobar</button>
+        </div>
+    </div>
+</div>
+ <!-- {{ registroForm.get('tipoAccionista').value }} -->

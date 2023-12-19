@@ -4,6 +4,8 @@ import { ServicesConfig } from 'app/services.config';
 import { TramiteTransaccion } from './tramitetransacciones/tramitetransacciones.model';
 import { Observable } from 'rxjs';
 import { transaccionesPendientes } from './aprobacionespendientes/aprobacionespendientes.model';
+import { Titulos } from './aprobaciones/aprobaciones.model';
+import { Archivos } from '../control-accionistas/aprobaraccionista/archivos.model';
 
 
   @Injectable({
@@ -37,9 +39,17 @@ import { transaccionesPendientes } from './aprobacionespendientes/aprobacionespe
       return this.http.get<transaccionesPendientes[]>(this._baseUrl + "/api/transacciones/pendientesAprobacion");
     }
 
-    // obtenerDatosAprobacion(id: string): Observable<Actualizar> {
-    //   return this.http.get<Actualizar>(this._baseUrl + '/api/accionistas/' + id);
-    // }
+    obtenerTitulosComprados(id: string): Observable<Titulos[]> {
+      return this.http.get<Titulos[]>(this._baseUrl + '/api/transacciones/' + id);
+    }
+
+    obtenerArchivos(id: string): Observable<Archivos[]> {
+      return this.http.get<Archivos[]>(this._baseUrl + '/api/transacciones/' + id);
+    }
+
+     obtenerDatosAprobacion(id: string): Observable<transaccionesPendientes> {
+       return this.http.get<transaccionesPendientes>(this._baseUrl + '/api/transacciones/' + id);
+     }
 
     //enviar información
 
@@ -70,5 +80,10 @@ import { transaccionesPendientes } from './aprobacionespendientes/aprobacionespe
     enviarArchivosTramite(formDataArchivo: FormData): Observable<FormData> {
       return this.http.post<any>(this._baseUrl + '/api/uploadFile', formDataArchivo);
     }
+
+    enviarTransaccionAprobada(formData: any): Observable<any> {
+      return this.http.post<any>(this._baseUrl + '/api/transacciones/aprobar', formData);
+    }
+
 
   }
