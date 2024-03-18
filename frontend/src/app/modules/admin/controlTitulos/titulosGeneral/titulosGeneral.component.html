@@ -1,0 +1,152 @@
+<div class="flex-auto p-6 sm:p-10">
+    <!-- titulos -->
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Gestión General de Títulos
+    </div>
+    <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+        Información General</div>
+
+    <!-- alertas -->
+    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
+        <span fuseAlertTitle>Aprobación exitosa</span>
+        ¡Solicitud aprobada!
+    </fuse-alert>
+    <!-- fin alertas -->
+
+    <!-- Spinner carga -->
+    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+    </div>
+
+    <!-- resultados titulos accionista -->
+    <div class="flex-auto w-full px-8 pt-10 bg-card shadow rounded overflow-hidden" *ngIf="!loading">
+        <div class="flex flex-row justify-between">
+
+
+            <!-- fitro general -->
+            <div>
+                <mat-form-field class="w-100">
+                    <mat-label class="font-extrabold ">Filtro General:</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" #input placeholder="identificación, transacción...">
+                </mat-form-field>
+            </div>
+
+            <div>
+                <!-- Filtro por estado -->
+                <mat-form-field class="w-40 mr-3">
+                    <mat-label class="flex items-center font-extrabold ">
+                        <!-- Contenido del label -->
+                        <span>Categorías</span>
+                        <!-- Icono -->
+                        <mat-icon svgIcon="heroicons_solid:funnel" class="ml-auto"></mat-icon>
+                    </mat-label>
+                    <mat-select class="mt-1" value="" (selectionChange)="onSelectionChange($event)">
+                        <mat-option value="">
+                            <mat-icon>cancel</mat-icon>
+                            Ninguna
+                        </mat-option>
+                        <mat-option value="venta">
+                            <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                            Venta</mat-option>
+                        <mat-option value="donacion">
+                            <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                            Donación</mat-option>
+                        <mat-option value="endoso">
+                            <mat-icon svgIcon="heroicons_mini:banknotes"></mat-icon>
+                            Endoso</mat-option>
+                        <mat-option value="embargo">
+                            <mat-icon svgIcon="heroicons_mini:lock-closed"></mat-icon>
+                            Embargo</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- filtro Estados -->
+                <mat-form-field class="w-40 ">
+                    <mat-label class="flex items-center font-extrabold ">
+                        <!-- Contenido del label -->
+                        <span>Estados</span>
+                        <!-- Icono -->
+                        <mat-icon svgIcon="heroicons_solid:funnel" class="ml-auto"></mat-icon>
+                    </mat-label>
+                    <mat-select class="mt-1" value="" (selectionChange)="onSelectionChange($event)">
+                        <mat-option value="">
+                            <mat-icon>cancel</mat-icon>
+                            Ninguna
+                        </mat-option>
+                        <mat-option value="Rechazado">
+                            <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                            Rechazado</mat-option>
+                        <mat-option value="Aprobado">
+                            <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                            Aprobados</mat-option>
+                        <mat-option value="En tramite">
+                            <mat-icon svgIcon="heroicons_mini:banknotes"></mat-icon>
+                            En tramite</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5">
+            <!-- Columna tipo -->
+            <ng-container matColumnDef="TIPO">
+                <th mat-header-cell *matHeaderCellDef> TIPO </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-chip color="warn">
+                        {{element.tipoTransaccionN}}
+                    </mat-chip>
+                </td>
+            </ng-container>
+
+            <!-- Columna título-->
+            <ng-container matColumnDef="CONSECUTIVO">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> TÍTULO </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.conseTrans}} </td>
+            </ng-container>
+
+            <!-- Columna identificacion -->
+            <ng-container matColumnDef="IDENTIFICACION">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> IDENTIFICACIÓN </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.idePer}} </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="CANTIDADACCION">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> CANTIDAD ACCIÓN </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.valTran}} </td>
+            </ng-container>
+
+            <!-- Columna Estados -->
+            <ng-container matColumnDef="ESTADO">
+                <th mat-header-cell *matHeaderCellDef> ESTADO </th>
+                <td mat-cell *matCellDef="let element"> {{element.estadoTransaccionN}} </td>
+            </ng-container>
+
+            <!-- TRANSACCIONES BOTONES -->
+            <ng-container matColumnDef="TRANSACCION">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> TRANSACCIÓN </th>
+                <td mat-cell *matCellDef="let row" class="button-cell" class="text-center">
+                    <button class="fuse-mat-button w-24" [disabled]="row.estadoTransaccion?.descEstado === 'Aprobado'"
+                        mat-mini-fab [color]="'primary'" type="submit" (click)="verMasModal(row)"
+                        [disabled]="isEnableButton">
+                        <mat-icon class="mr-1" svgIcon="heroicons_outline:eye"></mat-icon>
+                        Ver más
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- resultados no data -->
+            <tr class="mat-row text-center" *matNoDataRow>
+                <td class="mat-cell mt-10" class="h-50 font-extrabold" colspan="6">No existen datos para el valor:
+                    "{{input.value}}"
+                </td>
+            </tr>
+        </table>
+        <!-- paginador -->
+        <mat-paginator [length]="datosTabla.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20,40]"
+            showFirstLastButtons aria-label="Select page of periodic elements">
+        </mat-paginator>
+    </div>
+</div>

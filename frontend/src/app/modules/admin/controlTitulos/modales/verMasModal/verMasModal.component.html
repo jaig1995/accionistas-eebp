@@ -1,0 +1,60 @@
+<div class="flex flex-col p-2">
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-primary">Información general Transaccion
+        No.{{consecutivoTransaccion}}</p>
+    <mat-divider class="mb-6" />
+    <!-- formulario -->
+    <div class="w-full flex flex-col">
+        <div class="flex flex-row items-center  my-2 w-full">
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Fecha Transacción:</mat-label>
+                <input matInput type="text" formControlName="conseTrans" readonly [value]="fechaTransaccion">
+            </mat-form-field>
+
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Estado:</mat-label>
+                <input matInput type="text" formControlName="conseTitulo" readonly
+                    [value]="estadoTransaccion.descEstado">
+            </mat-form-field>
+
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Codigo Accionista:</mat-label>
+                <input matInput type="text" formControlName="numAcciones" readonly [value]="idPersona">
+            </mat-form-field>
+        </div>
+    </div>
+    <!-- titulos de la transaccion  -->
+    <mat-divider class="mb-6" />
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-primary">Títulos de la transacción</p>
+    <div class="w-full flex flex-col">
+        <div class="flex flex-row items-center  my-2 w-full" *ngFor="let titulo of titulosEnTransaccion">
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Fecha Transacción:</mat-label>
+                <input matInput type="text" [value]="titulo.conseTrans" readonly>
+            </mat-form-field>
+
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Estado:</mat-label>
+                <input matInput type="text" [value]="titulo.conseTitulo" readonly
+                    [value]="estadoTransaccion.descEstado">
+            </mat-form-field>
+
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label>Código Accionista:</mat-label>
+                <input matInput type="text" [value]="titulo.numAcciones" readonly>
+            </mat-form-field>
+        </div>
+    </div>
+    <!-- Documentos de la transaccion -->
+    <mat-divider class="mb-6" />
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-primary">Documentos de la transacción
+    </p>
+    <!-- iterar sobre los documentos que contenga la transaccion -->
+    <div *ngFor="let item of archivosTransaccion">
+        <div class="flex justify-center">
+            <a mat-button target="_blank" [href]="item.url"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>{{
+                item.fileName }}</a>
+        </div>
+    </div>
+
+</div>

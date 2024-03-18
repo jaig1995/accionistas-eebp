@@ -1,0 +1,166 @@
+<div class="flex-auto p-6 sm:p-10">
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Gestión de Transacciones
+    </div>
+    <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+        Venta, Endoso, embargo</div>
+
+    <!-- alertas -->
+    <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+        <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+            <span fuseAlertTitle>Información</span>
+            ¡Transacción exitosa!
+        </fuse-alert>
+    </div>
+
+
+    <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+        <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+            <span fuseAlertTitle>Información</span>
+            ¡Transacción no exitosa!
+        </fuse-alert>
+    </div>
+    <!-- fin alertas -->
+
+    <!-- Seccion consultar -->
+    <div class="flex-auto  w-full mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
+        <form [formGroup]="formularioBuscar" (ngSubmit)="consultar()">
+            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                <mat-label>Consultar por identificación</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                <input matInput formControlName="numeroIdentificacion" type="text" placeholder="número identificación">
+                <mat-error
+                    *ngIf="formularioBuscar.get('numeroIdentificacion').hasError('pattern') && !formularioBuscar.get('numeroIdentificacion').hasError('required')">El
+                    valor ingresado no es un número.</mat-error>
+            </mat-form-field>
+            <button class="fuse-mat-button w-28 ml-3 mb-8" mat-mini-fab [color]="'accent'" type="submit"
+                [disabled]="this.formularioBuscar.invalid || loading">
+                <mat-icon svgIcon="heroicons_outline:magnifying-glass"></mat-icon>
+                Consultar
+            </button>
+        </form>
+    </div>
+
+    <!-- Spinner carga -->
+    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+    </div>
+
+    <!-- mensaje no contiene informacion -->
+    <div class="flex flex-auto w-full h-100 mt-5 px-8 bg-card shadow rounded overflow-hidden"
+        *ngIf="!titulos && !loading ">
+        <div class="flex justify-center items-center flex-grow">
+            <p class="font-extrabold">"No existen datos para mostrar"</p>
+        </div>
+    </div>
+
+
+    <div *ngIf="titulos.length || (titulos && loading)"
+        class="flex-auto  w-full  px-8 pt-10 bg-card shadow rounded overflow-hidden">
+
+        <!-- label nombre accionista -->
+        <div class="flex justify-between">
+            <p class="text-lg flex justify-center items-center text-primary">Los títulos estan asociados a: <span
+                    class="font-extrabold p-2"> {{ datosUsuario}}</span></p>
+        </div>
+        <mat-divider class="mt-4 mb-10"></mat-divider>
+
+        <!-- resultados titulos accionista -->
+        <table mat-table [dataSource]="titulos" *ngIf="!loading" class="mb-5">
+
+            <!-- Checkbox de selección maestra -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="masterToggle($event)"></mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox [checked]="row.selected" (change)="toggleRow(row)"></mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- Columna consecutivo -->
+            <ng-container matColumnDef="conseTitulo">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> TÍTULO </th>
+                <td mat-cell *matCellDef="let row" class="text-center"> {{row.conseTitulo}} </td>
+            </ng-container>
+
+            <!-- Columna Descripción -->
+            <ng-container matColumnDef="canAccTit">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
+                <td mat-cell *matCellDef="let row" class="text-center"> {{row.canAccTit}} </td>
+            </ng-container>
+
+            <!-- Columna valor -->
+            <ng-container matColumnDef="valor">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> VALOR </th>
+                <td mat-cell *matCellDef="let row" class="text-center"> {{row.valAccTit}} </td>
+            </ng-container>
+
+            <!-- Columna acciones -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> TRANSACCIONES </th>
+                <td mat-cell *matCellDef="let row" class="text-center">
+                    <a mat-button [color]="'accent'" (click)="ventaModal(row)"
+                        *ngIf="transacciones.length === 0">Vender<mat-icon
+                            svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                    </a>
+                    <a mat-button [color]="'primary'" *ngIf="transacciones.length === 0"
+                        (click)="endosoModal(row)">Endosar<mat-icon svgIcon="heroicons_mini:banknotes"></mat-icon>
+                    </a>
+                    <a mat-button [ngStyle]="{ 'color': '#F8DE4C' }" class="custom-button-donar"
+                        *ngIf="transacciones.length === 0" (click)="donacionModal(row)">Donar<mat-icon
+                            class="custom-button-donar" svgIcon="heroicons_solid:gift"></mat-icon>
+                    </a>
+                    <a mat-button [ngStyle]="{ 'color': '#FE901A' }" class="custom-button-sucesion"
+                        *ngIf="transacciones.length === 0" (click)="sucesionModal(row)">sucesión<mat-icon
+                            class="custom-button-sucesion" svgIcon="heroicons_solid:gift"></mat-icon>
+                    </a>
+                    <a mat-button [color]="'warn'" *ngIf="transacciones.length === 0"
+                        (click)="embargoModal(row)">Embargo<mat-icon svgIcon="heroicons_mini:lock-closed"></mat-icon>
+                    </a>
+                </td>
+            </ng-container>
+
+            <!-- Definición de las columnas -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Mensaje no existen datos -->
+            <tr class="mat-row text-center" *matNoDataRow>
+                <td class="mat-cell" colspan="5" class="h-50 font-extrabold">"No existen datos para mostrar"</td>
+            </tr>
+
+        </table>
+
+
+
+        <!--BOTONES ACCIONES -->
+        <div class="flex flex-row justify-end rounded card shadow" *ngIf="transacciones.length !== 0">
+
+            <!-- vender -->
+            <a mat-button [color]="'accent'" (click)="ventaModal(row)">Vender<mat-icon
+                    svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+            </a>
+            <!-- endosar -->
+            <a mat-button [color]="'primary'" (click)="endosoModal(row)">Endosar<mat-icon
+                    svgIcon="heroicons_mini:banknotes"></mat-icon>
+            </a>
+            <!-- donar -->
+            <a mat-button [ngStyle]="{ 'color': '#F8DE4C' }" class="custom-button-donar"
+                (click)="donacionModal(row)">Donar<mat-icon class="custom-button-donar"
+                    svgIcon="heroicons_solid:gift"></mat-icon>
+            </a>
+            <!-- sucesion -->
+            <a mat-button [ngStyle]="{ 'color': '#FE901A' }" class="custom-button-sucesion"
+                (click)="sucesionModal(row)">sucesión<mat-icon class="custom-button-sucesion"
+                    svgIcon="heroicons_solid:gift"></mat-icon>
+            </a>
+            <!-- embargo -->
+            <a mat-button [color]="'warn'" (click)="embargoModal(row)">Embargo<mat-icon
+                    svgIcon="heroicons_mini:lock-closed"></mat-icon>
+            </a>
+        </div>
+    </div>
+
+
+</div>

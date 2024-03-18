@@ -1,0 +1,38 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- titulo -->
+    <h1 class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center">{{ data.modo === 'crear' ?
+        'Crear parámetro' : 'Editar parámetro' }}</h1>
+
+    <!-- Inicio Formulario -->
+    <form [formGroup]="formulario" (ngSubmit)="guardarParametro()"
+        class="flex flex-col flex-auto items-center justify-center">
+
+        <!-- campo Id Parámetro -->
+        <mat-form-field *ngIf="data.modo !== 'crear'"
+            class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2 items-center justify-center" [subscriptSizing]="'dynamic'">
+            <mat-label>Id Parámetro</mat-label>
+            <mat-icon svgIcon="heroicons_outline:hashtag"></mat-icon>
+            <input matInput type="text" id="valorAccion" formControlName="idParametro" disabled readonly>
+        </mat-form-field>
+
+        <!-- campo Descripción -->
+        <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2" [subscriptSizing]="'dynamic'">
+            <mat-label>Descripción</mat-label>
+            <mat-icon svgIcon="heroicons_outline:document-text"></mat-icon>
+            <input matInput type="text" id="valorAccion" formControlName="descripcion">
+        </mat-form-field>
+
+
+        <!-- campo valor de acción -->
+        <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-2" [subscriptSizing]="'dynamic'">
+            <mat-label>Valor de Acción</mat-label>
+            <mat-icon svgIcon="mat_outline:attach_money"></mat-icon>
+            <input matInput type="text" id="valorAccion" formControlName="valor">
+        </mat-form-field>
+
+        <!-- boton accion guardar -->
+        <button class="fuse-mat-button w-24 mt-3" mat-mini-fab [color]="'accent'" type="submit">
+            Guardar
+        </button>
+    </form>
+</div>

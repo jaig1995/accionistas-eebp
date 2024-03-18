@@ -1,0 +1,147 @@
+<div class="flex flex-col p-2">
+
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-accent">Compra de titulos</p>
+    <mat-divider class="mb-6" />
+
+    <!-- formulario -->
+
+
+    <!-- subir archivos -->
+    <div class="flex flex-col w-full ">
+        <a class="w-full " mat-stroked-button [color]="isValidFile ? 'primary' : 'warn' " (click)="fileInput.click()">
+            <mat-icon svgIcon="heroicons_outline:document-arrow-up"></mat-icon>
+            Subir formato compra-venta
+        </a>
+        <input hidden #fileInput type="file" (change)="onFileSelected($event)" required>
+        <label class="text-center mt-3 font-extrabold">{{ fileName }}</label>
+        <mat-divider class="my-6" />
+
+    </div>
+
+
+    <div *ngFor="let titulo of data.arrayTitulos" class="w-full flex flex-col">
+        <form [formGroup]="crearFormulario(titulo)">
+            <div class="flex flex-row items-center  my-2 w-full">
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Transacción:</mat-label>
+                    <input matInput type="text" formControlName="conseTrans" readonly>
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Título:</mat-label>
+                    <input matInput type="text" formControlName="conseTitulo" readonly>
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Número de acciones:</mat-label>
+                    <input matInput type="text" formControlName="numAcciones" readonly>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+
+    <!-- numero de acciones -->
+    <div class="flex w-full justify-end">
+
+        <!-- formulario numero de acciones -->
+        <div class="flex justify-center w-full mr-1">
+            <form [formGroup]="numeroAcciones" class="w-full">
+
+                <div class="flex flex-row items-center overflow-hidden">
+                    <mat-form-field class="flex-grow mr-2">
+                        <mat-label>Ingresa el número de acciones </mat-label>
+                        <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+
+                        <input matInput formControlName="cantAcciones" type="number"
+                            placeholder="Numero de acciones a comprar">
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="flex flex-col justify-center w-72">
+            <mat-form-field class="flex-grow mr-2">
+                <mat-label class="text-accent">Total acciones:</mat-label>
+                <mat-icon class="text-accent" svgIcon="heroicons_solid:hashtag"></mat-icon>
+                <input class="text-accent" matInput type="text" readonly [value]="sumaTotal">
+            </mat-form-field>
+            <mat-error class="-mt-4"
+                *ngIf="numeroAcciones.get('cantAcciones').invalid && (numeroAcciones.get('cantAcciones').dirty || numeroAcciones.get('cantAcciones').touched)">
+                Valor máximo excedido.
+            </mat-error>
+
+        </div>
+    </div>
+
+    <!-- Agrega tomador -->
+    <div class="flex justify-center w-full">
+        <form [formGroup]="miFormulario">
+            <div class="flex flex-row items-center overflow-hidden  w-120">
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Ingresa Tomador </mat-label>
+                    <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                    <input matInput formControlName="nombre" [matAutocomplete]="auto" type="text"
+                        placeholder="Nombre del tomador">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccionista">
+                        <mat-option *ngFor="let accionista of filteredAccionistas | async" [value]="accionista">
+                            {{ accionista.Nombres }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <div>
+                    <button type="button" class="w-20 ml-1" mat-mini-fab color="accent" (click)="agregarTomador()"
+                        [disabled]="miFormulario.get('nombre').value === '' || miFormulario.get('nombre').value === null">
+                        <mat-icon svgIcon="heroicons_outline:user-plus"></mat-icon>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- mostrar tomador -->
+    <div class="w-full flex flex-col">
+
+        <mat-divider class="my-3" />
+
+        <form [formGroup]="tomadoresForm">
+            <div class="flex justify-center mt-3" *ngIf="tomadoresForm.get('tomadores')?.value?.length > 0">
+                <label class="text-primary font-bold items-center">Tomadores</label>
+            </div>
+            <!-- Itera sobre los tomadores existentes -->
+            <div formArrayName="tomadores">
+                <div *ngFor="let tomador of tomadores.controls; let i = index"
+                    class="flex flex-row items-center overflow-hidden my-2">
+
+                    <div class="flex flex-col w-full">
+                        <mat-form-field class="flex-grow mr-2">
+                            <mat-label>Tomador {{ i + 1 }}:</mat-label>
+                            <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                            <input matInput [formControl]="tomador" type="text" placeholder="Nombre del tomador"
+                                readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <button type="button" class="w-20 ml-1" mat-mini-fab color="warn" (click)="eliminarTomador(i)">
+                            <mat-icon svgIcon="heroicons_outline:user-minus"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- boton tramitar -->
+        <div>
+            <button type="submit" class="mx-auto w-full" mat-mini-fab [color]="'accent'"
+                [ngClass]="{'mt-5': tomadoresForm.get('tomadores')?.value?.length > 0, 'mt-20': tomadoresForm.get('tomadores')?.value?.length === 0}"
+                [disabled]="tomadoresForm.get('tomadores')?.value?.length === 0 || numeroAcciones.invalid || !isValidFile "
+                (click)="submit()">
+                Tramitar
+            </button>
+        </div>
+    </div>
+
+</div>
