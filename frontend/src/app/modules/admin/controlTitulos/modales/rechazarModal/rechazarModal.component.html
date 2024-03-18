@@ -1,0 +1,32 @@
+<div class="flex-auto p-2">
+
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-warn">Rechazar Transaccion</p>
+    <mat-divider class="mb-6" />
+
+    <!-- formulario -->
+
+    <div class="flex justify-center overflow-auto w-full" >
+
+        <div  class="flex flex-col overflow-hidden mt-2">
+
+            <!-- subir archivos -->
+            <div class="flex flex-col w-full mb-3">
+                <a class="w-full " mat-stroked-button [color]="isValidFile ? 'primary' : 'warn' "
+                    (click)="fileInput.click()">
+                    <mat-icon svgIcon="heroicons_outline:document-arrow-up"></mat-icon>
+                    Subir formato de rechazo
+                </a>
+                <input hidden #fileInput type="file" (change)="onFileSelected($event)" required>
+                <label class="text-center mt-3 font-extrabold">{{ fileName }}</label>
+            </div>
+
+            <!-- boton tramitar -->
+            <button (click)="onSubmit()" class=" mx-auto w-full mt-12" mat-mini-fab [color]="'warn'"
+                [disabled]="!isValidFile || isLoad">Rechazar</button>
+        </div>
+
+
+    </div>
+
+</div>

@@ -1,0 +1,206 @@
+<div class="flex-auto p-6 sm:p-10">
+
+
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Gestión General de Títulos
+    </div>
+    <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+        Publicación de títulos ofertados</div>
+
+    <!-- alertas -->
+    <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+        <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+            <span fuseAlertTitle>Información</span>
+            ¡Transacción exitosa!
+        </fuse-alert>
+    </div>
+
+
+    <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+        <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+            <span fuseAlertTitle>Información</span>
+            ¡Transacción no exitosa!
+        </fuse-alert>
+    </div>
+    <!-- fin alertas -->
+
+
+
+
+    <!-- Spinner carga -->
+    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+    </div>
+
+
+
+    <div class="flex-auto  w-full  px-8 pt-10 bg-card shadow rounded overflow-hidden" *ngIf="!loading">
+
+        <!-- filtros -->
+        <div class="flex flex-row justify-between">
+            <mat-form-field class="w-100">
+                <mat-label class="font-extrabold ">Filtro General:</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+
+            <!-- filtro secciones -->
+            <mat-form-field class="w-50">
+                <mat-label class="flex items-center font-extrabold">
+                    <span>Categorias</span>
+                    <mat-icon svgIcon="heroicons_solid:funnel" class="ml-auto"></mat-icon>
+                </mat-label>
+
+                <mat-select class="mt-1" value="" (selectionChange)="onSelectionChange($event)">
+                    <mat-option value="">
+                        <mat-icon>cancel</mat-icon> <!-- Icono para la opción "Ninguna" -->
+                        Ninguna
+                    </mat-option>
+                    <mat-option value="venta">
+                        <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                        Venta</mat-option>
+                    <mat-option value="donacion">
+                        <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                        Donación</mat-option>
+                    <mat-option value="endoso">
+                        <mat-icon svgIcon="heroicons_mini:banknotes"></mat-icon>
+                        Endoso</mat-option>
+                    <mat-option value="sucesion">
+                        <mat-icon svgIcon="heroicons_mini:banknotes"></mat-icon>
+                        Sucesión</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Tabla publicacion ventas -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5">
+
+            <!-- seleccionador -->
+            <ng-container matColumnDef="SELECT">
+                <th mat-header-cell *matHeaderCellDef>
+                    SELECCIONAR
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-checkbox [checked]="element.selected" (change)="toggleRow(element)"
+                        [disabled]="(element?.desTran !== tipoTransaccionSeleccionado) && tipoTransaccionSeleccionado && transacciones.length !== 0 "></mat-checkbox>
+                </td>
+            </ng-container>
+
+            <!-- columna tipo -->
+            <ng-container matColumnDef="TIPO">
+                <th mat-header-cell *matHeaderCellDef> TIPO </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-chip color="warn">
+                        {{element?.desTran}}
+                    </mat-chip>
+                </td>
+            </ng-container>
+
+            <!-- columna consecutivo -->
+            <ng-container matColumnDef="TITULO">
+                <th mat-header-cell *matHeaderCellDef> TÍTULO </th>
+                <td mat-cell *matCellDef="let element"> {{element?.conseTitulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="IDENTIFICACION">
+                <th mat-header-cell *matHeaderCellDef> IDENTIFICACION </th>
+                <td mat-cell *matCellDef="let element"> {{element.idePer}} </td>
+            </ng-container>
+
+            <!-- columna cantidad de acciones -->
+            <ng-container matColumnDef="CANTIDADACCION">
+                <th mat-header-cell *matHeaderCellDef> ACCIONES </th>
+                <td mat-cell *matCellDef="let element"> {{element.numAcciones}} </td>
+            </ng-container>
+
+
+            <!-- columna intencion de compra -->
+            <ng-container matColumnDef="INTENCION">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> INTENCIÓN COMPRA </th>
+                <td mat-cell *matCellDef="let element" class="text-center text-white"> <mat-chip
+                        [ngStyle]="{'background-color': element.intencionCompra ? '#002E5F' : ''}"
+                        class="w-15 text-center">
+                        <span class="text-white ml-2 ">{{element.intencionCompra ? "SI" : "NO"}}</span>
+                    </mat-chip></td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="ESTADO">
+                <th mat-header-cell *matHeaderCellDef> ESTADO </th>
+                <td mat-cell *matCellDef="let element"> {{element.descEstado}} </td>
+            </ng-container>
+
+            <!-- columna botones de acciones -->
+            <ng-container matColumnDef="TRANSACCION">
+                <th mat-header-cell *matHeaderCellDef> TRANSACCIÓN </th>
+                <td mat-cell *matCellDef="let row" class="button-cell" class="text-center">
+                    <!-- boton comprar titulo -->
+                    <button class="fuse-mat-button w-30" mat-mini-fab [color]="'accent'" type="submit"
+                        (click)="compraModal(row)" *ngIf="row.desTran === 'venta' && transacciones.length === 0">
+                        <mat-icon class="mr-1" svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                        Comprar
+                    </button>
+
+                    <button class="fuse-mat-button w-30" mat-mini-fab [color]="'primary'" type="submit"
+                        (click)="endosarModal(row)" *ngIf="row.desTran === 'endoso' && transacciones.length === 0">
+                        <mat-icon class="mr-1" svgIcon="heroicons_mini:banknotes"></mat-icon>
+                        Endosar
+                    </button>
+
+                    <button class="fuse-mat-button w-30 bg-yellow-300" mat-mini-fab type="submit"
+                        (click)="donarModal(row)" *ngIf="row.desTran === 'donacion' && transacciones.length === 0">
+                        <mat-icon class="mr-2" svgIcon="heroicons_solid:gift"></mat-icon>
+                        Donar
+                    </button>
+
+                    <button class="fuse-mat-button w-30 bg-orange-500 " mat-mini-fab type="submit"
+                        (click)="sucesionModal(row)" *ngIf="row.desTran === 'sucesion' && transacciones.length === 0">
+                        <mat-icon class="mr-2" svgIcon="heroicons_solid:gift"></mat-icon>
+                        Sucesión
+                    </button>
+
+                    <!-- boton editar transaccion -->
+
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Mensaje no existen datos -->
+            <tr class="mat-row text-center" *matNoDataRow>
+                <td class="mat-cell" colspan="8" class="h-50 font-extrabold">"No existen datos para mostrar"</td>
+            </tr>
+        </table>
+
+
+        <div class="flex flex-row justify-end rounded card shadow bg-white" *ngIf="transacciones.length !== 0">
+            <!-- comprar -->
+            <button class="fuse-mat-button w-30 mt-2" mat-mini-fab [color]="'accent'" type="submit"
+                (click)="compraModal()" [disabled]="tipoTransaccionSeleccionado !== 'venta'">
+                <mat-icon svgIcon="heroicons_mini:currency-dollar"></mat-icon>
+                Comprar
+            </button>
+
+            <button class="fuse-mat-button w-30 ml-2 mt-2" mat-mini-fab [color]="'primary'" type="submit"
+                (click)="endosarModal()" [disabled]=" tipoTransaccionSeleccionado !== 'endoso'">
+                <mat-icon class="mr-1" svgIcon="heroicons_mini:banknotes"></mat-icon>
+                Endosar
+            </button>
+
+            <button class="fuse-mat-button w-30 bg-yellow-300 ml-2 mt-2" mat-mini-fab type="submit"
+                (click)="donarModal()" [disabled]="tipoTransaccionSeleccionado !== 'donacion'">
+                <mat-icon class="mr-2" svgIcon="heroicons_solid:gift"></mat-icon>
+                Donar
+            </button>
+
+            <button class="fuse-mat-button w-30 bg-orange-500 ml-2 mt-2" mat-mini-fab type="submit"
+                (click)="sucesionModal()" [disabled]="tipoTransaccionSeleccionado !== 'sucesion'">
+                <mat-icon class="mr-2" svgIcon="heroicons_solid:gift"></mat-icon>
+                Sucesión
+            </button>
+
+        </div>
+        <mat-paginator class="text-right" [pageSizeOptions]="[5, 10, 20]" [pageSize]="10"
+            showFirstLastButtons></mat-paginator>
+
+    </div>
+</div>

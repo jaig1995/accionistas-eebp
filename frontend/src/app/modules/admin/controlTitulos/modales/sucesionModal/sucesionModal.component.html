@@ -1,0 +1,73 @@
+<div class="flex-auto p-2">
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-orange-400">Sucesión de títulos</p>
+    <mat-divider class="mb-6" />
+    <!-- formulario -->
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="flex justify-center overflow-auto w-full">
+        <div formArrayName="titulos" class="flex flex-col overflow-hidden ">
+            <!-- subir archivos -->
+            <div class="flex flex-col w-full mb-5">
+                <a class="w-full " mat-stroked-button [color]="isValidFile ? 'primary' : 'warn' "
+                    (click)="fileInput.click()">
+                    <mat-icon svgIcon="heroicons_outline:document-arrow-up"></mat-icon>
+                    Subir formato de sucesión
+                </a>
+                <input hidden #fileInput type="file" (change)="onFileSelected($event)" required>
+                <label class="text-center mt-3 font-extrabold">{{ fileName }}</label>
+            </div>
+            <mat-divider class="mb-6" />
+            <!-- campos formulario -->
+            <div *ngFor="let titulos of formulario.get('titulos').controls; let i = index" [formGroupName]="i"
+                class="flex flex-row overflow-hidden my-2 ">
+                <!-- consecutivo -->
+                <mat-form-field class="w-full  " [subscriptSizing]="'dynamic'">
+                    <mat-label>título:</mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:hashtag'">
+                    </mat-icon>
+                    <input matInput type="text" formControlName="conseTitulo" readonly>
+                </mat-form-field>
+
+                <!-- acciones -->
+                <mat-form-field class="w-full px-4   " [subscriptSizing]="'dynamic'">
+                    <mat-label>Acciones:</mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:banknotes'">
+                    </mat-icon>
+                    <input matInput type="number" formControlName="numAcciones">
+                    <mat-error *ngIf="formulario.get('titulos').controls[i].get('numAcciones').errors?.required">
+                        Ingresa un valor.
+                    </mat-error>
+                    <mat-error *ngIf="formulario.get('titulos').controls[i].get('numAcciones').errors?.pattern">
+                        El valor debe ser un número.
+                    </mat-error>
+                    <mat-error *ngIf="formulario.get('titulos').controls[i].get('numAcciones').errors?.maxNumber">
+                        Valor máximo excedido.
+                    </mat-error>
+                </mat-form-field>
+                <!-- valor -->
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>Valor:</mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_mini:currency-dollar">
+                    </mat-icon>
+                    <input matInput type="text" formControlName="valAccTit" readonly>
+                </mat-form-field>
+            </div>
+            <mat-divider class="mb-6" />
+            <!-- razon general -->
+            <div class="w-full mx-auto flex justify-center flex-col">
+                <form [formGroup]="descripcion">
+                    <mat-label class="text-center my-5 font-extrabold  ">Razón sucesión título(s)</mat-label>
+                    <mat-form-field class="w-full">
+                        <textarea #razonTextArea formControlName="obsTransaccion" class="w-320" matInput
+                            placeholder="Ingresa la razón"></textarea>
+                    </mat-form-field>
+                    <mat-error
+                        *ngIf="descripcion.get('obsTransaccion').touched && descripcion.get('obsTransaccion').errors?.required">La
+                        razón es obligatoria.</mat-error>
+                </form>
+            </div>
+            <!-- boton tramitar -->
+            <button type="submit" class=" mx-auto w-full mt-5" mat-mini-fab [color]="'accent'"
+                [disabled]="formulario.invalid || !isValidFile">Tramitar</button>
+        </div>
+    </form>
+</div>

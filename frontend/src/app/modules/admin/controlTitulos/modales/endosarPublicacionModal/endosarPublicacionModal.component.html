@@ -1,0 +1,92 @@
+<div class="flex flex-col p-2">
+
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-primary">Endosar títulos</p>
+    <mat-divider class="mb-6" />
+
+    <!-- formulario -->
+    <div *ngFor="let titulo of data.arrayTitulos" class="w-full flex flex-col">
+        <form [formGroup]="crearFormulario(titulo)">
+            <div class="flex flex-row items-center  my-2 w-full">
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Transacción:</mat-label>
+                    <input matInput type="text" formControlName="conseTrans" readonly>
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Título:</mat-label>
+                    <input matInput type="text" formControlName="conseTitulo" readonly>
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Número de acciones:</mat-label>
+                    <input matInput type="text" formControlName="numAcciones" readonly>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- Agrega tomador -->
+    <div class="flex justify-center w-full">
+        <form [formGroup]="miFormulario">
+            <div class="flex flex-row items-center overflow-hidden my-2 w-120">
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Ingresa Tomador </mat-label>
+                    <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                    <input matInput formControlName="nombre" [matAutocomplete]="auto" type="text" placeholder="Nombre del tomador">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccionista">
+                        <mat-option *ngFor="let accionista of filteredAccionistas | async" [value]="accionista">
+                          {{ accionista.Nombres }}
+                        </mat-option>
+                      </mat-autocomplete>
+                </mat-form-field>
+                <div>
+                    <button type="button" class="w-20 ml-1" mat-mini-fab color="accent" (click)="agregarTomador()">
+                        <mat-icon svgIcon="heroicons_outline:user-plus"></mat-icon>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- mostrar tomador -->
+    <div class="w-full flex flex-col">
+
+        <mat-divider class="my-3" />
+
+        <form [formGroup]="tomadoresForm">
+            <div class="flex justify-center mt-3" *ngIf="tomadoresForm.get('tomadores')?.value?.length > 0">
+                <label class="text-primary font-bold items-center">Tomadores</label>
+            </div>
+            <!-- Itera sobre los tomadores existentes -->
+            <div formArrayName="tomadores">
+                <div *ngFor="let tomador of tomadores.controls; let i = index"
+                    class="flex flex-row items-center overflow-hidden my-2">
+                    <mat-form-field class="flex-grow mr-2">
+                        <mat-label>Tomador {{ i + 1 }}:</mat-label>
+                        <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+
+                        <input matInput [formControl]="tomador" type="text" placeholder="Nombre del tomador">
+                    </mat-form-field>
+                    <div>
+                        <button type="button" class="w-20 ml-1" mat-mini-fab color="warn" (click)="eliminarTomador(i)">
+                            <mat-icon svgIcon="heroicons_outline:user-minus"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- boton tramitar -->
+        <div>
+            <button type="submit" class="mx-auto w-full" mat-mini-fab [color]="'accent'"
+                [ngClass]="{'mt-5': tomadoresForm.get('tomadores')?.value?.length > 0, 'mt-20': tomadoresForm.get('tomadores')?.value?.length === 0}"
+                [disabled]="tomadoresForm.get('tomadores')?.value?.length === 0" (click)="submit()">
+                Tramitar
+            </button>
+        </div>
+    </div>
+
+</div>

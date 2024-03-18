@@ -92,12 +92,15 @@ export const appRoutes: Route[] = [
             {path: 'accionistas/actualizar/autorizacion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizarautorizacion/actualizarautorizacion.routes')},
             {path: 'accionistas/actualizar/declaracion/:id', loadChildren: () => import('app/modules/admin/control-accionistas/actualizardeclaracion/actualizardeclaracion.routes')},
             {path: 'accionistas/actualizar', loadChildren: () => import('app/modules/admin/control-accionistas/modificaraccionista/modificaraccionista.routes')},
-            {path: 'titulo/registro', loadChildren: () => import('app/modules/admin/controlTitulos/registrotitulos/registrotitulos.routes')},
+            {path: 'titulo/registro', loadChildren: () => import('app/modules/admin/controlTitulos/titulosGeneral/titulosGeneral.routes')},
+            {path: 'parametrizacion', loadChildren: () => import('app/modules/admin/parametrizacion/parametrizacion.routes')},
+            {path: 'acciones/transacciones', loadChildren: () => import('app/modules/admin/controlTitulos/gestionTitulos/gestionTitulos.routes')},
+            {path: 'acciones/aprobacion', loadChildren: () => import('app/modules/admin/controlTitulos/aprobarTitulos/gestionTitulos.routes')},
             // {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/ventaacciones/ventaacciones.routes')},
             // {path: 'acciones/compra', loadChildren: () => import('app/modules/admin/controlTitulos/compraacciones/compraacciones.routes')},
-            {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/transacciones/tramitetransacciones/tramitetransacciones.routes')},
+            {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/publicacionVentas/gestionTitulos.routes')},
             {path: 'transacciones/pendientes', loadChildren: () => import('app/modules/admin/transacciones/aprobacionespendientes/aprobacionespendientes.routes')},
             {path: 'transacciones/pendientes/:id', loadChildren: () => import('app/modules/admin/transacciones/aprobaciones/aprobaciones.routes')},
-        ]   
+        ]
     }
 ];
