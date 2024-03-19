@@ -55,7 +55,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
     // variable de entorno
-    private _baseUrl: string = ServicesConfig.apiUrl;
+    private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
 
     //Tabla
     datosTabla: AprobarTitulos[];
@@ -221,7 +221,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
                     codTipTran: 1
                 },
                 estadoTransaccion: {
-                    ideEstado: 6
+                    ideEstado: 4
                 },
                 transaccionTitulo: embargo.transaccionTitulo.map(titulo => ({
                     conseTitulo: titulo.conseTitulo,

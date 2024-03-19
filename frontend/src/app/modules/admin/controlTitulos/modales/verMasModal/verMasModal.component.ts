@@ -29,7 +29,8 @@ import { ControlTitulosService } from '../../controlTitulos.service';
 export class VerMasModalComponent {
 
     // url backend
-    private _baseUrl: string = ServicesConfig.apiUrl;
+    private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
+
 
     // variables generales de la transaccion
     consecutivoTransaccion: any;
@@ -53,7 +54,7 @@ export class VerMasModalComponent {
         this.archivosTransaccion = files.map(item => {
             return {
                 fileName: item.fileName,
-                url: this._baseUrl + item.url
+                url: this.apiUrlDocumentos + item.url
             };
         });
     }

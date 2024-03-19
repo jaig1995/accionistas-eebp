@@ -20,6 +20,7 @@ import { EndosoModalComponent } from '../modales/endosoModal/endosoModal.compone
 import { DonacionModalComponent } from '../modales/donacionModal/donacionModal.component';
 import { EmbargoModalComponent } from '../modales/embargoModal/embargoModal.component';
 import { SucesionModalComponent } from '../modales/sucesionModal/sucesionModal.component';
+import { EditarTituloModalComponent } from '../modales/editarTituloModal/editarTituloModal.component';
 
 @Component({
     selector: 'app-gestion-titulos',
@@ -49,7 +50,7 @@ export class GestionTitulosComponent {
     datosUsuario: string;
 
     // tabla
-    displayedColumns: string[] = ['select', 'conseTitulo', 'canAccTit', 'valor', 'actions'];
+    displayedColumns: string[] = ['select', 'conseTitulo', 'folio','canAccTit', 'valor', 'actions'];
     transacciones: any[] = [];
 
 
@@ -370,6 +371,25 @@ export class GestionTitulosComponent {
                 this.titulos = this.titulos.filter(titulo => !this.consecutivosTitulos.includes(titulo.conseTitulo));
                 this.transacciones = []
                 this.consecutivosTitulos = []
+                this.mostrarAlertaExitosa()
+            } else {
+                this.mostrarAlertaFallida
+            }
+        });
+    }
+
+    editarModal(titulo) {
+        const { editarTitulo } = titulo
+        const dialogRef = this.dialog.open(EditarTituloModalComponent, {
+            width: '700px',
+            height: '480px',
+            data: {
+                editarTitulo
+            },
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result.success) {
+                this.inicializarDatos(this.formularioBuscar.value.numeroIdentificacion)
                 this.mostrarAlertaExitosa()
             } else {
                 this.mostrarAlertaFallida
