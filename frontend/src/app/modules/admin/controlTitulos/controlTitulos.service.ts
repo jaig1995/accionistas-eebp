@@ -20,10 +20,10 @@ export class ControlTitulosService {
 
 
     obtenerTitulo(codUsuario: number): Observable<any> {
-        return this.http.get<Accionista>(`${this._baseUrl}/api/accionistas/${codUsuario}`).pipe(
+        return this.http.get<any>(`${this._baseUrl}/api/accionistas/${codUsuario}`).pipe(
             map(response => (
-
                 {
+
                 codUsuario: response.codUsuario,
                 nomPri: response.nomPri,
                 nomSeg: response.nomSeg,
@@ -31,12 +31,16 @@ export class ControlTitulosService {
                 apeSeg: response.apeSeg,
                 esAccionista: response.esAccionista,
                 titulos: response.titulos.map(titulo => ({
+                    folio:titulo.folio,
+                    editarTitulo:titulo,
                     estadoTitulo:titulo.estadoTitulo.descEstado,
                     conseTitulo: titulo.conseTitulo,
                     canAccTit: titulo.canAccTit,
                     valAccTit: titulo.valAccTit,
                 }))
-            }))
+
+            }
+            ))
         );
     }
 
@@ -107,6 +111,13 @@ export class ControlTitulosService {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
         return this.http.post<any>(url, titulos, { headers });
+    }
+
+    editarTitulo(titulo: any): Observable<any> {
+        const url = `${this._baseUrl}/api/titulos`;
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+        return this.http.post<any>(url, titulo, { headers });
     }
 
     obtenerTituloPorId(id: number) {

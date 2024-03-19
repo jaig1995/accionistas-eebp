@@ -1,0 +1,48 @@
+<div class="flex flex-col p-2">
+    <!-- titulo -->
+    <p class="text-lg font-extrabold mb-2 flex justify-center items-center text-primary">Información general título No.{{consecutivoTitulo}}
+        </p>
+    <mat-divider class="mb-6" />
+    <!-- formulario -->
+    <div class="w-full flex flex-col">
+        <form [formGroup]="formularioEditar" (ngSubmit)="onSubmit()">
+
+            <div class="flex flex-row items-center  my-2 w-full">
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Fecha Creación:</mat-label>
+                    <input matInput type="text" formControlName="fecCreTit" readonly >
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Estado:</mat-label>
+                    <input matInput type="text" formControlName="descEstado" readonly
+                        >
+                </mat-form-field>
+
+                <mat-form-field class="flex-grow mr-2">
+                    <mat-label>Acciones:</mat-label>
+                    <input matInput type="text" formControlName="canAccTit" readonly >
+                </mat-form-field>
+            </div>
+
+
+            <div class="w-full flex flex-col">
+                <div class="flex flex-row items-center  my-2 w-full">
+                    <mat-form-field class="flex-grow mr-2">
+                        <mat-label>Folio:</mat-label>
+                        <input matInput type="text" formControlName="folio"  >
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div>
+                <!-- boton tramitar -->
+            <button type="submit" class=" mx-auto w-full mt-5" mat-mini-fab [color]="'accent'"
+            [disabled]="false" >Tramitar</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
