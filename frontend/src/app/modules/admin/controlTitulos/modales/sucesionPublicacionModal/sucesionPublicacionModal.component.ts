@@ -35,6 +35,9 @@ export class SucesionPublicacionModalComponent {
     filteredAccionistas: Observable<any[]>;
     accionistas: any[] = [];
 
+    //validaciones
+    isLoading: boolean = true;
+
     public tomadoresForm: FormGroup = this.fb.group({
         tomadores: this.fb.array([], [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)])
     });
@@ -55,6 +58,7 @@ export class SucesionPublicacionModalComponent {
     }
 
     submit() {
+        this.isLoading= false;
         let titulos = this.data.arrayTitulos.map(data => {
             return {
                 conseTrans: data.conseTrans,

@@ -38,6 +38,8 @@ export class DonacionModalComponent {
     fileName: string = '';
     isValidFile: boolean = false;
     archivoSeleccionado: File | null = null;
+    isLoading: boolean = true
+
 
 
     constructor(public dialogRef: MatDialogRef<VentaModalComponent>,
@@ -80,6 +82,7 @@ export class DonacionModalComponent {
      * Maneja el evento para enviar el formulario
      */
     onSubmit() {
+        this.isLoading = false
         const descripcionDonacion = this.descripcion.value;
         const transaccionTituloSinValAccTit = this.formulario.value.titulos.map(titulo => {
             const { valAccTit, ...rest } = titulo;

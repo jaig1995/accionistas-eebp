@@ -37,6 +37,7 @@ export class VentaModalComponent implements OnInit {
     fileName: string = '';
     isValidFile: boolean = false;
     archivoSeleccionado: File | null = null;
+    isLoading: boolean = true
 
     constructor(public dialogRef: MatDialogRef<VentaModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -78,6 +79,7 @@ export class VentaModalComponent implements OnInit {
      * Maneja el evento para enviar el formulario
      */
     onSubmit() {
+        this.isLoading = false
         const descripcionVenta = this.descripcion.value;
         const transaccionTituloSinValAccTit = this.formulario.value.titulos.map(titulo => {
             const { valAccTit, ...rest } = titulo;
