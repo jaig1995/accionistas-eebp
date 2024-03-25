@@ -83,7 +83,7 @@
         <div>
             <button type="submit" class="mx-auto w-full" mat-mini-fab [color]="'accent'"
                 [ngClass]="{'mt-5': tomadoresForm.get('tomadores')?.value?.length > 0, 'mt-20': tomadoresForm.get('tomadores')?.value?.length === 0}"
-                [disabled]="tomadoresForm.get('tomadores')?.value?.length === 0" (click)="submit()">
+                [disabled]="tomadoresForm.get('tomadores')?.value?.length === 0 || !isLoading" (click)="submit()">
                 Tramitar
             </button>
         </div>

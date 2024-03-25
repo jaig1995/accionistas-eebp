@@ -125,8 +125,8 @@
                     <a mat-button [color]="'warn'" *ngIf="transacciones.length === 0"
                         (click)="embargoModal(row)">Embargo<mat-icon svgIcon="heroicons_mini:lock-closed"></mat-icon>
                     </a>
-                    <a mat-button [color]="'warn'" *ngIf="transacciones.length === 0"
-                        (click)="editarModal(row)">Editar<mat-icon svgIcon="heroicons_outline:pencil"></mat-icon>
+                    <a mat-button [ngStyle]="{ 'color': '#8B30FF' }"  *ngIf="transacciones.length === 0"
+                        (click)="editarModal(row)">Editar<mat-icon class="custom-button-editar"  svgIcon="heroicons_outline:pencil"></mat-icon>
                     </a>
                 </td>
             </ng-container>

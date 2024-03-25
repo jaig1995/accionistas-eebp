@@ -21,6 +21,8 @@ import { EndosarPublicacionModalComponent } from '../modales/endosarPublicacionM
 import { SucesionPublicacionModalComponent } from '../modales/sucesionPublicacionModal/sucesionPublicacionModal.component';
 import { fuseAnimations } from '@fuse/animations';
 import { CompraPublicacionModalComponent } from '../modales/compraPublicacionModal/compraPublicacionModal.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { Datos } from '../interfaces/publicacionVentas.interface';
 @Component({
     selector: 'app-publicacion-ventas',
     standalone: true,
@@ -40,7 +42,8 @@ import { CompraPublicacionModalComponent } from '../modales/compraPublicacionMod
         FuseAlertComponent,
         MatPaginatorModule,
         MatSortModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatMenuModule
     ],
     templateUrl: 'publicacionVentas.component.html',
     animations: fuseAnimations,
@@ -55,6 +58,9 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
+
+    //Filtro
+    accionesBuscar: number
     //seleccionador de titulos.
     transacciones: any[] = [];
     tipoTransaccionSeleccionado: string | undefined;
@@ -80,14 +86,15 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.inicializarDatos()
 
+
     }
 
-     /**
-     * Muestra una alerta EXITOSA en la interfaz de usuario.
-     * Establece la variable showSuccesAlert en true para mostrar la alerta y
-     * luego la restablece a false después de 3000 milisegundos (3 segundos).
-     */
-     mostrarAlertaExitosa(): void {
+    /**
+    * Muestra una alerta EXITOSA en la interfaz de usuario.
+    * Establece la variable showSuccesAlert en true para mostrar la alerta y
+    * luego la restablece a false después de 3000 milisegundos (3 segundos).
+    */
+    mostrarAlertaExitosa(): void {
         this.showSuccesAlert = true;
         setTimeout(() => {
             this.showSuccesAlert = false;
@@ -135,12 +142,14 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                         }));
                     }
 
+
                 }
 
                 );
                 this.loading = false
                 //mostrar solo titulos activos filtro en Front-end por estado diferentes de anulado
                 let titulosActivos = titulosPorTransaccion.filter(activo => activo.descEstadoTitulo !== 'anulado')
+                // console.log(titulosActivos)
                 //asignación a tabla de material
                 this.datosTabla = titulosActivos
                 // console.log(this.datosTabla) //TODO:empezar aqui funcionalidad filtro avanzado
@@ -248,12 +257,11 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                 this.transacciones = []
                 this.consecutivosTitulos = []
                 this.mostrarAlertaExitosa()
-            }else{
+            } else {
                 this.mostrarAlertaFallida()
             }
         });
     }
-
 
     /**
      * Método que abre un diálogo modal para realizar un endoso de publicación.
@@ -282,7 +290,7 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                 this.transacciones = []
                 this.consecutivosTitulos = []
                 this.mostrarAlertaExitosa()
-            }else{
+            } else {
                 this.mostrarAlertaFallida()
             }
         });
@@ -316,7 +324,7 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                 this.transacciones = []
                 this.consecutivosTitulos = []
                 this.mostrarAlertaExitosa()
-            }else{
+            } else {
                 this.mostrarAlertaFallida
             }
         });
@@ -351,10 +359,89 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                 this.transacciones = []
                 this.consecutivosTitulos = []
                 this.mostrarAlertaExitosa()
-            }else{
+            } else {
                 this.mostrarAlertaFallida()
             }
         });
     }
+
+
+    /**
+     * Método que busca una combinación de objetos para alcanzar un total específico.
+     * Si no puede encontrar una combinación exacta, busca la combinación que tenga la menor diferencia positiva respecto al total.
+     * @param total El total que se desea alcanzar con la combinación de objetos.
+     * @param desTran El tipo de transacción que deben tener los objetos para ser considerados en la combinación.
+     * @param datos Un array de objetos de tipo Datos que se utilizarán para buscar la combinación.
+     * @returns Un array de objetos de tipo Datos que representan la combinación encontrada, o null si no se encontró ninguna combinación.
+     */
+    encontrarCombinacionParaTotal(total: number, desTran: string, datos: Datos[]): Datos[] | null {
+        let combinacionExacta: Datos[] | null = null;
+        let mejorCombinacion: Datos[] | null = null;
+        let diferenciaMejorCombinacion = Infinity;
+        let iteraciones = 0;
+
+        function buscarCombinaciones(index: number, combinacionActual: Datos[], sumaParcial: number) {
+            iteraciones++;
+
+            if (iteraciones > datos.length * 10) {
+                // Detener la recursión si se supera el límite de iteraciones
+                return;
+            }
+            const diferencia = sumaParcial - total;
+
+            if (sumaParcial === total) {
+                // Si encuentra una combinación exacta, asignarla y finalizar la búsqueda
+                combinacionExacta = [...combinacionActual];
+                return;
+            }
+
+            if (diferencia >= 0 && diferencia < diferenciaMejorCombinacion) {
+                // Actualizar la mejor combinación si la diferencia es menor
+                mejorCombinacion = [...combinacionActual];
+                diferenciaMejorCombinacion = diferencia;
+            }
+
+            for (let i = index; i < datos.length; i++) {
+                const dato = datos[i];
+                if (!dato.selected && dato.desTran === desTran) {
+                    dato.selected = true;
+                    combinacionActual.push(dato);
+                    buscarCombinaciones(i + 1, combinacionActual, sumaParcial + dato.numAcciones);
+                    combinacionActual.pop();
+                    dato.selected = false;
+                }
+            }
+        }
+
+        buscarCombinaciones(0, [], 0);
+        if (combinacionExacta !== null) {
+            return combinacionExacta;
+        } else {
+            return mejorCombinacion;
+        }
+    }
+
+
+    /**
+     * Método que busca acciones según un tipo específico y actualiza los datos mostrados en la tabla.
+     * Si no se especifica un tipo, se muestran todas las acciones.
+     * @param tipo El tipo de transacción por el cual se desea filtrar las acciones.
+     */
+    buscarAccionesPor(tipo?: string) {
+        if (!tipo) {
+            this.dataSource.data = this.datosTabla
+        } else {
+            this.loading = true;
+            let numeroAccionesaBuscar = this.accionesBuscar
+            const datosAcciones = this.datosTabla
+            let filtroAcciones = this.encontrarCombinacionParaTotal(numeroAccionesaBuscar, tipo, datosAcciones);
+            this.dataSource.data = filtroAcciones
+            tipo = null
+            this.loading = false;
+        }
+
+        this.accionesBuscar = null
+    }
+
 }
 

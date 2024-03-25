@@ -42,6 +42,28 @@
                 <input matInput (keyup)="applyFilter($event)" #input>
             </mat-form-field>
 
+
+
+            <div class="flex flex-row justify-center items-center">
+
+                <mat-form-field class="w-30">
+                    <mat-label class="font-extrabold ">No.Acciones:</mat-label>
+                    <input matInput [(ngModel)]="accionesBuscar" type="number"  #input>
+                </mat-form-field>
+
+                <div class="ml-2">
+                    <button mat-button [matMenuTriggerFor]="menu" [color]="'accent'" >Tipo Acción</button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="buscarAccionesPor()">Ninguno</button>
+                        <button mat-menu-item (click)="buscarAccionesPor('venta')">Venta</button>
+                        <button mat-menu-item (click)="buscarAccionesPor('endoso')">Endoso</button>
+                        <button mat-menu-item (click)="buscarAccionesPor('sucesion')">Sucesion</button>
+                        <button mat-menu-item (click)="buscarAccionesPor('donacion')">Donación</button>
+                    </mat-menu>
+                </div>
+            </div>
+
+
             <!-- filtro secciones -->
             <mat-form-field class="w-50">
                 <mat-label class="flex items-center font-extrabold">

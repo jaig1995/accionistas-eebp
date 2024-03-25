@@ -37,6 +37,7 @@ export class EmbargoModalComponent implements OnInit {
     fileName: string = '';
     isValidFile: boolean = false;
     archivoSeleccionado: File | null = null;
+    isLoading: boolean = true
 
 
     constructor(public dialogRef: MatDialogRef<VentaModalComponent>,
@@ -75,6 +76,7 @@ export class EmbargoModalComponent implements OnInit {
      * Maneja el evento para enviar el formulario
      */
     onSubmit() {
+        this.isLoading = false;
         const transaccionTituloSinValAccTit = this.formulario.value.titulos.map(titulo => {
             const { valAccTit, ...rest } = titulo;
             return rest;

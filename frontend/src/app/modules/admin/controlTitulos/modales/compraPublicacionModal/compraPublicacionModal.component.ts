@@ -35,6 +35,7 @@ export class CompraPublicacionModalComponent implements OnInit {
     fileName: string = '';
     isValidFile: boolean = false;
     archivoSeleccionado: File | null = null;
+    isLoading: boolean = true;
 
     //seleccionador
     accionistas: any[] = [];
@@ -120,7 +121,7 @@ export class CompraPublicacionModalComponent implements OnInit {
     }
 
     submit() {
-
+        this.isLoading= false;
         let titulos = this.data.arrayTitulos.map(data => {
             return {
                 conseTrans: data.conseTrans,
@@ -150,6 +151,7 @@ export class CompraPublicacionModalComponent implements OnInit {
               this.cambiarNombreArchivo(nombreArchivo);
               this.controlTitulosService.enviarFormatoVenta(this.archivoSeleccionado).subscribe();
               this.dialogRef.close({ success: true });
+
             },
             error: (error) => {
                 this.dialogRef.close({ success: false });
