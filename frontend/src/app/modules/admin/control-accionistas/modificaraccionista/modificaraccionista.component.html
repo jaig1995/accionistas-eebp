@@ -27,25 +27,36 @@
             </div>
             <mat-divider class="mt-4 mb-4"></mat-divider><br>
 
-            <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'">
-                <mat-label>Tipo de accionista:</mat-label>
-                <mat-select id="tipoAccionista"  formControlName="tipoAccionista">
-                  <mat-option [value]="1">Empleado</mat-option>
-                  <mat-option [value]="2">Pertenece a junta</mat-option> 
-                  <mat-option [value]="3">Ninguno</mat-option> 
-                </mat-select>
-            </mat-form-field >
+            <div [style.text-align]="'center'" >
 
-            <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'" >
-                <mat-label>Número de Carnet del Accionista:</mat-label>
-                <mat-error>Solo se permiten números.</mat-error>
-                <input matInput type="text" id="numCarnet" formControlName="numCarnet">
-            </mat-form-field>
+                <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 " [subscriptSizing]="'dynamic'">
+                    <mat-label>Tipo de accionista:</mat-label>
+                    <mat-select id="tipoAccionista"  formControlName="tipoAccionista">
+                    <mat-option [value]="1">Empleado</mat-option>
+                    <mat-option [value]="2">Pertenece a junta</mat-option> 
+                    <mat-option [value]="3">Ninguno</mat-option> 
+                    </mat-select>
+                </mat-form-field >
 
-            <button *ngIf="mostrarTablas" class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Subir archivos</button>
-            <input hidden (change)="onFileSelectedMultiple($event)" #fileInput multiple type="file" formControlName="file">
-            <span  class="file-name" *ngFor="let file of selectedFileMultiple"> {{file.name}} - </span><br>
-        
+                <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'" >
+                    <mat-label>Número de Carnet del Accionista:</mat-label>
+                    <mat-error>Solo se permiten números.</mat-error>
+                    <input matInput type="text" id="numCarnet" formControlName="numCarnet">
+                </mat-form-field>
+
+                <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Estado de aprobación:</mat-label>
+                    <mat-select id="aprobado"  formControlName="aprobado">
+                    <mat-option value="S">Aprobado</mat-option>
+                    <mat-option value="N">Rechazado</mat-option> 
+                    <mat-option value="P">Pendiente</mat-option> 
+                    </mat-select>
+                </mat-form-field >
+
+                <button *ngIf="mostrarTablas" class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Subir archivos</button>
+                <input hidden (change)="onFileSelectedMultiple($event)" #fileInput multiple type="file" formControlName="file">
+                <span  class="file-name" *ngFor="let file of selectedFileMultiple"> {{file.name}} - </span><br>
+            </div>
         </form><br>
 
         <table *ngIf="mostrarTablas" mat-table [dataSource]="datosAccionista" class="mat-elevation-z4">

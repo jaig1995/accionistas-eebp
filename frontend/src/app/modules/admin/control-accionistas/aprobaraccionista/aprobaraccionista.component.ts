@@ -220,7 +220,7 @@ export class AprobaraccionistaComponent implements OnInit{
               this.registroForm.get('codUsuario').setValue('');
               this.mostrarBotones = false;
               this.mostrarTablas = false;
-            } else if (accionistaData.descripcionRechazo !== null) {
+            } else if (accionistaData.aprobado === 'N') {
               const confirmation = this._fuseConfirmationService.open({
                 "title": "El usuario fue rechazado con la siguiente descripción:",
                 "message": accionistaData.descripcionRechazo,

@@ -73,6 +73,7 @@ export class ModificaraccionistaComponent implements OnInit {
   registroForm = new FormGroup({
     'codUsuario': new FormControl('', [Validators.required,Validators.pattern('^[0-9]*$')]),
     'tipoAccionista': new FormControl('', Validators.required),
+    'aprobado': new FormControl('', Validators.required),
     'numCarnet': new FormControl({ value: '', disabled: true },[Validators.required,Validators.pattern('^[0-9]*$')]),
     'file': new FormControl(''),
   })
@@ -104,7 +105,7 @@ export class ModificaraccionistaComponent implements OnInit {
 
       codUsuario: this.registroForm.get('codUsuario').value,
       tipoAccionista: this.registroForm.get('tipoAccionista').value,
-      
+      aprobado: this.registroForm.get('aprobado').value,
     };
 
     console.log(this.registroForm)
@@ -208,15 +209,16 @@ export class ModificaraccionistaComponent implements OnInit {
   
     this.accionistasService.obtenerDatosRegistro(codUsuario).subscribe(
       (data: RegAccionistas) => {
-        
+        console.log(data);
           this.accionistasService.obtenerAccionista(codUsuario).subscribe(
             (datos: Accionista) => {
-              
+              console.log(datos);
               this.datosActualizar = datos;
               this.registroForm.patchValue({
                 
                 tipoAccionista: datos.tipoAccionista,
                 numCarnet: datos.numCarnet,
+                aprobado: datos.aprobado
       
               });
           });

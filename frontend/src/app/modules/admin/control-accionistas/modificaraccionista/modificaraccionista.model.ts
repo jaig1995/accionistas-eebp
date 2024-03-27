@@ -4,6 +4,7 @@ export interface EsAccionistas{
     codRepresentante: string;
     nomRepresentante: string;
     esAccionista: string;
+    aprobado: string;
     tipoDocAccionista: string;
     tipoDocRepresentante: string;
 }

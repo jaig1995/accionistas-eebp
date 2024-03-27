@@ -112,9 +112,35 @@ export class ModificarapoderadoComponent implements OnInit {
           this.router.navigate(['inicio']);
         },
         (error) => {
+          
 
         }
       );
+    }else{
+      const confirmation = this._fuseConfirmationService.open({
+
+        "title": "No se puede asignar un representante!",
+        "message": "",
+        "icon": {
+          "show": true,
+          "name": "heroicons_outline:exclamation-triangle",
+          "color": "warn"
+        },
+        "actions": {
+          "confirm": {
+            "show": true,
+            "label": "Aceptar",
+            "color": "warn"
+          },
+          "cancel": {
+            "show": false,
+            "label": "Cancel"
+          }
+        },
+        "dismissible": true
+
+      });
+      this.router.navigate(['inicio']);
     }
   }
 
@@ -154,7 +180,7 @@ export class ModificarapoderadoComponent implements OnInit {
         if (data.tipoDocAccionista === 'CC' || data.tipoDocAccionista === 'CE' || data.tipoDocAccionista === 'NIT') {
           const confirmation = this._fuseConfirmationService.open({
 
-            "title": "El usuario no tiene representante",
+            "title": "El usuario es su propio representante",
             "message": "",
             "icon": {
               "show": true,
@@ -165,7 +191,7 @@ export class ModificarapoderadoComponent implements OnInit {
               "confirm": {
                 "show": true,
                 "label": "Aceptar",
-                "color": "warn"
+                "color": "succes"
               },
               "cancel": {
                 "show": false,
@@ -176,67 +202,15 @@ export class ModificarapoderadoComponent implements OnInit {
     
           });
           this.modificacionForm.get('codUsuario').setValue('');
-          this.mostrarCampoAdicionalFueraTabla = null;
-        }
-        if (data.esAccionista === 'S'){
-          console.log(data);
+        }else{
           this.codigoUsuarioAccionista = codUsuario;
           this.datosAccionista = [data];
           this.datosRepresentante = [data];
-          this.mostrarCampoAdicionalFueraTabla = data.codUsuario !== null;
-        }else{
-          const confirmation = this._fuseConfirmationService.open({
-
-            "title": "El usuario aún no es accionista.",
-            "message": "Verifique el código de usuario.",
-            "icon": {
-              "show": true,
-              "name": "heroicons_outline:exclamation-triangle",
-              "color": "warn"
-            },
-            "actions": {
-              "confirm": {
-                "show": true,
-                "label": "Aceptar",
-                "color": "warn"
-              },
-              "cancel": {
-                "show": false,
-                "label": "Cancel"
-              }
-            },
-            "dismissible": true
-    
-          });
+          this.mostrarCampoAdicionalFueraTabla = true;
         }
-        
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        const confirmation = this._fuseConfirmationService.open({
-
-          "title": "El usuario aún no es accionista",
-          "message": "Verifique el código de usuario.",
-          "icon": {
-            "show": true,
-            "name": "heroicons_outline:exclamation-triangle",
-            "color": "warn"
-          },
-          "actions": {
-            "confirm": {
-              "show": true,
-              "label": "Aceptar",
-              "color": "warn"
-            },
-            "cancel": {
-              "show": false,
-              "label": "Cancel"
-            }
-          },
-          "dismissible": true
-  
-        });
-        this.modificacionForm.get('codUsuario').setValue('');
       }
     );
     this.accionistasService.obtenerAccionista(codUsuario).subscribe(
@@ -266,7 +240,7 @@ export class ModificarapoderadoComponent implements OnInit {
     
           });
           this.modificacionForm.get('codUsuario').setValue('');
-          this.mostrarCampoAdicionalFueraTabla = null;
+          this.mostrarCampoAdicionalFueraTabla = false;
         }
         
       }
@@ -372,7 +346,4 @@ export class ModificarapoderadoComponent implements OnInit {
     
   }
 
-  tablas() {
-    this.mostrarTablas = true;
-  }
 }
