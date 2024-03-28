@@ -96,11 +96,10 @@ export const appRoutes: Route[] = [
             {path: 'parametrizacion', loadChildren: () => import('app/modules/admin/parametrizacion/parametrizacion.routes')},
             {path: 'acciones/transacciones', loadChildren: () => import('app/modules/admin/controlTitulos/gestionTitulos/gestionTitulos.routes')},
             {path: 'acciones/aprobacion', loadChildren: () => import('app/modules/admin/controlTitulos/aprobarTitulos/gestionTitulos.routes')},
-            // {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/ventaacciones/ventaacciones.routes')},
-            // {path: 'acciones/compra', loadChildren: () => import('app/modules/admin/controlTitulos/compraacciones/compraacciones.routes')},
             {path: 'acciones/venta', loadChildren: () => import('app/modules/admin/controlTitulos/publicacionVentas/gestionTitulos.routes')},
             {path: 'transacciones/pendientes', loadChildren: () => import('app/modules/admin/transacciones/aprobacionespendientes/aprobacionespendientes.routes')},
             {path: 'transacciones/pendientes/:id', loadChildren: () => import('app/modules/admin/transacciones/aprobaciones/aprobaciones.routes')},
+            {path: 'asamblea/registrar-poderes', loadChildren: () => import('app/modules/admin/asamblea/registroPoderes/registroPoderes.routes'), title:"Registro De Poderes"},
         ]
     }
 ];

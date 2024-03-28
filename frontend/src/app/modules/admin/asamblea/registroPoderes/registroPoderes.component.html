@@ -1,0 +1,155 @@
+<div class="flex-auto p-6 sm:p-10">
+    <!-- titulos -->
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">Registro de Poderes</div>
+    <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+        Pre-Asamblea </div>
+
+    <!-- alertas -->
+    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
+        <span fuseAlertTitle>Aprobación exitosa</span>
+        ¡Solicitud aprobada!
+    </fuse-alert>
+    <!-- fin alertas -->
+
+    <div class="flex-auto w-full px-3 pt-10 bg-card shadow rounded overflow-hidden ">
+
+        <div class="flex flex-row justify-between">
+            <!-- Buscar Poderdante -->
+            <div class="flex flex-row w-full mb-10 overflow-hidden">
+                <div class="flex items-center ">
+                    <mat-form-field class="w-full sm:w-72 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                        <mat-label>Poderdante: </mat-label>
+                        <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                            svgIcon="heroicons_solid:user"></mat-icon>
+                        <input matInput [formControl]="poderdante" [matAutocomplete]="poderdanteAutoComplet" type="text"
+                            placeholder="Número identificación" class="w-150">
+                        <mat-autocomplete #poderdanteAutoComplet="matAutocomplete" [displayWith]="mostrarPoderdante">
+                            <mat-option *ngFor="let poderdante of filtroPoderdantes | async" [value]="poderdante">
+                                {{ poderdante.Nombres }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <!-- Buscar Apoderado -->
+                <div class="flex flex-row items-center">
+                    <mat-form-field class="w-full sm:w-72 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                        <mat-label>Apoderado: </mat-label>
+                        <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                            [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
+                        <input matInput [formControl]="apoderado" [matAutocomplete]="apoderadoAutoComplet" type="text"
+                            placeholder="Número identificación" class="w-150">
+                        <mat-autocomplete #apoderadoAutoComplet="matAutocomplete" [displayWith]="mostrarApoderado">
+                            <mat-option *ngFor="let apoderado of filtroApoderados | async" [value]="apoderado">
+                                {{ apoderado.Nombres }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <!-- cargar archivos -->
+                <div class="flex items-end ml-2 mb-2">
+                    <button mat-stroked-button color="accent"><mat-icon
+                            svgIcon="mat_solid:attach_file"></mat-icon>Cargar Formato</button>
+                </div>
+            </div>
+
+            <!-- BOTON AGREGAR -->
+            <div class=" mb-10 mr-3 flex">
+                <div class="flex items-end mb-2">
+                    <button mat-raised-button color="primary" class="w-40"><mat-icon
+                            svgIcon="heroicons_solid:user-plus"></mat-icon>&nbsp; Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Spinner carga -->
+    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+    </div>
+
+
+    <!-- Tabla con registros -->
+    <div class="flex-auto  w-full  px-8 pt-10 bg-card shadow rounded overflow-hidden" *ngIf="!loading">
+
+        <div class="flex flex-row justify-between items-center">
+            <mat-form-field class="w-72" >
+                <mat-label>Filtro General</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+            </mat-form-field>
+
+
+            <button mat-fab [matMenuTriggerFor]="menu" [color]="'accent'"><mat-icon
+                    svgIcon="heroicons_solid:document-arrow-down"></mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>Excel</button>
+                <button mat-menu-item>PDF</button>
+            </mat-menu>
+        </div>
+
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="CONSECUTIVO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> CONS </th>
+                    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                </ng-container>
+
+                <!-- Progress Column -->
+                <ng-container matColumnDef="DOCUMENTO PODERDANTE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="PODERDANTE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="N.ACCIONES">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> N.ACCIONES </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                </ng-container>
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="APODERADO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> APODERADO </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                </ng-container>
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="DOCUMENTO APODERADO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO APODERADO </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                </ng-container>
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="VER MÁS">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> VER MÁS </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                </ng-container>
+                <!-- Fruit Column -->
+                <ng-container matColumnDef="ACCIONES">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ACCIONES </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        </div>
+
+
+
+    </div>
+
+</div>

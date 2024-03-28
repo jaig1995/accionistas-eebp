@@ -22,22 +22,27 @@
     <!-- fin alertas -->
 
     <!-- Seccion consultar -->
-    <div class="flex-auto  w-full mt-4 px-8 pt-10 bg-card shadow rounded overflow-hidden">
-        <form [formGroup]="formularioBuscar" (ngSubmit)="consultar()">
-            <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
-                <mat-label>Consultar por identificación</mat-label>
-                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+    <!-- BUSCAR tomador -->
+    <div class="flex-auto  w-full  px-8 pt-10 bg-card shadow rounded overflow-hidden">
+        <form [formGroup]="miFormulario" (ngSubmit)="consultar()" class="flex flex-row items-center mb-10">
+                <mat-form-field class="w-full sm:w-72 sm:mt-0 sm:ml-4" [subscriptSizing]="'dynamic'">
+                    <mat-label>Buscar:  </mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
                     [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                <input matInput formControlName="numeroIdentificacion" type="text" placeholder="número identificación">
-                <mat-error
-                    *ngIf="formularioBuscar.get('numeroIdentificacion').hasError('pattern') && !formularioBuscar.get('numeroIdentificacion').hasError('required')">El
-                    valor ingresado no es un número.</mat-error>
-            </mat-form-field>
-            <button class="fuse-mat-button w-28 ml-3 mb-8" mat-mini-fab [color]="'accent'" type="submit"
-                [disabled]="this.formularioBuscar.invalid || loading">
-                <mat-icon svgIcon="heroicons_outline:magnifying-glass"></mat-icon>
-                Consultar
-            </button>
+                    <input matInput formControlName="nombre" [matAutocomplete]="auto" type="text"
+                        placeholder="Número identificación" class="w-150">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccionista">
+                        <mat-option *ngFor="let accionista of filteredAccionistas | async" [value]="accionista">
+                            {{ accionista.Nombres }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <button class="fuse-mat-button w-28 ml-3 mt-5" mat-mini-fab [color]="'accent'" type="submit"
+                    [disabled]="loading">
+                    <mat-icon svgIcon="heroicons_outline:magnifying-glass"></mat-icon>
+                    Consultar
+                </button>
         </form>
     </div>
 
@@ -125,8 +130,9 @@
                     <a mat-button [color]="'warn'" *ngIf="transacciones.length === 0"
                         (click)="embargoModal(row)">Embargo<mat-icon svgIcon="heroicons_mini:lock-closed"></mat-icon>
                     </a>
-                    <a mat-button [ngStyle]="{ 'color': '#8B30FF' }"  *ngIf="transacciones.length === 0"
-                        (click)="editarModal(row)">Editar<mat-icon class="custom-button-editar"  svgIcon="heroicons_outline:pencil"></mat-icon>
+                    <a mat-button [ngStyle]="{ 'color': '#8B30FF' }" *ngIf="transacciones.length === 0"
+                        (click)="editarModal(row)">Editar<mat-icon class="custom-button-editar"
+                            svgIcon="heroicons_outline:pencil"></mat-icon>
                     </a>
                 </td>
             </ng-container>
