@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { ControlTitulosService } from '../controlTitulos.service';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +21,8 @@ import { DonacionModalComponent } from '../modales/donacionModal/donacionModal.c
 import { EmbargoModalComponent } from '../modales/embargoModal/embargoModal.component';
 import { SucesionModalComponent } from '../modales/sucesionModal/sucesionModal.component';
 import { EditarTituloModalComponent } from '../modales/editarTituloModal/editarTituloModal.component';
+import { map, Observable, startWith } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'app-gestion-titulos',
@@ -29,6 +31,7 @@ import { EditarTituloModalComponent } from '../modales/editarTituloModal/editarT
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
@@ -38,16 +41,22 @@ import { EditarTituloModalComponent } from '../modales/editarTituloModal/editarT
         MatCheckboxModule,
         ReactiveFormsModule,
         MatProgressSpinnerModule,
-        FuseAlertComponent
+        FuseAlertComponent,
+        MatAutocompleteModule,
+        AsyncPipe,
     ],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
 })
-export class GestionTitulosComponent {
+export class GestionTitulosComponent implements OnInit {
 
     // propiedades
     titulos: any = [];
     datosUsuario: string;
+    myControl = new FormControl('');
+
+    filteredAccionistas: Observable<any[]>;
+
 
     // tabla
     displayedColumns: string[] = ['select', 'conseTitulo', 'folio','canAccTit', 'valor', 'actions'];
@@ -65,10 +74,44 @@ export class GestionTitulosComponent {
     loading = false;
     codigoUsuario: any;
     consecutivosTitulos: any[];
+    accionistas: any[] = [];
 
 
-    constructor(private controlTitulosService: ControlTitulosService, private dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) { }
+    miFormulario: FormGroup;
 
+
+    constructor(private fb: FormBuilder,private controlTitulosService: ControlTitulosService, private dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) {
+        this.miFormulario = this.fb.group({
+            nombre: ['', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)]],
+        });
+     }
+
+
+    ngOnInit(): void {
+        this.miFormulario = this.fb.group({
+            nombre: [''],
+        });
+
+        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+            this.accionistas = data;
+        });
+
+        this.filteredAccionistas = this.miFormulario.get('nombre').valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterAccionistas(value))
+        );
+
+        }
+
+
+        private _filterAccionistas(value: string): any[] {
+            const filterValue = value;
+            return this.accionistas.filter(accionista => accionista.Nombres.includes(filterValue));
+        }
+
+        displayAccionista(accionista: any): string {
+            return accionista && accionista.Nombres ? accionista.Nombres : '';
+        }
 
     /**
     * Muestra una alerta EXITOSA en la interfaz de usuario.
@@ -101,11 +144,16 @@ export class GestionTitulosComponent {
      * @param {string} cod - El código del título a cargar.
      */
     consultar(): void {
-        const cod = this.formularioBuscar.value.numeroIdentificacion
-        if (!cod) {
-            return
+        console.log(this.miFormulario.value)
+        let num = ''
+        const selectedAccionista = this.miFormulario.value.nombre;
+        if (typeof (selectedAccionista) === 'object') {
+             num = this.miFormulario.value.nombre.idPer
+            console.log("num", num)
+        } else {
+             num = this.miFormulario.value.nombre
         }
-        this.inicializarDatos(cod)
+        this.inicializarDatos(num)
     }
 
 
