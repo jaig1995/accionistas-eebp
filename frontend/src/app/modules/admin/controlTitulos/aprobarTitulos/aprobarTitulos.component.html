@@ -79,8 +79,8 @@
 
             <!-- Position Column -->
             <ng-container matColumnDef="TIPO">
-                <th mat-header-cell *matHeaderCellDef> TIPO </th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> TIPO </th>
+                <td mat-cell *matCellDef="let element" class="text-center">
                     <mat-chip color="warn">
                         {{element.tipoTransaccionN}}
                     </mat-chip>
@@ -89,19 +89,13 @@
 
             <!-- Name Column -->
             <ng-container matColumnDef="CONSECUTIVO">
-                <th mat-header-cell *matHeaderCellDef> TITULO </th>
-                <td mat-cell *matCellDef="let element"> {{element.conseTrans}} </td>
+                <th mat-header-cell *matHeaderCellDef> NO.TRANSACCIÓN </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.conseTrans}} </td>
             </ng-container>
 
             <ng-container matColumnDef="IDENTIFICACION">
                 <th mat-header-cell *matHeaderCellDef> IDENTIFICACION </th>
-                <td mat-cell *matCellDef="let element"> {{element.idePer}} </td>
-            </ng-container>
-
-            <!-- Weight Column -->
-            <ng-container matColumnDef="CANTIDADACCION">
-                <th mat-header-cell *matHeaderCellDef> CANTIDAD ACCION </th>
-                <td mat-cell *matCellDef="let element"> {{element.valTran}} </td>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.idePer}} </td>
             </ng-container>
 
             <ng-container matColumnDef="INTENCION">
@@ -113,20 +107,20 @@
             </ng-container>
 
             <ng-container matColumnDef="ESTADO">
-                <th mat-header-cell *matHeaderCellDef> ESTADO </th>
-                <td mat-cell *matCellDef="let element"> {{element.estadoTransaccion?.descEstado}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> ESTADO </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.estadoTransaccion?.descEstado}} </td>
             </ng-container>
 
             <ng-container matColumnDef="DOCUMENTO">
-                <th mat-header-cell *matHeaderCellDef> DOCUMENTO </th>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> DOCUMENTO </th>
                 <td mat-cell *matCellDef="let element"> <a mat-button target="_blank"
-                        [href]="apiUrlDocumentos+element.files[0].url" [color]="'accent'"><mat-icon
+                        [href]="apiUrlDocumentos+element.files[0].url ? apiUrlDocumentos+element.files[0].url : '/' " [color]="'accent'"><mat-icon
                             svgIcon="mat_solid:attach_file"></mat-icon>Documento</a>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="TRANSACCION">
-                <th mat-header-cell *matHeaderCellDef> TRANSACCION </th>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
                 <td mat-cell *matCellDef="let row" class="button-cell">
                     <button class="fuse-mat-button w-24" [disabled]="row.estadoTransaccion?.descEstado === 'Aprobado'"
                         mat-mini-fab [color]="'primary'" type="submit" (click)="aprobar(row)" [disabled]="isEnableButton" *ngIf="row.tipoTransaccion.desTran !== 'embargo'">

@@ -67,7 +67,6 @@ export class ParametrizacionComponent implements OnInit {
             },
         });
         await dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Resultado dialog: ${result}`)
             if (result) {
                 this.cargarDatos()
             }
@@ -76,7 +75,6 @@ export class ParametrizacionComponent implements OnInit {
 
     eliminarParemetro(element:any){
         const {idParametro} = element
-        console.log(idParametro)
         if(!idParametro) return
         this.parametrizacionService.eliminarParametros(idParametro).subscribe(data => console.log(data), )
         this.cargarDatos()

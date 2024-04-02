@@ -56,10 +56,6 @@ export class EndosarPublicacionModalComponent {
             nombre: ['', Validators.required],
             idPer: ['']
         });
-
-        console.log(data.arrayTitulos)
-
-
     }
 
     submit() {
@@ -114,7 +110,7 @@ export class EndosarPublicacionModalComponent {
             nombre: [''],
         });
 
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
             this.accionistas = data;
         });
 

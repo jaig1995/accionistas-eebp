@@ -49,7 +49,6 @@ export class AprobarModalComponent {
 
 
     ngOnInit(): void {
-        console.log(this.data)
         const { titulo, codigo } = this.data
         this.idPersona = codigo
         const formArray = this.formBuilder.array(this.data.titulo.map(objeto => this.crearFormulario(objeto)));

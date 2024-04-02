@@ -59,7 +59,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
     //Tabla
     datosTabla: AprobarTitulos[];
-    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'CANTIDADACCION', 'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
+    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO',  'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
     dataSource: any;
 
     private _fuseConfirmationService;
@@ -159,7 +159,6 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
      */
     onSelectionChange(event: any): void {
         const filterValue = event.value;;
-        console.log(filterValue)
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 

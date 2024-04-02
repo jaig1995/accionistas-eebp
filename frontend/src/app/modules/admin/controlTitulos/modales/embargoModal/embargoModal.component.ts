@@ -171,11 +171,10 @@ export class EmbargoModalComponent implements OnInit {
     * @returns Un validador personalizado para verificar el valor máximo.
     */
     maxNumberValidator(max: number) {
-        return (control: FormControl) => {
+        return (control: FormControl): { [key: string]: any } | null => {
             const value = control.value;
-            const maxAllowed = max;
-            if (value > maxAllowed) {
-                return { maxNumber: true };
+            if (isNaN(value) || value <= 0 || value > max) {
+                return { 'maxNumber': { value: control.value } };
             }
             return null;
         };

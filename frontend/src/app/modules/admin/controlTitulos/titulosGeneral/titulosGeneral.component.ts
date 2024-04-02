@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -20,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ControlTitulosService } from '../controlTitulos.service';
 import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
 import { VerMasModalComponent } from '../modales/verMasModal/verMasModal.component';
+import { map, Observable, startWith } from 'rxjs';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'app-titulos-general',
@@ -41,6 +43,9 @@ import { VerMasModalComponent } from '../modales/verMasModal/verMasModal.compone
         MatPaginatorModule,
         MatProgressSpinnerModule,
         MatSortModule,
+        MatAutocompleteModule,
+        AsyncPipe,
+
     ],
     templateUrl: 'titulosGeneral.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -48,7 +53,7 @@ import { VerMasModalComponent } from '../modales/verMasModal/verMasModal.compone
 export class TitulosGeneralComponent implements OnInit, AfterViewInit {
     //Tabla
     datosTabla: AprobarTitulos[];
-    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'CANTIDADACCION', 'ESTADO', 'TRANSACCION',];
+    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'ESTADO', 'TRANSACCION',];
     dataSource: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -59,17 +64,45 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
     showAlert = false;
     isEnableButton = false;
 
+    accionistas: any[] = [];
+    filteredAccionistas: Observable<any[]>;
+    buscar = new FormControl('');
 
-    constructor(private controlTitulosService: ControlTitulosService, private router: Router, private dialog: MatDialog) {
+
+    constructor(private controlTitulosService: ControlTitulosService, private dialog: MatDialog) {
         this.inicializarDatos()
     }
 
     ngOnInit(): void {
         this.inicializarDatos();
+
+        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
+            this.accionistas = data;
+        });
+
+        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+            this.accionistas = data;
+        });
+
+        this.filteredAccionistas = this.buscar.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterAccionistas(value))
+        );
+    }
+
+
+    private _filterAccionistas(value: string): any[] {
+        const filterValue = value;
+        return this.accionistas.filter(accionista => accionista.Nombres.includes(filterValue));
+    }
+
+    displayAccionista(accionista: any): string {
+        return accionista && accionista.Nombres ? accionista.Nombres : '';
     }
 
     ngAfterViewInit(): void {
         this.inicializarDatos();
+
     }
 
 
@@ -90,7 +123,6 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
                             estadoTransaccionN: data.estadoTransaccion?.descEstado
                         };
                     });
-                    console.log(this.datosTabla)
                     this.dataSource = new MatTableDataSource<any>(this.datosTabla);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
@@ -149,4 +181,11 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
             }
         });
     }
+
+
+    onOptionSelected(event: MatAutocompleteSelectedEvent): void {
+        const accionistaSeleccionado = event.option.value;
+        const filterValue = accionistaSeleccionado.idPer;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+      }
 }

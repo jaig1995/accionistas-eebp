@@ -92,7 +92,7 @@ export class GestionTitulosComponent implements OnInit {
             nombre: [''],
         });
 
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
             this.accionistas = data;
         });
 
@@ -144,12 +144,10 @@ export class GestionTitulosComponent implements OnInit {
      * @param {string} cod - El código del título a cargar.
      */
     consultar(): void {
-        console.log(this.miFormulario.value)
         let num = ''
         const selectedAccionista = this.miFormulario.value.nombre;
         if (typeof (selectedAccionista) === 'object') {
              num = this.miFormulario.value.nombre.idPer
-            console.log("num", num)
         } else {
              num = this.miFormulario.value.nombre
         }
@@ -169,7 +167,7 @@ export class GestionTitulosComponent implements OnInit {
                     const { codUsuario, titulos, ...otrosDatos } = data;
                     this.codigoUsuario = codUsuario
                     // filtro en frontend titulos con estado solo activos
-                    const titulosActivos = titulos.filter(titulo => titulo.estadoTitulo === "activo");
+                    const titulosActivos = titulos.filter(titulo => titulo.estadoTitulo === "activo" || titulo.estadoTitulo === "En tramite");
                     this.titulos = titulosActivos.map(titulo => ({
                         ...titulo,
                         selected: false //propiedad para seleccionador

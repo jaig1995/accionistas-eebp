@@ -16,32 +16,60 @@
 
         <div class="flex flex-row justify-between">
 
-            <div class="flex flex-row w-full mb-5 ml-5 overflow-hidden">
+            <div class="flex flex-row  items-center w-full mb-5 ml-5 overflow-hidden">
 
-                <!-- Buscar Poderdante -->
-                <div class="w-72 mr-5">
-                    <app-input-autocomplete [labelInput]="'Poderdante'" (accionista)="obtenerPoderdante($event)" />
+                <!-- Consecutivo -->
+                <div class=" mr-5">
+                    <mat-form-field >
+                        <mat-label>Consecutivo</mat-label>
+                        <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                        <input matInput>
+                    </mat-form-field>
                 </div>
 
-                <!-- Buscar Apoderado -->
-                <div class="w-72">
-                    <app-input-autocomplete [labelInput]="'Apoderado'" (accionista)="obtenerApoderado($event)" />
+                <!-- Fecha Asamblea-->
+                <div class="mr-5">
+                    <mat-form-field class="w-50">
+                        <mat-label>Fecha Asamblea</mat-label>
+                        <input matInput [matDatepicker]="Date">
+                        <mat-datepicker-toggle matIconSuffix [for]="Date"></mat-datepicker-toggle>
+                        <mat-datepicker #Date></mat-datepicker>
+                      </mat-form-field>
+
                 </div>
+
+                <!-- Hora Asamblea-->
+                <div class="mr-5">
+                    <mat-form-field class="w-40">
+                      <mat-label>Hora Asamblea</mat-label>
+                      <input matInput [ngxTimepicker]="Timer"  >
+                      <mat-icon matSuffix svgIcon="heroicons_solid:clock"></mat-icon>
+                    </mat-form-field>
+                    <ngx-material-timepicker #Timer [theme]="oktTheme"></ngx-material-timepicker>
+                  </div>
 
                 <!-- cargar archivos -->
-                <div class="flex items-end ml-2 mb-2">
+                <div class="flex ">
                     <button mat-stroked-button color="accent"><mat-icon
-                            svgIcon="mat_solid:attach_file"></mat-icon>Cargar Formato</button>
+                            svgIcon="mat_solid:attach_file"></mat-icon>Cargar Imagen</button>
                 </div>
+            </div>
+
+            <!-- checkbox -->
+            <div>
+                <mat-radio-group aria-label="Select an option">
+                    <mat-radio-button value="Ordinaria">Ordinaria</mat-radio-button>
+                    <mat-radio-button value="Extraordinaria">Extraordinaria</mat-radio-button>
+                  </mat-radio-group>
             </div>
 
             <!-- BOTON AGREGAR -->
             <div class=" mb-5 mr-3 flex">
-                <div class="flex items-end mb-2">
-                    <button mat-raised-button color="primary" class="w-40" (click)="mostrar()"><mat-icon
-                            svgIcon="heroicons_solid:user-plus" ></mat-icon>&nbsp; Registrar</button>
+                <div class="flex items-center ml-2 ">
+                    <button mat-raised-button color="primary" class="w-28"><mat-icon svgIcon="heroicons_solid:plus-small"></mat-icon>&nbsp; Agregar</button>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -59,16 +87,8 @@
             <mat-form-field class="w-72">
                 <mat-label>Filtro General</mat-label>
                 <mat-icon svgIcon="heroicons_solid:magnifying-glass-plus"></mat-icon>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Documento, N.Acciones..." #input>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
             </mat-form-field>
-
-
-            <button mat-fab [matMenuTriggerFor]="menu" [color]="'accent'"><mat-icon
-                    svgIcon="heroicons_solid:document-arrow-down"></mat-icon></button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item>Excel</button>
-                <button mat-menu-item>PDF</button>
-            </mat-menu>
         </div>
 
         <div class="mat-elevation-z8">
@@ -81,43 +101,37 @@
                 </ng-container>
 
                 <!-- Progress Column -->
-                <ng-container matColumnDef="DOCUMENTO PODERDANTE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO PODERDANTE </th>
+                <ng-container matColumnDef="FECHA_ASAMBLEA">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>FECHA ASAMBLEA </th>
                     <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
                 </ng-container>
 
                 <!-- Name Column -->
-                <ng-container matColumnDef="PODERDANTE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> PODERDANTE </th>
+                <ng-container matColumnDef="HORA_ASAMBLEA">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> HORA ASAMBLEA </th>
                     <td mat-cell *matCellDef="let row"> {{row.name}} </td>
                 </ng-container>
 
                 <!-- Fruit Column -->
-                <ng-container matColumnDef="N.ACCIONES">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> N.ACCIONES </th>
+                <ng-container matColumnDef="TIPO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> TIPO </th>
                     <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
                 </ng-container>
                 <!-- Fruit Column -->
-                <ng-container matColumnDef="APODERADO">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> APODERADO </th>
+                <ng-container matColumnDef="ESTADO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ESTADO </th>
                     <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
                 </ng-container>
                 <!-- Fruit Column -->
-                <ng-container matColumnDef="DOCUMENTO APODERADO">
+                <ng-container matColumnDef="VER_MAS">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO APODERADO </th>
                     <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
                 </ng-container>
                 <!-- Fruit Column -->
-                <ng-container matColumnDef="VER MÁS">
+                <ng-container matColumnDef="ACCIONES">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> VER MÁS </th>
                     <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
                 </ng-container>
-                <!-- Fruit Column -->
-                <ng-container matColumnDef="ACCIONES">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ACCIONES </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
-                </ng-container>
-
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

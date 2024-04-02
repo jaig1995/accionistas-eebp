@@ -136,6 +136,17 @@ export class ControlTitulosService {
         );
       }
 
+    obtenerAccionistasHabilitados(): Observable<any[]> {
+        return this.http.get<any[]>(`${this._baseUrl}/api/accionista`).pipe(
+          map(accionistas => {
+            return accionistas.map(accionista => ({
+              idPer: accionista.codAccionista ,
+              Nombres: accionista.codAccionista + '-'+accionista.nomAccionista ,
+            }));
+          })
+        );
+      }
+
 
 
 }

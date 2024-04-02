@@ -1,0 +1,79 @@
+<div class="grid grid-cols-10 h-90 border border-blue-900 rounded-lg py-4 mb-14">
+    <div class="col-span-8 p-4 flex flex-col ">
+
+        <!-- consultar por numero de cedula -->
+        <div class="flex flex-row justify-between items-center ">
+            <div class="w-full flex flex-row">
+                <div class="w-100">
+                    <app-input-autocomplete [labelInput]="'Accionista'" (accionista)="obtenerDatosAccionista($event)" />
+
+                </div>
+                <div class="ml-4 mb-2 flex align items-end  ">
+                    <button mat-flat-button [color]="'accent'" (click)="buscarAccionista()"><mat-icon
+                            svgIcon="heroicons_solid:magnifying-glass-circle"></mat-icon> Buscar</button>
+                </div>
+            </div>
+
+            <div class=" mr-4 mt-5">
+                <mat-radio-group [(ngModel)]="checked" class="flex-row flex text-primary font-extrabold">
+                    <mat-radio-button color="primary" class="text-primary font-extrabold"
+                        value="principal"><span class="text-primary font-extrabold">Principal</span></mat-radio-button>
+                    <mat-radio-button color="primary" value="suplente"><span
+                            class="text-primary font-extrabold">Suplente</span></mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+        </div>
+
+
+        <mat-divider class="my-6" />
+        <div>
+            <!-- Primera Sección -->
+            <div class="flex flex-row ">
+                <mat-form-field class="w-full mr-2 ">
+                    <mat-label class="font-extrabold text-primary">Nombres y Apellidos:</mat-label>
+                    <mat-icon svgIcon="heroicons_solid:user-circle"></mat-icon>
+                    <input matInput type="text" readonly
+                        [value]="((informacionAccionista$ | async)?.nomPri ?? '') + ' ' + ((informacionAccionista$ | async)?.apePri ?? '')">
+                </mat-form-field>
+
+                <mat-form-field class="w-full">
+                    <mat-label class="font-extrabold text-primary ">Teléfono:</mat-label>
+                    <mat-icon svgIcon="heroicons_solid:device-phone-mobile"></mat-icon>
+                    <input matInput type="text" readonly [value]="((informacionAccionista$ | async)?.celPersona ?? '')">
+                </mat-form-field>
+            </div>
+        </div>
+        <!-- Segunda Sección -->
+        <div>
+            <div class="flex flex-row ">
+                <mat-form-field class="w-full mr-2">
+                    <mat-label class="font-extrabold text-primary">Documento De Identidad:</mat-label>
+                    <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                    <input matInput type="text" readonly [value]="((informacionAccionista$ | async)?.codUsuario ?? '')">
+                </mat-form-field>
+
+                <mat-form-field class="w-full">
+                    <mat-label class="font-extrabold text-primary">Correo Electrónico:</mat-label>
+                    <mat-icon svgIcon="heroicons_solid:at-symbol"></mat-icon>
+                    <input matInput type="text" readonly
+                        [value]="((informacionAccionista$ | async)?.correoPersona ?? '')">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <!-- Fotografia -->
+    <div class="col-span-2 pb-6 pr-4 relative flex justify-center" (click)="botonClick = !botonClick" (mouseover)="mostrarBoton = false">
+        <img src="../../../../assets/images/avatars/1994190568.jpg" alt=""
+            class="object-cover w-full h-full rounded-md opacity-90 hover:opacity-100" >
+        <button color="primary" *ngIf="mostrarBoton || botonClick" class="font-bold py-2 px-4 rounded"
+            style="z-index: 9999;"><mat-icon svgIcon="heroicons_solid:arrow-up-on-square"></mat-icon></button>
+    </div>
+
+
+
+
+
+
+
+</div>

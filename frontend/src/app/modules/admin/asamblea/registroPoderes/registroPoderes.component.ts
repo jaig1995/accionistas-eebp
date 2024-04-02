@@ -1,21 +1,18 @@
+
+
+import { AfterViewInit, Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FuseAlertComponent } from '@fuse/components/alert';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { map, Observable, startWith } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FuseAlertComponent } from '@fuse/components/alert';
+
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { ControlTitulosService } from '../../controlTitulos/controlTitulos.service';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 
 @Component({
     selector: 'app-registro-poderes',
@@ -23,45 +20,25 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     imports: [
         CommonModule,
         FormsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatButtonModule,
-        MatDividerModule,
-        MatTableModule,
-        MatCheckboxModule,
         ReactiveFormsModule,
-        MatProgressSpinnerModule,
-        FuseAlertComponent,
-        MatAutocompleteModule,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatMenuModule,
         AsyncPipe,
+        FuseAlertComponent,
+        InputAutocompleteComponent,
+        AngularMaterialModules
 
     ],
     templateUrl: 'registroPoderes.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.Emulated,
 })
-export class RegistroPoderesComponent implements OnInit, AfterViewInit {
-
-    //inyeccion de dependencias
-    private controlTitulosService = inject(ControlTitulosService);
+export class RegistroPoderesComponent implements AfterViewInit {
 
     //alertas o validaciones
     loading: boolean;
     showAlert: any;
 
-    //autocomplete para accionistas
-    poderdantes: any[] = [];
-    apoderados: any[] = [];
-    filtroPoderdantes: Observable<any[]>;
-    filtroApoderados: Observable<any[]>;
-
-    //formularios
-    poderdante = new FormControl('');
-    apoderado = new FormControl('');
+    //variables componentes
+    poderdante: any
+    apoderado: any;
 
     //tabla
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -69,15 +46,9 @@ export class RegistroPoderesComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['CONSECUTIVO', 'DOCUMENTO PODERDANTE', 'PODERDANTE', 'N.ACCIONES', 'APODERADO', 'DOCUMENTO APODERADO', 'VER MÁS', 'ACCIONES'];
     dataSource: MatTableDataSource<any>;
 
+
     constructor() {
         this.dataSource = new MatTableDataSource(['users']);
-    }
-
-
-    ngOnInit(): void {
-        this.obtenerAccionistas()
-        this.filtroPoderdante()
-        this.filtroApoderado()
     }
 
     ngAfterViewInit() {
@@ -85,45 +56,20 @@ export class RegistroPoderesComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
 
-
-    obtenerAccionistas() {
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
-            this.poderdantes = data;
-            this.apoderados = data;
-        });
+    obtenerPoderdante(valor: string) {
+        this.poderdante = valor;
     }
 
-    filtroPoderdante() {
-        this.filtroPoderdantes = this.poderdante.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filtroPoderdante(value))
-        );
+    obtenerApoderado(valor: any) {
+        this.apoderado = valor;
     }
 
-    filtroApoderado() {
-        this.filtroApoderados = this.apoderado.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filtroApoderado(value))
-        );
+    mostrar(){
+        console.log("hola")
+        console.log(this.poderdante,this.apoderado )
     }
 
-    private _filtroPoderdante(value: string): any[] {
-        const filterValue = value;
-        return this.poderdantes.filter(accionista => accionista.Nombres.includes(filterValue));
-    }
 
-    private _filtroApoderado(value: string): any[] {
-        const filterValue = value;
-        return this.apoderados.filter(accionista => accionista.Nombres.includes(filterValue));
-    }
-
-    mostrarPoderdante(poderdante: any): string {
-        return poderdante && poderdante.Nombres ? poderdante.Nombres : '';
-    }
-
-    mostrarApoderado(apoderado: any): string {
-        return apoderado && apoderado.Nombres ? apoderado.Nombres : '';
-    }
 
 
 
