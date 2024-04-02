@@ -113,7 +113,7 @@ export class SucesionPublicacionModalComponent {
             nombre: [''],
         });
 
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
             this.accionistas = data;
         });
 
@@ -128,7 +128,6 @@ export class SucesionPublicacionModalComponent {
     }
 
     private _filterAccionistas(value: string): any[] {
-        console.log(value)
         const filterValue = value.toLowerCase();
         return this.accionistas.filter(accionista => accionista.Nombres.toLowerCase().includes(filterValue));
     }

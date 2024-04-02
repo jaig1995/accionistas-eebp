@@ -100,6 +100,8 @@ export const appRoutes: Route[] = [
             {path: 'transacciones/pendientes', loadChildren: () => import('app/modules/admin/transacciones/aprobacionespendientes/aprobacionespendientes.routes')},
             {path: 'transacciones/pendientes/:id', loadChildren: () => import('app/modules/admin/transacciones/aprobaciones/aprobaciones.routes')},
             {path: 'asamblea/registrar-poderes', loadChildren: () => import('app/modules/admin/asamblea/registroPoderes/registroPoderes.routes'), title:"Registro De Poderes"},
+            {path: 'asamblea/postulaciones',  loadComponent: () => import('app/modules/admin/asamblea/postulaciones/postulaciones.component').then(c => c.PostulacionesComponent), title:"Postulaciones"},
+            {path: 'asamblea/agregar',  loadComponent: () => import('app/modules/admin/asamblea/crearAsamblea/crearAsamblea.component').then(c => c.CrearAsambleaComponent), title:"Crear Asamblea"},
         ]
     }
 ];

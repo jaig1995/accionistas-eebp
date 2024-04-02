@@ -29,18 +29,18 @@
     <div class="w-full flex flex-col">
         <div class="flex flex-row items-center  my-2 w-full" *ngFor="let titulo of titulosEnTransaccion">
             <mat-form-field class="flex-grow mr-2">
-                <mat-label>Fecha Transacción:</mat-label>
-                <input matInput type="text" [value]="titulo.conseTrans" readonly>
+                <mat-label>Titulo:</mat-label>
+                <input matInput type="text" [value]="titulo.conseTitulo" readonly>
             </mat-form-field>
 
             <mat-form-field class="flex-grow mr-2">
                 <mat-label>Estado:</mat-label>
-                <input matInput type="text" [value]="titulo.conseTitulo" readonly
+                <input matInput type="text"  readonly
                     [value]="estadoTransaccion.descEstado">
             </mat-form-field>
 
             <mat-form-field class="flex-grow mr-2">
-                <mat-label>Código Accionista:</mat-label>
+                <mat-label>Número de Acciones:</mat-label>
                 <input matInput type="text" [value]="titulo.numAcciones" readonly>
             </mat-form-field>
         </div>

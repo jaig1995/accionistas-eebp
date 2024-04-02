@@ -1,0 +1,90 @@
+<div class="w-full">
+    <button mat-button (click)="accordion.openAll()">Expandir Todo</button>
+    <button mat-button (click)="accordion.closeAll()">Colapsar Todo</button>
+</div>
+<!-- postulados para comite escrutador -->
+<mat-accordion multi>
+    <mat-expansion-panel class="hover:bg-primary-300">
+        <mat-expansion-panel-header class="bg-primary ">
+            <mat-panel-title class="text-white ">
+                {{'postulados para comite escrutador' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- postulados para presidente asamblea -->
+    <mat-expansion-panel class="hover:bg-primary-300 -mt-5">
+        <mat-expansion-panel-header class="bg-primary ">
+            <mat-panel-title class="text-white ">
+                {{'postulados para presidente asamblea' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+
+    <!-- postulados para comite aprobación de acta -->
+    <mat-expansion-panel class="hover:bg-primary-300 -mt-5">
+        <mat-expansion-panel-header class="bg-primary ">
+            <mat-panel-title class="text-white ">
+                {{'postulados para comite aprobación de acta' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+            <div class="flex-1">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false"></app-plancha-postulante>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

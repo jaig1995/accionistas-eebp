@@ -60,7 +60,7 @@ export class AuthService
      */
     resetPassword(password: string, codUsuario: string): Observable<any>
     {
-        console.log(password + " " + codUsuario);
+
         return this._httpClient.post(this._baseUrl + '/api/auth/reset-password', {codUsuario: codUsuario, password: password});
     }
 

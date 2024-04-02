@@ -1,0 +1,26 @@
+<div class="w-full">
+
+    <mat-tab-group [selectedIndex]="0">
+        <mat-tab label="Comite Escrutador">
+            <div class="w-full h-auto">
+                <!-- titulos -->
+                <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">{{ 'postular a comite escrutador' | titlecase }}</div>
+                <app-postulante />
+                <app-postulante />
+            </div>
+        </mat-tab>
+        <mat-tab label="Presidente Asamblea">
+            <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">{{ 'postular a presidente asamblea' | titlecase }}</div>
+            <app-postulante />
+        </mat-tab>
+        <mat-tab label="Comite Aprobacion acta">
+            <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">{{ 'postular a comite aprobacion de acta' | titlecase }}</div>
+            <app-postulante />
+        </mat-tab>
+        <mat-tab label="Resumen">
+            <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">{{ 'resumen general' | titlecase }}</div>
+            <app-resumen-postulaciones />
+        </mat-tab>
+    </mat-tab-group>
+
+</div>

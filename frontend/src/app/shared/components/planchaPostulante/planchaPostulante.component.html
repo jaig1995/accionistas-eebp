@@ -1,0 +1,61 @@
+<div class="bg-gray w-full flex flex-col mt-8 rounded-lg bg-white shadow-md" *ngIf="!modoPlanchaUnPostulante">
+    <h2 class="text-center mt-4 font-extrabold text-primary">Plancha No.1</h2>
+    <div class="flex md:flex-row sm:flex-col gap-2 rounded-lg mt-7 px-3 {{ modoVotacion ? '' : 'mb-12' }}">
+        <!-- Postulante numero 1 -->
+        <div class="flex-1 rounded-lg">
+            <div class="col-span-2 relative flex flex-col justify-center">
+                <img src="../../../../assets/images/avatars/1994190568.jpg" alt=""
+                    class="object-cover w-50 h-50 rounded-md opacity-90 hover:opacity-100 shadow-md">
+                    <h3 class="text-center font-extrabold mt-2 text-primary">Alexander Chicaiza</h3>
+            </div>
+        </div>
+
+        <!-- Postulante numero 2 -->
+        <div class="flex-1 bg-white rounded-lg">
+            <div class="flex-1 bg-white rounded-lg flex justify-center">
+                <div class="col-span-2 relative flex flex-col justify-center ">
+                    <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
+                        class="object-cover w-50 h-50 rounded-md opacity-90 hover:opacity-100 shadow-md">
+                    <h3 class="text-center font-extrabold mt-2 text-primary">John Chicaiza</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- checkbox -->
+    <div class="flex flex-row justify-center my-5" *ngIf="modoVotacion">
+        <mat-radio-group aria-label="Select an option">
+            <mat-radio-button value="1">
+                <span class="text-accent font-extrabold">
+                    Seleccionar
+                </span>
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+</div>
+
+<!-- modo votacion un solo postulante -->
+
+<div class="bg-gray w-full flex flex-col mt-8 rounded-lg bg-white shadow-md" *ngIf="modoPlanchaUnPostulante">
+    <h2 class="text-center mt-4 font-extrabold text-primary">Plancha No.11111</h2>
+    <div class="flex md:flex-row sm:flex-col gap-2 justify-center rounded-lg mt-7 px-3 {{ modoVotacion ? '' : 'mb-12' }}">
+        <!-- Postulante numero 1 -->
+        <div class="flex-1 flex justify-center  rounded-lg" >
+            <div class="col-span-2 relative flex flex-col justify-center">
+                <img src="../../../../assets/images/avatars/1994190568.jpg" alt=""
+                    class="object-cover w-50 h-50 rounded-md opacity-90 hover:opacity-100 shadow-md">
+                    <h3 class="text-center font-extrabold mt-2 text-primary">John Chicaiza</h3>
+            </div>
+        </div>
+
+    </div>
+    <!-- checkbox -->
+    <div class="flex flex-row justify-center my-5" *ngIf="modoVotacion">
+        <mat-radio-group aria-label="Select an option">
+            <mat-radio-button value="1">
+                <span class="text-accent font-extrabold ">
+                    Seleccionar
+                </span>
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+</div>
