@@ -14,6 +14,14 @@ import {MatTabsModule} from '@angular/material/tabs'
 import {MatRadioModule} from '@angular/material/radio';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatSelectModule} from '@angular/material/select';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatCardModule} from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatChipsModule } from '@angular/material/chips';
 
 export const AngularMaterialModules = [
   MatAutocompleteModule,
@@ -32,6 +40,14 @@ export const AngularMaterialModules = [
   MatRadioModule,
   MatExpansionModule,
   MatDatepickerModule,
+  MatTooltipModule,
+  MatStepperModule,
+  MatSelectModule,
+  MatChipsModule,
+  MatGridListModule,
+  MatCardModule,
+  MatNativeDateModule,
+  MatSlideToggleModule
 
 
 ];

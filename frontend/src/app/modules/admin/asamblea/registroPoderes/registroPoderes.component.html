@@ -6,10 +6,25 @@
 
 
     <!-- alertas -->
-    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
-        <span fuseAlertTitle>Aprobación exitosa</span>
-        ¡Solicitud aprobada!
-    </fuse-alert>
+    <div class="flex justify-end fixed top-7 right-9 mt-13 w-full z-50 animated-box" >
+
+        <div class="w-100 mb-4 ">
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+                <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción exitosa!
+                </fuse-alert>
+            </div>
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+                <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción no exitosa!
+                </fuse-alert>
+            </div>
+        </div>
+    </div>
     <!-- fin alertas -->
 
     <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
@@ -20,26 +35,32 @@
 
                 <!-- Buscar Poderdante -->
                 <div class="w-72 mr-5">
-                    <app-input-autocomplete [labelInput]="'Poderdante'" (accionista)="obtenerPoderdante($event)" />
+                    <app-input-autocomplete [labelInput]="'Poderdante'" (accionista)="obtenerPoderdante($event)"
+                        (valorInput)="obtenerInputPoderdante($event)"
+                        (errorFormulario)="errorFormularioPoderdante($event)" />
                 </div>
 
                 <!-- Buscar Apoderado -->
                 <div class="w-72">
-                    <app-input-autocomplete [labelInput]="'Apoderado'" (accionista)="obtenerApoderado($event)" />
+                    <app-input-autocomplete [labelInput]="'Apoderado'" (accionista)="obtenerApoderado($event)"
+                        (valorInput)="obtenerInputApoderado($event)"
+                        (errorFormulario)="errorFormularioApoderado($event)" />
                 </div>
 
                 <!-- cargar archivos -->
                 <div class="flex items-end ml-2 mb-2">
-                    <button mat-stroked-button color="accent"><mat-icon
-                            svgIcon="mat_solid:attach_file"></mat-icon>Cargar Formato</button>
+                    <app-button-cargar-documentos [nombreBoton]="'Cargar Archivo'"
+                        [formatosAceptados]="'.pdf,.doc,.docx'" (contieneArchivo)="contieneArchivo($event)"
+                        (archivo)="recibirArchivo($event)" />
                 </div>
             </div>
 
             <!-- BOTON AGREGAR -->
             <div class=" mb-5 mr-3 flex">
                 <div class="flex items-end mb-2">
-                    <button mat-raised-button color="primary" class="w-40" (click)="mostrar()"><mat-icon
-                            svgIcon="heroicons_solid:user-plus" ></mat-icon>&nbsp; Registrar</button>
+                    <button mat-raised-button color="primary" class="w-40" (click)="enviarRegistroPoderes()"
+                        [disabled]="!esValidoPoderdante || !esValidoApoderado || !existeDocumento"><mat-icon
+                            svgIcon="heroicons_solid:user-plus"></mat-icon>&nbsp; Registrar</button>
                 </div>
             </div>
         </div>
@@ -71,51 +92,64 @@
             </mat-menu>
         </div>
 
-        <div class="mat-elevation-z8">
+        <div class="mat-elevation-z8 mb-5">
             <table mat-table [dataSource]="dataSource" matSort>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="CONSECUTIVO">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> CONS </th>
-                    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> NO. </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.consecutivo}} </td>
                 </ng-container>
 
                 <!-- Progress Column -->
                 <ng-container matColumnDef="DOCUMENTO PODERDANTE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO PODERDANTE </th>
-                    <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> DOCUMENTO PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.idPoderdante}}</td>
                 </ng-container>
 
                 <!-- Name Column -->
                 <ng-container matColumnDef="PODERDANTE">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> PODERDANTE </th>
-                    <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                    <th mat-header-cell *matHeaderCellDef> PODERDANTE </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombrePoderdante}} </td>
                 </ng-container>
 
                 <!-- Fruit Column -->
                 <ng-container matColumnDef="N.ACCIONES">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> N.ACCIONES </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                    <th mat-header-cell *matHeaderCellDef> N.ACCIONES </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.accionesPoderdante}} </td>
                 </ng-container>
                 <!-- Fruit Column -->
                 <ng-container matColumnDef="APODERADO">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> APODERADO </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                    <th mat-header-cell *matHeaderCellDef> APODERADO </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombreApoderado}} </td>
                 </ng-container>
+
                 <!-- Fruit Column -->
                 <ng-container matColumnDef="DOCUMENTO APODERADO">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DOCUMENTO APODERADO </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">DOCUMENTO
+                            APODERADO</span> </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.idApoderado}} </td>
                 </ng-container>
+
                 <!-- Fruit Column -->
-                <ng-container matColumnDef="VER MÁS">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> VER MÁS </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                <ng-container matColumnDef="ESTADO">
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">ESTADO
+                            APODERADO</span> </th>
+                    <td mat-cell *matCellDef="let row" class="text-center"> <span class="font-semibold"
+                            [ngStyle]="{ 'color': getColor(row.estado) }">{{row.estado}}</span> </td>
                 </ng-container>
                 <!-- Fruit Column -->
                 <ng-container matColumnDef="ACCIONES">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> ACCIONES </th>
-                    <td mat-cell *matCellDef="let row"> {{row.fruit}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
+                    <td mat-cell *matCellDef="let row" class="text-center">
+                        <div class="flex fle-row justify-between">
+                            <button mat-stroked-button color="primary">Documento</button>
+                            <button mat-stroked-button color="accent" class="ml-2"
+                                (click)="aprobarSolicitud(row)">Aprobar</button>
+                            <button mat-stroked-button color="warn" class="ml-2"
+                                (click)="abrirDialogo(dialogTemplate, row)">Rechazar</button>
+                        </div>
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -129,9 +163,21 @@
 
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
         </div>
-
-
-
     </div>
-
 </div>
+
+<ng-template #dialogTemplate>
+    <div class="flex flex-row">
+        <mat-icon svgIcon="heroicons_solid:exclamation-triangle" color="warn" class="mr-2"></mat-icon>
+        <h2 mat-dialog-title class="font-extrabold"> Rechazar</h2>
+    </div>
+    <mat-dialog-content>
+        ¿Estás seguro de que deseas rechazar esta solicitud?
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close (click)="cerrarDialogo()"><span
+                class="font-bold text-warn">No</span></button>
+        <button mat-button mat-dialog-close cdkFocusInitial class="font-bold" (click)="aprobarDialogo()"> <span
+                class="font-bold text-accent">Si</span></button>
+    </mat-dialog-actions>
+</ng-template>

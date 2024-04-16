@@ -1,16 +1,22 @@
 <div class="flex-auto">
-        <div class="flex items-center ">
-            <mat-form-field class="flex-grow" [subscriptSizing]="'dynamic'">
-                <mat-label>{{labelInput}}: </mat-label>
-                <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user"></mat-icon>
-                <input matInput [formControl]="buscarAccionista" [matAutocomplete]="accionistasC" type="text"
-                    placeholder="Número identificación">
-                <mat-autocomplete #accionistasC="matAutocomplete" [displayWith]="mostrarAccionistas"
-                    (optionSelected)="accionistaSeleccionado($event)">
-                    <mat-option *ngFor="let accionista of filtroAccionistas | async" [value]="accionista">
-                        {{ accionista.Nombres }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </div>
+    <div class="flex items-center ">
+        <mat-form-field class="flex-grow" [subscriptSizing]="'dynamic'">
+            <div></div>
+            <mat-label class="font-bold">{{labelInput}}</mat-label>
+            <mat-icon matPrefix class="hidden sm:flex icon-size-5" svgIcon="heroicons_solid:user"></mat-icon>
+            <input matInput [formControl]="buscarAccionista" [matAutocomplete]="accionistasC" type="text"
+                placeholder="Número identificación" (input)="cambioInput()">
+            <mat-icon svgIcon="heroicons_outline:question-mark-circle" #tooltip="matTooltip"
+                matTooltip="Activa MAYÚSCULAS, para buscar por nombre" matTooltipPosition="above" class="text-xs mb-3 -mr-3" ></mat-icon>
+            <mat-autocomplete #accionistasC="matAutocomplete" [displayWith]="mostrarAccionistas"
+                (optionSelected)="accionistaSeleccionado($event)">
+                <mat-option *ngFor="let accionista of filtroAccionistas | async" [value]="accionista">
+                    {{ accionista.Nombres }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="buscarAccionista.invalid && (buscarAccionista.dirty || buscarAccionista.touched)">
+                El campo es requerido.
+            </mat-error>
+        </mat-form-field>
+    </div>
 </div>

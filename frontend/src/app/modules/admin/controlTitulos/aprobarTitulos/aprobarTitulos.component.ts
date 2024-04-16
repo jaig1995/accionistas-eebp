@@ -1,51 +1,32 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
+import { Router } from '@angular/router';
 
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent } from '@fuse/components/alert';
-import { ControlTitulosService } from '../controlTitulos.service';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { AprobarModalComponent } from '../modales/aprobarModal/aprobarModal.component';
-import { MatDialog } from '@angular/material/dialog';
+import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
 import { RechazarModalComponent } from '../modales/rechazarModal/rechazarModal.component';
 import { ServicesConfig } from 'app/services.config';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
+import { ControlTitulosService } from '../controlTitulos.service';
 @Component({
     selector: 'app-aprobar-titulos',
     standalone: true,
     animations: fuseAnimations,
     imports: [
         CommonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDividerModule,
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatChipsModule,
-        MatCheckboxModule,
-        FormsModule,
         FuseAlertComponent,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatSortModule,
+        AsyncPipe,
+        InputAutocompleteComponent,
+        AngularMaterialModules
 
 
     ],
@@ -59,7 +40,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
     //Tabla
     datosTabla: AprobarTitulos[];
-    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO',  'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
+    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO','ACCIONES' ,'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
     dataSource: any;
 
     private _fuseConfirmationService;
@@ -75,6 +56,11 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
     isEnableButton = false;
 
 
+    // Seccion Recibir valor componente hijo (app-input-autocomplete)
+    accionistaAutoComplete: any;
+    tablaConAcciones: { accionesTransaccion: any; conseTrans: number; fecTrans: Date; idePer: string; valTran: number; intencionCompra: boolean; tipoTransaccion: import("/Users/jachg/Documents/PROYECTO EEPB/accionistas-eebp/frontend/src/app/modules/admin/controlTitulos/interfaces/aprobarTitulos.interface").TipoTransaccion; estadoTransaccion: any; transaccionTitulo: any[]; files: import("/Users/jachg/Documents/PROYECTO EEPB/accionistas-eebp/frontend/src/app/modules/admin/controlTitulos/interfaces/aprobarTitulos.interface").File[]; }[];
+
+
     constructor(private controlTitulosService: ControlTitulosService, private router: Router, private dialog: MatDialog, fuseConfirmationService: FuseConfirmationService) {
         this._fuseConfirmationService = fuseConfirmationService;
     }
@@ -86,6 +72,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.inicializarDatos();
     }
+
 
     /**
      * Muestra una alerta EXITOSA en la interfaz de usuario.
@@ -112,8 +99,6 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
     }
 
 
-
-
     /**
      * Método para cargar los datos de transacciones desde el servicio y actualizar la tabla.
      * Este metodo realiza dos llamados para buscar el path en el cual contiene el documento
@@ -132,7 +117,15 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
                             tipoTransaccionN: data.tipoTransaccion.desTran,
                         };
                     });
-                    this.dataSource = new MatTableDataSource<any>(this.datosTabla);
+                    this.tablaConAcciones = this.datosTabla.map((data) => {
+                        const sumaAcciones = data.transaccionTitulo.reduce((total, titulo) => total + (titulo.numAcciones || 0), 0);
+                        return {
+                            ...data,
+                            accionesTransaccion: sumaAcciones !== 0 ? sumaAcciones : '-'
+                        };
+                    });
+                    this.dataSource = new MatTableDataSource<any>(this.tablaConAcciones);
+                    console.log("Desde inicializarDatos",this.datosTabla)
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                     this.loading = false;
@@ -169,10 +162,18 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
      * Además, navega a la primera página del paginador si está disponible.
      * @param {Event} event - Evento que contiene el valor ingresado en el campo de búsqueda.
      */
-    applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
+    applyFilter(event): void {
+        const filterValue = event
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
+    ///INCIO SECCION COMPONENTE HIJO
+    obtenerAccionista(valor) {
+        this.accionistaAutoComplete = valor.idPer;
+        console.log(this.accionistaAutoComplete)
+        this.applyFilter(this.accionistaAutoComplete)
+    }
+    //fin seccion
 
 
     /**
@@ -289,16 +290,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
         });
     }
 
-    /**
-     * Método para recargar el componente redirigiendo a la ruta '/acciones/aprobacion'.
-     * Primero redirige a la ruta raíz '/' y luego a la ruta '/acciones/aprobacion'.
-     * Pendiente!!
-     */
-    recargarComponente(): void {
-        this.router.navigate(['/']).then(() => {
-            this.router.navigate(['/acciones/aprobacion']);
-        });
-    }
+
 }
 
 

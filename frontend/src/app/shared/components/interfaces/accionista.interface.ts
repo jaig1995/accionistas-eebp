@@ -75,3 +75,9 @@ export interface EstadoTitulo {
     ideEstadoTitulo: number;
     descEstado:      string;
 }
+
+
+export interface AccionistaInputAutoComplete {
+    idPer:   string;
+    Nombres: string;
+}

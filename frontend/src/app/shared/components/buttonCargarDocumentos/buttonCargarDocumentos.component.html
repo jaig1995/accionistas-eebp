@@ -1,0 +1,9 @@
+<div class="flex-auto">
+    <div class="flex items-center">
+        <button mat-stroked-button color="accent" (click)="fileInput.click()">
+            <mat-icon svgIcon="mat_solid:attach_file"></mat-icon>{{nombreBoton}}
+        </button>
+        <!-- Input oculto para seleccionar archivos -->
+        <input type="file" #fileInput style="display: none;" [accept]="formatosAceptados" (change)="archivoSelecionado($event)">
+    </div>
+</div>

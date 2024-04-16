@@ -1,49 +1,32 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableDataSource, MatTableModule, } from '@angular/material/table';
+
+import { MatTableDataSource } from '@angular/material/table';
 import { FuseAlertComponent } from '@fuse/components/alert';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { ControlTitulosService } from '../controlTitulos.service';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { fuseAnimations } from '@fuse/animations';
+
+import { ControlTitulosService } from '../controlTitulos.service';
 import { DonarPublicacionModalComponent } from '../modales/donarPublicacionModal/donarPublicacionModal.component';
 import { EndosarPublicacionModalComponent } from '../modales/endosarPublicacionModal/endosarPublicacionModal.component';
 import { SucesionPublicacionModalComponent } from '../modales/sucesionPublicacionModal/sucesionPublicacionModal.component';
-import { fuseAnimations } from '@fuse/animations';
 import { CompraPublicacionModalComponent } from '../modales/compraPublicacionModal/compraPublicacionModal.component';
-import { MatMenuModule } from '@angular/material/menu';
 import { Datos } from '../interfaces/publicacionVentas.interface';
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 @Component({
     selector: 'app-publicacion-ventas',
     standalone: true,
     imports: [
         CommonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDividerModule,
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
         ReactiveFormsModule,
-        MatChipsModule,
-        MatCheckboxModule,
         FormsModule,
         FuseAlertComponent,
-        MatPaginatorModule,
-        MatSortModule,
-        MatProgressSpinnerModule,
-        MatMenuModule
+        InputAutocompleteComponent,
+        AngularMaterialModules
     ],
     templateUrl: 'publicacionVentas.component.html',
     animations: fuseAnimations,
@@ -71,6 +54,8 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
     showSuccesAlert = false;
     showFailedAlert = false;
     consecutivosTitulos: any[];
+
+    accionistaAutoComplete: any;
 
     constructor(private controlTitulosService: ControlTitulosService, private dialog: MatDialog, private elRef: ElementRef) {
     }
@@ -203,14 +188,18 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
      * Método que aplica un filtro de búsqueda a los datos de la tabla.
      * @param event El evento que desencadena la aplicación del filtro.
     */
-    applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim();
-
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-        }
+    applyFilter(event): void {
+        const filterValue = event
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
+    ///INCIO SECCION COMPONENTE HIJO
+    obtenerAccionista(valor) {
+        this.accionistaAutoComplete = valor.idPer;
+        console.log(this.accionistaAutoComplete)
+        this.applyFilter(this.accionistaAutoComplete)
+    }
+    //fin seccion
 
     /**
      * Método que se ejecuta cuando cambia la selección en un control, como un menú desplegable.

@@ -1,0 +1,85 @@
+<div class="flex-auto p-6 sm:p-10">
+    <!-- titulos -->
+    <div class="text-4xl font-extrabold flex flex-col flex-auto items-center justify-center ">QUORUM</div>
+
+
+
+    <!-- alertas -->
+    <!-- <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
+        <span fuseAlertTitle>Aprobación exitosa</span>
+        ¡Solicitud aprobada!
+    </fuse-alert> -->
+    <!-- fin alertas -->
+
+    <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden items-center ">
+
+        <div class=" flex sm:flex-col md:flex-col lg:flex-row xl:flex-row justify-between py-5">
+            <div class="w-full p-2 mr-2">
+
+                <canvas id="chart">{{ chart }}</canvas>
+            </div>
+
+
+            <div class=" w-120 bg-card flex items-center md:justify-center md:ml-20  sm:ml-20  md:mt-15  sm:mt-15  " >
+                <div class="w-full flex flex-col justify-center items-center   ">
+
+                    <!-- primera seccion  -->
+                    <div class="flex flex-col bg-card shadow mb-7  w-120 p-4 rounded-md border ">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary text-2xl">ASAMBLEA NÚMERO </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="text-2xl" >
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary text-2xl">TOTAL ASAMBLEA </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="text-2xl" >
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- segunda seccion -->
+
+                    <div class="flex flex-col bg-card shadow mb-7  w-120 p-4 rounded-md border">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary text-2xl">ACCIONES ASAMBLEA </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="text-2xl" >
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary text-2xl">TOTAL ACCIONES </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="text-2xl" >
+                                <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- tercera seccion  -->
+                    <div class="flex flex-col bg-card shadow mb-7  w-120 p-4 rounded-md border">
+                        <div class="flex flex-row justify-between items-center">
+                            <p class="font-semibold text-primary text-2xl">QUORUM </p>
+                            <mat-form-field class="example-full-width w-40">
+                                <input type="tel" matInput class="text-2xl" [(ngModel)]="valor" porcentaje [porcentajes]="valor">
+                                <mat-icon svgIcon="heroicons_solid:receipt-percent"></mat-icon>
+                              </mat-form-field>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <button mat-fab class="w-full" (click)="mostrar()">
+                                <p class="font-bold text-2xl">VALIDAR QUORUM</p>
+                              </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
