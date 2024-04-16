@@ -58,7 +58,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
     // Seccion Recibir valor componente hijo (app-input-autocomplete)
     accionistaAutoComplete: any;
-    tablaConAcciones: { accionesTransaccion: any; conseTrans: number; fecTrans: Date; idePer: string; valTran: number; intencionCompra: boolean; tipoTransaccion: import("/Users/jachg/Documents/PROYECTO EEPB/accionistas-eebp/frontend/src/app/modules/admin/controlTitulos/interfaces/aprobarTitulos.interface").TipoTransaccion; estadoTransaccion: any; transaccionTitulo: any[]; files: import("/Users/jachg/Documents/PROYECTO EEPB/accionistas-eebp/frontend/src/app/modules/admin/controlTitulos/interfaces/aprobarTitulos.interface").File[]; }[];
+    tablaConAcciones: { accionesTransaccion: any; conseTrans: number; fecTrans: Date; idePer: string; valTran: number; intencionCompra: boolean; tipoTransaccion: import("../interfaces/aprobarTitulos.interface").TipoTransaccion; estadoTransaccion: any; transaccionTitulo: any[]; files: import("../interfaces/aprobarTitulos.interface").File[]; }[];
 
 
     constructor(private controlTitulosService: ControlTitulosService, private router: Router, private dialog: MatDialog, fuseConfirmationService: FuseConfirmationService) {
