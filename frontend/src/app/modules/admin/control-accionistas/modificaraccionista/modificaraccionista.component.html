@@ -133,7 +133,7 @@
                     <td mat-cell *matCellDef="let element" [style.text-align]="'center'" style="text-align: justify; vertical-align: middle;"><a title="Eliminar archivo" (click)="eliminarArchivo(element.fileName)">
                         <mat-icon [color]="'warn'" svgIcon="mat_outline:delete_outline"></mat-icon>
                     </a> </td>
-                </ng-container>
+            </ng-container>
             
                 <tr mat-header-row *matHeaderRowDef="displayedColumnsArchivos"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumnsArchivos;"></tr>

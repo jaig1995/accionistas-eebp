@@ -54,6 +54,15 @@
         </td>
       </ng-container> 
 
+      <ng-container matColumnDef="borrar">
+        <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+        <td mat-cell *matCellDef="let persona">
+            <button mat-icon-button color="warn" title="Eliminar persona" (click)="eliminarPersona(persona.codUsuario)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

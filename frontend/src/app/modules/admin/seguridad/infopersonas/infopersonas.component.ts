@@ -10,6 +10,7 @@ import { infoAccionistas } from '../../control-accionistas/informacion-accionist
 import {NgIf} from "@angular/common";
 import { ServicesConfig } from 'app/services.config';
 import { InformacionAccionistasService } from '../../control-accionistas/informacion-accionistas/accionistas-data.service';
+import { UserDataService } from '../permisos/user-data.service';
 
 @Component({
   selector: 'infopersonas',
@@ -22,9 +23,9 @@ export class InfopersonasComponent implements OnInit {
 
   private _baseUrl: string = ServicesConfig.apiUrl;
   datos: MatTableDataSource<infoAccionistas>;
-  displayedColumns: string[] = [ 'avatar', 'codUsuario', 'nomPri', 'apePri', 'correoPersona', 'actualizar'];
+  displayedColumns: string[] = [ 'avatar', 'codUsuario', 'nomPri', 'apePri', 'correoPersona', 'borrar', 'actualizar'];
 
-  constructor(private userDatos: InformacionAccionistasService) {}
+  constructor(private userDatos: InformacionAccionistasService, private userDataService: UserDataService) {}
 
   ngOnInit() {
     this.userDatos.obtenerUsuarios().subscribe(
@@ -37,7 +38,17 @@ export class InfopersonasComponent implements OnInit {
     );
   }
 
- 
+  eliminarPersona(codUsuario: string) {
+    this.userDataService.eliminarPersona(codUsuario).subscribe(
+      () => {
+        window.location.reload();
+      },
+      error => {
+        console.error('Error al eliminar la persona:', error);
+      }
+    );
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.datos.filterPredicate = (data: infoAccionistas, filter: string) => {

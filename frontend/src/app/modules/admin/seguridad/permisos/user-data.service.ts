@@ -24,4 +24,8 @@ export class UserDataService {
         return this.http.get<Usuario>(this._baseUrl + "/api/usuarios/" + id);
     }
 
+    eliminarPersona(codUsuario: string): Observable<void> {
+      return this.http.delete<void>(this._baseUrl + "/api/accionistas/borrar/" + codUsuario);
+    }
+
 }
