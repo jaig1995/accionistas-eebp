@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { InputAutocompleteComponent } from '../inputAutocomplete/inputAutocomplete.component';
@@ -14,32 +14,120 @@ import { Accionista } from '../interfaces/accionista.interface';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         InputAutocompleteComponent,
         AngularMaterialModules,
     ],
     templateUrl: 'postulante.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostulanteComponent {
+export class PostulanteComponent implements OnInit {
 
+    // Inyección de dependencias
     private sharedComponentsService = inject(SharedComponentsService)
+    private fb = inject(FormBuilder)
 
+    //variables para componentes padres
+    @Output() datosDelPostulante = new EventEmitter<any>();
+    @Output() campoVacio = new EventEmitter<any>(false);
+
+    //Variables Imagenes
+    imagenCargada: boolean = false;
+    imagenPostulante: string = "../../../../assets/images/avatars/1994190568.jpg";
+
+    //Variables informacion accionistas
     datosAccionista: any
-    checked = false;
-    indeterminate = false;
-    informacionAccionista$: Observable<Accionista>;
-    mostrarBoton = false;
-    botonClick = false;
+    InformacionDelPostulante: any
 
+    //formulario datos postulante
+    datosPostulante: FormGroup;
+    validacionDatosAccionista: boolean = false;
+
+    //validacion existen datos de accionista
+    existenDatosAccionista:boolean = false;
+
+
+    ngOnInit(): void {
+        this.datosPostulante = this.fb.group({
+            tipoAccionista: ['', Validators.required],
+            nombresApellidos: ['', Validators.required],
+            telefono: ['', Validators.required],
+            documentoIdentidad: ['', Validators.required],
+            correoElectronico: ['', [Validators.required, Validators.email]]
+        });
+
+        this.datosPostulante.valueChanges.subscribe(value => {
+            if (this.datosPostulante.invalid || !this.validacionDatosAccionista) return
+            this.datosDelPostulante.emit(this.datosPostulante)
+
+        });
+
+    }
+
+
+    //seccion recibe datos de los componentes hijos
     obtenerDatosAccionista(valor: string) {
         this.datosAccionista = valor;
     }
 
+    errorFormularioDatosAccionista(error) {
+        this.validacionDatosAccionista = error;
+        this.campoVacio.emit(this.validacionDatosAccionista)
+        if (!this.validacionDatosAccionista) {
+            this.datosPostulante.reset()
+        }
+    }
+    //fin seccion
 
+
+
+    /**
+     * Método utilizado para buscar un accionista y obtener sus datos.
+     * Marca el campo de tipo de accionista como tocado si no se proporcionan datos de accionista.
+     * Obtiene los datos del postulante utilizando el código del accionista.
+     * Reinicia los datos del accionista después de obtener los datos del postulante.
+     */
     buscarAccionista() {
-        const {idPer:codigoDelAccionista} = this.datosAccionista
-        if(!codigoDelAccionista ) console.log("first")
-        this.informacionAccionista$ = this.sharedComponentsService.obtenerInformacionAccionista(codigoDelAccionista);
+        if (!this.datosAccionista) {
+            this.datosPostulante.get('tipoAccionista').markAsTouched();
+            return
+        }
+        const { idPer: codigoDelAccionista } = this.datosAccionista
+        this.obtenerDatosPostulante(codigoDelAccionista)
+        this.enviarPostulante()
+        this.datosAccionista = undefined
+    }
+
+
+    /**
+     * Obtiene los datos correspondientes al accionista postulado
+     * @param codigoDelAccionista cedula accionista
+     */
+    obtenerDatosPostulante(codigoDelAccionista) {
+        this.sharedComponentsService.obtenerInformacionAccionista(codigoDelAccionista)
+            .subscribe({
+                next: (data: Accionista) => {
+                    this.InformacionDelPostulante = data
+                    this.datosPostulante.patchValue({
+                        nombresApellidos: data.nomPri,
+                        telefono: data.celPersona,
+                        documentoIdentidad: data.codUsuario,
+                        correoElectronico: data.correoPersona
+                    });
+                    this.datosPostulante.get('tipoAccionista').markAsTouched();
+                },
+                error: (data) => {
+                    this.existenDatosAccionista = true
+                }
+            })
+    }
+
+    /**
+     * Método utilizado para enviar los datos del postulante.
+     * Emite los datos del postulante para que otros componentes los reciban.
+     */
+    enviarPostulante() {
+        this.datosDelPostulante.emit(this.datosPostulante)
     }
 
 }

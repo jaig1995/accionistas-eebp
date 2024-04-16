@@ -1,56 +1,33 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { FuseAlertComponent } from '@fuse/components/alert';
-import { MatDialog } from '@angular/material/dialog';
 
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+
+
+import { FuseAlertComponent } from '@fuse/components/alert';
 import { ControlTitulosService } from '../controlTitulos.service';
 import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
 import { VerMasModalComponent } from '../modales/verMasModal/verMasModal.component';
-import { map, Observable, startWith } from 'rxjs';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 @Component({
     selector: 'app-titulos-general',
     standalone: true,
     imports: [
         CommonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDividerModule,
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatChipsModule,
-        MatCheckboxModule,
-        FormsModule,
+        InputAutocompleteComponent,
         FuseAlertComponent,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatSortModule,
-        MatAutocompleteModule,
         AsyncPipe,
-
+        AngularMaterialModules
     ],
     templateUrl: 'titulosGeneral.component.html',
     encapsulation: ViewEncapsulation.None,
 })
 export class TitulosGeneralComponent implements OnInit, AfterViewInit {
+
     //Tabla
     datosTabla: AprobarTitulos[];
     displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'ESTADO', 'TRANSACCION',];
@@ -64,9 +41,8 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
     showAlert = false;
     isEnableButton = false;
 
-    accionistas: any[] = [];
-    filteredAccionistas: Observable<any[]>;
-    buscar = new FormControl('');
+    //variables componente hijo autocomplete
+    accionistaAutoComplete: any;
 
 
     constructor(private controlTitulosService: ControlTitulosService, private dialog: MatDialog) {
@@ -75,35 +51,22 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.inicializarDatos();
-
-        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
-            this.accionistas = data;
-        });
-
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
-            this.accionistas = data;
-        });
-
-        this.filteredAccionistas = this.buscar.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filterAccionistas(value))
-        );
     }
 
 
-    private _filterAccionistas(value: string): any[] {
-        const filterValue = value;
-        return this.accionistas.filter(accionista => accionista.Nombres.includes(filterValue));
-    }
-
-    displayAccionista(accionista: any): string {
-        return accionista && accionista.Nombres ? accionista.Nombres : '';
+    // Seccion Recibir valor componente hijo (app-input-autocomplete)
+    obtenerAccionista(valor) {
+        this.accionistaAutoComplete = valor.idPer;
+        console.log(this.accionistaAutoComplete)
+        this.applyFilter(this.accionistaAutoComplete)
     }
 
     ngAfterViewInit(): void {
         this.inicializarDatos();
 
     }
+    //fin seccion
+
 
 
     /**
@@ -158,10 +121,11 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
      * Además, navega a la primera página del paginador si está disponible.
      * @param {Event} event - Evento que contiene el valor ingresado en el campo de búsqueda.
      */
-    applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
+    applyFilter(event): void {
+        const filterValue = event
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
 
     /**
      * Abre un diálogo modal para mostrar más detalles sobre una transacción específica.
@@ -181,11 +145,4 @@ export class TitulosGeneralComponent implements OnInit, AfterViewInit {
             }
         });
     }
-
-
-    onOptionSelected(event: MatAutocompleteSelectedEvent): void {
-        const accionistaSeleccionado = event.option.value;
-        const filterValue = accionistaSeleccionado.idPer;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-      }
 }

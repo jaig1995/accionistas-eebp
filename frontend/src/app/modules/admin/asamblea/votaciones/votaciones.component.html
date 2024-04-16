@@ -1,0 +1,45 @@
+<div class="w-full h-auto">
+
+
+    <div class="flex-auto">
+
+    </div>
+    <mat-tab-group [selectedIndex]="0">
+        <mat-tab label="Individual">
+            <div class="w-full h-auto">
+
+                  <mat-accordion class="flex flex-col justify-between" multi>
+
+                    <mat-expansion-panel *ngFor="let item of poderDantes">
+                      <mat-expansion-panel-header class="flex flex-row justify-between w-full">
+                        <mat-panel-title class="w-full">
+                          Poderdante
+                        </mat-panel-title>
+                        <mat-panel-description class="flex flex-row justify-between w-full">
+                          {{item}}
+                          <mat-icon>account_circle</mat-icon>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+
+                      <h2>Aqui El componente Hijo(Logica votaciones en el componente hijo)</h2>
+
+                    </mat-expansion-panel>
+
+                  </mat-accordion>
+
+            </div>
+        </mat-tab>
+
+
+
+
+        <!-- seccion dos -->
+        <mat-tab label="Bloque">
+
+            <div class="w-full h-auto">
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+
+</div>

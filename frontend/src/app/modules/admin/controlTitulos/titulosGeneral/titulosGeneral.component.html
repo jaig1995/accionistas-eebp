@@ -22,17 +22,10 @@
         <div class="flex flex-row justify-between">
 
 
-            <!-- fitro general -->
-            <div>
-                <mat-form-field class="w-100">
-                    <mat-label class="font-extrabold ">Filtro General:</mat-label>
-                    <input matInput [(ngModel)]="buscar"  (keyup)="applyFilter($event)" #input placeholder="identificación, transacción..." [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccionista" (optionSelected)="onOptionSelected($event)">
-                        <mat-option *ngFor="let accionista of filteredAccionistas | async" [value]="accionista">
-                            {{ accionista.Nombres }}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
+             <!-- fitro general -->
+             <div class="w-80 mb-1">
+                <app-input-autocomplete [labelInput]="'Filtro General'" (accionista)="obtenerAccionista($event)"
+                    (valorInput)="applyFilter($event)"/>
             </div>
 
             <div>

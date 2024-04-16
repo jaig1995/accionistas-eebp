@@ -1,0 +1,233 @@
+<div class="w-full">
+
+    <mat-tab-group [selectedIndex]="0">
+        <mat-tab label="Preguntas Asamblea">
+            <div class="w-full h-auto">
+                <div class="flex-auto p-6 sm:p-10">
+                    <!-- titulos -->
+                    <div
+                        class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+                        Configuración Preguntas Asamblea </div>
+
+
+                    <!-- alertas -->
+                    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
+                        <span fuseAlertTitle>Aprobación exitosa</span>
+                        ¡Solicitud aprobada!
+                    </fuse-alert>
+                    <!-- fin alertas -->
+
+                    <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
+
+                        <div class="flex flex-row justify-between">
+
+                            <div class="flex flex-row  items-center w-full mb-5 ml-5 overflow-hidden justify-between">
+
+
+                                <mat-vertical-stepper [linear]="false" #stepper class="w-full">
+                                    <mat-step>
+                                        <!-- encabezado titulo -->
+                                        <ng-template matStepLabel><span class="text-primary font-extrabold">Contexto
+                                                Preguntas Asamblea No. 023</span></ng-template>
+
+                                        <!-- Tipo de Asamble -->
+                                        <div class=" mr-5 mb-5 flex flex-row w-full">
+                                            <mat-form-field class="w-80">
+                                                <mat-label class="text-primary font-semibold mt-2">Tipo de
+                                                    Asamblea</mat-label>
+                                                <mat-select>
+                                                    <mat-option value="valid">Informativa</mat-option>
+                                                    <mat-option value="invalid">Decisión</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <mat-divider class="mb-7" />
+
+                                        <mat-label class="text-primary font-semibold">Escoge los temas a
+                                            tratar:</mat-label>
+                                        <div class="flex flex-row justify-around">
+                                            <section class="flex flex-col">
+                                                <mat-checkbox (change)="toggleCheckbox('Estados Financieros')">
+                                                    <p class="text-primary font-semibold">Estados Financieros</p>
+                                                </mat-checkbox>
+                                                <mat-checkbox (change)="toggleCheckbox('Distribución Utilidades')">
+                                                    <p class="text-primary font-semibold">Distribución Utilidades</p>
+                                                </mat-checkbox>
+                                                <mat-checkbox (change)="toggleCheckbox('Proposiciones y Varios')">
+                                                    <p class="text-primary font-semibold">Proposiciones y Varios</p>
+                                                </mat-checkbox>
+                                            </section>
+
+                                            <section class="flex flex-col">
+                                                <mat-checkbox (change)="toggleCheckbox('Junta Directiva')">
+                                                    <p class="text-primary font-semibold">Junta Directiva</p>
+                                                </mat-checkbox>
+                                                <mat-checkbox (change)="toggleCheckbox('Revisoría Fiscal')">
+                                                    <p class="text-primary font-semibold">Revisoría Fiscal</p>
+                                                </mat-checkbox>
+                                                <mat-checkbox (change)="toggleCheckbox('Reforma Estatutos')">
+                                                    <p class="text-primary font-semibold">Reforma Estatutos</p>
+                                                </mat-checkbox>
+                                            </section>
+                                        </div>
+
+                                        <div class="flex justify-end">
+                                            <button mat-raised-button color="primary" class="w-40" matStepperNext>&nbsp;
+                                                Siguiente
+                                                <mat-icon svgIcon="heroicons_outline:arrow-right"></mat-icon>
+                                            </button>
+
+                                        </div>
+                                    </mat-step>
+                                    <mat-step>
+                                        <!-- encabezado titulo -->
+                                        <ng-template matStepLabel><span class="text-primary font-extrabold">Asignación
+                                                de preguntas para asamblea
+                                                No.023</span></ng-template>
+                                        <!-- Escoger Tipo de pregunta -->
+                                        <div class=" mr-5 mb-5 flex flex-row justify-between w-full">
+                                            <!-- Contexto de la pregunta -->
+                                            <div class=" mr-5 mb-5 flex flex-row w-full mt-7">
+                                                <mat-form-field class="w-100">
+                                                    <mat-label class="text-primary font-semibold">Escoge el tema al que
+                                                        quieras agregar una pregunta</mat-label>
+                                                        <mat-select class="text-accent font-semibold" [(value)]="temaSeleccionado">
+                                                            <mat-option *ngFor="let opcion of contextoPreguntas" [value]="opcion">
+                                                                <p class="text-primary font-semibold">{{ opcion }}</p>
+                                                            </mat-option>
+                                                        </mat-select>
+
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="flex flex-row mt-14 mr-5">
+                                                <label id="tipoRespuesta" class="text-primary font-semibold mr-6">Tipo
+                                                    de
+                                                    respuesta:</label>
+                                                <mat-radio-group class="flex flex-row " aria-labelledby="tipoRespuesta"
+                                                    [formControl]="selectedOptionControl">
+                                                    <mat-radio-button value="unica">
+                                                        <p class="text-primary font-extrabold">Única</p>
+                                                    </mat-radio-button>
+                                                    <mat-radio-button value="multiple">
+                                                        <p class="text-primary font-extrabold">Múltiple</p>
+                                                    </mat-radio-button>
+                                                </mat-radio-group>
+                                            </div>
+                                        </div>
+                                        <!-- ingresa la pregunta si esta es unica -->
+                                        <div class="w-full" *ngIf="selectedOptionControl.value === 'unica'">
+                                            <mat-form-field class="w-full">
+                                                <mat-label class="text-primary font-semibold">Encabezado de la
+                                                    pregunta:</mat-label>
+                                                <textarea matInput placeholder="Escribe aqui la pregunta"></textarea>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="w-full flex flex-row justify-center items-center"
+                                            *ngIf="selectedOptionControl.value === 'multiple'">
+                                            <mat-form-field class="w-full">
+                                                <mat-label class="text-primary font-semibold">Encabezado de la
+                                                    pregunta</mat-label>
+                                                <textarea matInput placeholder="Escribe aqui la pregunta"></textarea>
+                                            </mat-form-field>
+                                        </div>
+
+
+                                        <!-- Adicionar preguntas de seleccion multiple -->
+                                        <div class="w-full flex flex-row justify-center items-center "
+                                            *ngIf="selectedOptionControl.value === 'multiple'">
+                                            <mat-form-field class="w-full">
+                                                <mat-label class="text-primary font-semibold">Ingresa las opciones de
+                                                    la pregunta</mat-label>
+                                                <textarea matInput placeholder="Escribe aqui la pregunta"></textarea>
+                                            </mat-form-field>
+
+                                            <div class="ml-4">
+                                                <button mat-fab color="accent">
+                                                    <mat-icon svgIcon="heroicons_solid:plus"></mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="flex flex-col" *ngIf="selectedOptionControl.value === 'multiple'">
+
+                                            <mat-divider class="my-6" />
+                                            <h3 class="my-3 text-primary font-semibold">Visualizador de preguntas
+                                                multiples </h3>
+                                            <!-- visualizar preguntas multiples -->
+                                            <div class="border border-blue-800 rounded-lg w-full min-h-15 p-12">
+
+
+                                                <div class="w-full flex flex-row justify-center items-center">
+                                                    <mat-form-field class="w-full">
+                                                        <input matInput placeholder="Escribe aqui la pregunta" />
+                                                    </mat-form-field>
+
+                                                    <div class="ml-4">
+                                                        <button mat-fab color="warn"
+                                                            aria-label="Example icon button with a bookmark icon">
+                                                            <mat-icon svgIcon="heroicons_solid:minus"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="w-full flex flex-row justify-center items-center">
+                                                    <mat-form-field class="w-full">
+                                                        <input matInput placeholder="Escribe aqui la pregunta" />
+                                                    </mat-form-field>
+
+                                                    <div class="ml-4">
+                                                        <button mat-fab color="warn"
+                                                            aria-label="Example icon button with a bookmark icon">
+                                                            <mat-icon svgIcon="heroicons_solid:minus"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <!-- boton agregar pregunta -->
+                                        <div class="flex justify-end mt-8">
+                                            <button mat-raised-button color="primary" class="w-40" matStepperNext>&nbsp;
+                                                Guardar
+                                                <mat-icon fontSet="../../"></mat-icon>
+                                            </button>
+                                        </div>
+
+                                    </mat-step>
+                                </mat-vertical-stepper>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Spinner carga -->
+                    <div class="flex justify-center items-center h-100 bg-card " *ngIf="loading">
+                        <mat-spinner diameter="50" color="accent"></mat-spinner>
+                    </div>
+
+
+                </div>
+            </div>
+        </mat-tab>
+        <!-- seccion dos -->
+        <mat-tab label="Resumen General">
+
+            <div class="w-full h-auto">
+                <app-resumen-preguntas-asamblea />
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+
+</div>
