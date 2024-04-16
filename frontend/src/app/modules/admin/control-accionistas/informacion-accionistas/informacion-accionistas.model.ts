@@ -4,4 +4,5 @@ export interface infoAccionistas{
     nomPri: string,
     apePri: string,
     esAccionista: string,
+    razonSocial: string,
 }

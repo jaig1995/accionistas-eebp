@@ -4,4 +4,5 @@ export interface Usuario {
     email: string,
     nombreUsuario: string,
     apellidoUsuario: string,
+    razonSocial: string,
 }

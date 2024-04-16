@@ -47,11 +47,11 @@
                 <mat-form-field *ngIf="mostrarTablas" class="w-full sm:w-72 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
                     <mat-label>Estado de aprobación:</mat-label>
                     <mat-select id="aprobado"  formControlName="aprobado">
-                    <mat-option value="S">Aprobado</mat-option>
-                    <mat-option value="N">Rechazado</mat-option> 
-                    <mat-option value="P">Pendiente</mat-option> 
+                        <mat-option value="S" *ngIf="registroForm.get('aprobado').value === 'S'">Aprobado</mat-option>
+                        <mat-option value="N" *ngIf="registroForm.get('aprobado').value === 'N'">Rechazado</mat-option>
+                        <mat-option value="P">Pendiente</mat-option>
                     </mat-select>
-                </mat-form-field >
+                </mat-form-field>
 
                 <button *ngIf="mostrarTablas" class="w-full sm:w-40 m-4 sm:mt-4 sm:ml-4" type="button" mat-stroked-button [color]="'primary'" (click)="fileInput.click()"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Subir archivos</button>
                 <input hidden (change)="onFileSelectedMultiple($event)" #fileInput multiple type="file" formControlName="file">

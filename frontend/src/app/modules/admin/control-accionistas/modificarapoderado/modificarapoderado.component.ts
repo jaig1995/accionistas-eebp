@@ -213,38 +213,7 @@ export class ModificarapoderadoComponent implements OnInit {
         console.error('Error al obtener los datos:', error);
       }
     );
-    this.accionistasService.obtenerAccionista(codUsuario).subscribe(
-      (data: Accionista) => {
-        if(data.descripcionRechazo !== null){
-          const confirmation = this._fuseConfirmationService.open({
-
-            "title": "Usuario rechazado!",
-            "message": "",
-            "icon": {
-              "show": true,
-              "name": "heroicons_outline:exclamation-triangle",
-              "color": "warn"
-            },
-            "actions": {
-              "confirm": {
-                "show": true,
-                "label": "Aceptar",
-                "color": "warn"
-              },
-              "cancel": {
-                "show": false,
-                "label": "Cancel"
-              }
-            },
-            "dismissible": true
     
-          });
-          this.modificacionForm.get('codUsuario').setValue('');
-          this.mostrarCampoAdicionalFueraTabla = false;
-        }
-        
-      }
-    );
   }
 
   consultarRepresentante() {

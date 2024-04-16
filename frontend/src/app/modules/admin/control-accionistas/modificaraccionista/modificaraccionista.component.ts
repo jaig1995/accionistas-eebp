@@ -79,16 +79,32 @@ export class ModificaraccionistaComponent implements OnInit {
   })
 
   ngOnInit() {
-  
+    this.registroForm = new FormGroup({
+      'codUsuario': new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]),
+      'tipoAccionista': new FormControl('', Validators.required),
+      'aprobado': new FormControl('', Validators.required),
+      'numCarnet': new FormControl({ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]*$')]),
+      'file': new FormControl('')
+    });
+
     this.accionistasService.obtenerAccionistas().subscribe((datos: EsAccionistas[]) => {
-      
       const datosFiltrados = datos.filter(item => item.codAccionista);
       this.datosAutocompletado = datosFiltrados;
       this.opcionesFiltradas = this.registroForm.get('codUsuario').valueChanges.pipe(
-        startWith(''), 
+        startWith(''),
         map(value => this._filtrarOpciones(value))
       );
+    });
 
+    // Suscripción al cambio de valor del control 'aprobado'
+    this.registroForm.get('aprobado').valueChanges.subscribe(value => {
+      if (value === 'S') {
+        // Si 'aprobado' es 'Aprobado', deshabilitar el control
+        this.registroForm.get('aprobado').disable();
+      } else {
+        // Si 'aprobado' es diferente de 'Aprobado', habilitar el control
+        this.registroForm.get('aprobado').enable();
+      }
     });
   }
 
