@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 export class AsambleaService {
 
     private _baseUrl: string = ServicesConfig.apiUrl;
-
     private http = inject(HttpClient);
 
     constructor() { }
