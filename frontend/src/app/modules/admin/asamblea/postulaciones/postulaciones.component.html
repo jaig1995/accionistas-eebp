@@ -53,9 +53,8 @@
     </div>
 
     <div class="flex flex-col mt-5">
-        <mat-dialog-content>
-            Por favor, ten en cuenta que solo debe haber un postulante <span class="text-accent font-bold">PRINCIPAL</span> y
-            uno <span class="text-primary font-bold">SUPLENTE</span>.
+        <mat-dialog-content [innerHTML]="mensajeAlertas">
+
         </mat-dialog-content>
         <div class="flex justify-end">
             <mat-dialog-actions class="mt-4">

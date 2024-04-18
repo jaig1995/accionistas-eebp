@@ -23,6 +23,9 @@ export class PostulacionesComponent {
 
     @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
 
+    //Variable mensaje Dialogo alertas
+    mensajeAlertas:String = ''
+
     // Variables comite Escrutador
     primerPostulanteComiteEscrutador: any = undefined;
     segundoPostulanteComiteEscrutador: any = undefined;
@@ -60,16 +63,21 @@ export class PostulacionesComponent {
     }
 
     enviarPostulacionComiteEscrutador() {
-        const { tipoAccionista: tipoAccionistaPrimerPostulante } = this.primerPostulanteComiteEscrutador?.value
-        const { tipoAccionista: tipoAccionistaSegundoPostulante } = this.segundoPostulanteComiteEscrutador?.value
+        const { tipoAccionista: tipoAccionistaPrimerPostulante, documentoIdentidad:documentoAccionistaPrimerPostulante } = this.primerPostulanteComiteEscrutador?.value
+        const { tipoAccionista: tipoAccionistaSegundoPostulante, documentoIdentidad:documentoAccionistaSegundoPostulante} = this.segundoPostulanteComiteEscrutador?.value
 
         if (tipoAccionistaPrimerPostulante === tipoAccionistaSegundoPostulante) {
-            this.abrirDialogo()
+            this.mensajeAlertas = `Por favor, ten en cuenta que solo debe haber un postulante <span class="text-accent font-bold">PRINCIPAL</span> y
+            uno <span class="text-primary font-bold">SUPLENTE</span>.`
+            this.abrirDialogo();
             return
         }
 
-        console.log("tipoAccionistaPrimerPostulante", tipoAccionistaPrimerPostulante)
-        console.log("tipoAccionistaSegundoPostulante", tipoAccionistaSegundoPostulante)
+        if(documentoAccionistaPrimerPostulante === documentoAccionistaSegundoPostulante){
+            this.mensajeAlertas = `Por favor, ten en cuenta que deben ser <span class="font-bold">diferente</span> el postulante <span class="text-accent font-bold">PRINCIPAL</span> del <span class="text-primary font-bold">SUPLENTE</span>.`
+            this.abrirDialogo();
+            return
+        }
 
         let postulacion = [
             this.primerPostulanteComiteEscrutador?.value,
