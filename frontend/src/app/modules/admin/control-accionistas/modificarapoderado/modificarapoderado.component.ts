@@ -57,11 +57,11 @@ export class ModificarapoderadoComponent implements OnInit {
   codigoUsuarioRepresentante: string;
   mostrarCampoAdicionalFueraTabla: boolean = false;
 
-  datosAutocompletado: Actualizar[] = []; 
+  datosAutocompletado: modificarRepresentante[] = []; 
   valorSeleccionado: string = '';
   
-  opcionesFiltradas: Observable<Actualizar[]>;
-  opcionesFiltradasRepresentante: Observable<Actualizar[]>;
+  opcionesFiltradas: Observable<modificarRepresentante[]>;
+  opcionesFiltradasRepresentante: Observable<modificarRepresentante[]>;
 
   constructor(private router: Router, private route: ActivatedRoute,private accionistasService: AccionistasService,fuseConfirmationService: FuseConfirmationService){
     this._fuseConfirmationService = fuseConfirmationService;
@@ -146,14 +146,14 @@ export class ModificarapoderadoComponent implements OnInit {
 
   ngOnInit() {
 
-    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+    this.accionistasService.obtenerCodigosAccionistas().subscribe((datos: modificarRepresentante[]) => {
       this.datosAutocompletado = datos;
       this.opcionesFiltradas = this.modificacionForm.get('codUsuario').valueChanges.pipe(
         startWith(''), 
         map(value => this._filtrarOpciones(value))
       );
     });
-    this.accionistasService.obtenerCodigos().subscribe((datos: Actualizar[]) => {
+    this.accionistasService.obtenerCodigosAccionistas().subscribe((datos: modificarRepresentante[]) => {
       this.datosAutocompletado = datos;
       this.opcionesFiltradasRepresentante = this.modificacionForm.get('codRepresentante').valueChanges.pipe(
         startWith(''), 
@@ -162,13 +162,13 @@ export class ModificarapoderadoComponent implements OnInit {
     });
   }
 
-  private _filtrarOpciones(value: string): Actualizar[] {
+  private _filtrarOpciones(value: string): modificarRepresentante[] {
       const filtro = value.toLowerCase();
-      return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
+      return this.datosAutocompletado.filter(opcion => opcion.codAccionista.toLowerCase().includes(filtro));
   }
-  private _filtrarOpcionesRepresentante(value: string): Actualizar[] {
+  private _filtrarOpcionesRepresentante(value: string): modificarRepresentante[] {
     const filtro = value.toLowerCase();
-    return this.datosAutocompletado.filter(opcion => opcion.codUsuario.toLowerCase().includes(filtro));
+    return this.datosAutocompletado.filter(opcion => opcion.codAccionista.toLowerCase().includes(filtro));
 }
 
   consultarUsuario() {

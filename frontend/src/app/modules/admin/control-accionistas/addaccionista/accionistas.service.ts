@@ -130,6 +130,10 @@ import { EsAccionistas } from '../modificaraccionista/modificaraccionista.model'
       return this.http.get<Actualizar[]>(this._baseUrl + '/api/accionistas');
     }
 
+    obtenerCodigosAccionistas(): Observable<modificarRepresentante[]> {
+      return this.http.get<modificarRepresentante[]>(this._baseUrl + '/api/accionista');
+    }
+
     obtenerArchivos(id: string): Observable<Archivos[]> {
       return this.http.get<Archivos[]>(this._baseUrl + '/api/accionista/aprobar/archivos/' + id);
     }

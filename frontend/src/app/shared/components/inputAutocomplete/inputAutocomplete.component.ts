@@ -59,7 +59,7 @@ export class InputAutocompleteComponent implements OnInit {
      * Los datos obtenidos se asignan a la propiedad accionistas del componente.
      */
     obtenerAccionistas() {
-        this.controlTitulosService.obtenerAccionistas().subscribe(data => {
+        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
             this.accionistas = data;
         });
     }

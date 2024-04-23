@@ -122,6 +122,7 @@
                   <input matInput  id="fecNacimiento" formControlName="fecNacimiento" matInput [matDatepicker]="picker" required>
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
+                  <mat-error>El año de nacimiento no puede ser mayor a la fecha actual.</mat-error> 
                 </mat-form-field>
   
                 <mat-form-field class="w-full sm:w-28 mt-4 sm:mt-4 sm:ml-4" [subscriptSizing]="'dynamic'">
@@ -200,7 +201,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" [matAutocomplete]="auto" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
+                        <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" [matAutocomplete]="auto" [required]="accionistasForm.get('tipDocumento').value !== 'TI' && accionistasForm.get('tipDocumento').value !== 'RC'">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option value="NINGUNO">NINGUNO</mat-option>
                     <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codActEco">

@@ -7,10 +7,10 @@
 
       <mat-divider class="mt-6 mb-10"></mat-divider><br>
 
-    <mat-form-field class="w-full sm:w-72 mt-4 sm:mt-0" [subscriptSizing]="'dynamic'">
-      <mat-label>Buscar por código (Identificación):</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Filtro"  #input>
-    </mat-form-field><br><br>
+      <div class="w-80">
+        <app-input-autocomplete [labelInput]="'Filtro General'" (accionista)="obtenerAccionista($event)"
+            (valorInput)="applyFilter($event)"/>
+      </div><br>
 
     <table mat-table [dataSource]="datos" matSort class="mat-elevation-z2">
 

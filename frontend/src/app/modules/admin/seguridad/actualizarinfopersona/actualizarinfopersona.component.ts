@@ -16,7 +16,7 @@ import { GeoService } from '../../control-accionistas/addaccionista/geo.service'
 import { Actualizar } from '../../control-accionistas/actualizar-informacion-accionistas/actualizar-informacion-accionistas.model';
 import { forEach } from 'lodash';
 import { ActEcoPer } from '../../control-accionistas/addaccionista/actEcoPer.model';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, Subscription, map, startWith } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
@@ -142,7 +142,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
     'tipoPersona': new FormControl('', Validators.required),
     'departamentoExp': new FormControl('', Validators.required),
     'municipioExp': new FormControl('', Validators.required),
-    'fecNacimiento': new FormControl('', Validators.required),
+    'fecNacimiento': new FormControl('',[ Validators.required, this.dateOfBirthValidator]),
     'genPersona': new FormControl('', Validators.required),
     'depNacimiento': new FormControl('', Validators.required),
     'lugNacimiento': new FormControl('', Validators.required),
@@ -683,7 +683,7 @@ export class ActualizarinfopersonaComponent implements OnInit{
       for (const field of fieldsToDisable) {
         const control = this.accionistasForm.get(field);
         if (control) {
-          if (value === 'TI') {
+          if (value === 'TI' || value === 'RC') {
             control.disable();
             control.clearValidators();
           } else {
@@ -817,19 +817,6 @@ export class ActualizarinfopersonaComponent implements OnInit{
     };
   }
 
-  dateOfBirthValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const selectedDate = new Date(control.value);
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Establecer la hora actual a las 00:00:00 para comparaciones de fecha.
-
-    // Comprobar si la fecha seleccionada es mayor que la fecha actual
-    if (selectedDate > currentDate) {
-      return { 'invalidDateOfBirth': true };
-    }
-
-    return null; // La fecha es válida
-  }
-
   obtenerHuella() {
     this.accionistasService.peticionGetHuella().subscribe(
       (response) => {
@@ -874,6 +861,34 @@ export class ActualizarinfopersonaComponent implements OnInit{
 
   capturarFirma(){
     this.accionistasService.peticionGetFirmaCaptura().subscribe();
+  }
+
+  dateOfBirthValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const fechaIngresada = control.value;
+  
+    // Verificar si la fecha ingresada es una cadena vacía o nula
+    if (!fechaIngresada || fechaIngresada.trim() === '') {
+      return null; // Permitir fechas vacías
+    }
+  
+    // Crear un objeto Date a partir de la cadena de fecha ISO 8601
+    const selectedDate = new Date(fechaIngresada);
+  
+    // Verificar si la fecha ingresada es válida
+    if (isNaN(selectedDate.getTime())) {
+      return { invalidDateOfBirth: true };
+    }
+  
+    // Obtener la fecha actual
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Establecer la hora actual a las 00:00:00 para comparaciones de fecha
+  
+    // Comprobar si la fecha seleccionada es mayor que la fecha actual
+    if (selectedDate > currentDate) {
+      return { invalidDateOfBirth: true };
+    }
+  
+    return null; // La fecha es válida
   }
 
 }

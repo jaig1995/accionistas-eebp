@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { infoAccionistas } from './informacion-accionistas.model';
 import { ServicesConfig } from 'app/services.config';
 
@@ -15,6 +15,15 @@ export class InformacionAccionistasService {
      * Constructor
      */
     constructor(private http: HttpClient){}
+
+    // usuarios: infoAccionistas[];
+
+    // obtenerUsuariosFilter(): Observable<infoAccionistas[]> {
+    //     return this.http.get<infoAccionistas[]>(this._baseUrl + "/api/accionistas")
+    //         .pipe(
+    //             tap(data => this.usuarios = data)
+    //         );
+    // }
 
     obtenerUsuarios(): Observable<infoAccionistas[]> {
         return this.http.get<infoAccionistas[]>(this._baseUrl + "/api/accionistas");

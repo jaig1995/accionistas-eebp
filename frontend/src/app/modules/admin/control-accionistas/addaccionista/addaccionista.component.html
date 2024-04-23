@@ -201,7 +201,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:building-office-2'"
                         matPrefix></mat-icon>
-                  <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" [matAutocomplete]="auto" [required]="accionistasForm.get('tipDocumento').value !== 'TI'">
+                  <input matInput type="text" id="actEcoPersona"  formControlName="actEcoPersona" [matAutocomplete]="auto" [required]="accionistasForm.get('tipDocumento').value !== 'TI' && accionistasForm.get('tipDocumento').value !== 'RC'">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option value="NINGUNO">NINGUNO</mat-option>
                     <mat-option *ngFor="let dato of opcionesFiltradas | async" [value]="dato.codActEco">

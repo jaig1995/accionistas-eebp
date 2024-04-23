@@ -77,7 +77,8 @@ export class AddaccionistaComponent {
     this.accionistasForm.get('num3Laboral').valueChanges.subscribe(() => this.actualizarDireccionLaboral());
 
     this.watchTipDocumentoChanges();
-    this.tarjetaIdentidad();
+    // this.tarjetaIdentidad();
+    // this.registroCivil();
     this.barrioDisabled();
     this.personaJuridica();
     
@@ -209,6 +210,8 @@ export class AddaccionistaComponent {
         map(value => this._filtrarOpciones(value))
       );
     });
+
+    this.tarjetaIdentidad();
   }
 
   
@@ -639,7 +642,7 @@ export class AddaccionistaComponent {
       for (const field of fieldsToDisable) {
         const control = this.accionistasForm.get(field);
         if (control) {
-          if (value === 'TI') {
+          if (value === 'TI' || value === 'RC') {
             control.disable();
             control.clearValidators();
           } else {
