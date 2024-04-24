@@ -12,21 +12,9 @@
         </mat-expansion-panel-header>
         <div class="grid grid-cols-2 gap-3">
             <!-- Primer conjunto de elementos -->
-            <div class="flex-1">
+            <div class="flex-1"  *ngFor="let item of comiteEscrutador">
                 <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
+                    [modoVotacion]="true" [datos]="item"></app-plancha-postulante>
             </div>
         </div>
     </mat-expansion-panel>
@@ -40,21 +28,9 @@
         </mat-expansion-panel-header>
         <div class="grid grid-cols-2 gap-3">
             <!-- Primer conjunto de elementos -->
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="true"
-                    [modoVotacion]="false"></app-plancha-postulante>
+            <div class="flex-1"  *ngFor="let item of presidenteAsamblea">
+                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
+                    [modoVotacion]="false" [datos]="item"></app-plancha-postulante>
             </div>
         </div>
     </mat-expansion-panel>
@@ -69,21 +45,9 @@
         </mat-expansion-panel-header>
         <div class="grid grid-cols-2 gap-3">
             <!-- Primer conjunto de elementos -->
-            <div class="flex-1">
+            <div class="flex-1"  *ngFor="let item of aprobacionActa">
                 <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
-            </div>
-            <div class="flex-1">
-                <app-plancha-postulante [modoPlanchaUnPostulante]="false"
-                    [modoVotacion]="false"></app-plancha-postulante>
+                    [modoVotacion]="false" [datos]="item"></app-plancha-postulante>
             </div>
         </div>
     </mat-expansion-panel>

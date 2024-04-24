@@ -14,6 +14,11 @@ import { AnalyticsMockApi } from 'app/mock-api/dashboards/analytics/api';
 import { CryptoMockApi } from 'app/mock-api/dashboards/crypto/api';
 import { FinanceMockApi } from 'app/mock-api/dashboards/finance/api';
 import { IconsMockApi } from 'app/mock-api/ui/icons/api';
+import { CreateTemplateMockApi } from './apps/creacion-plantilla/api';
+import { RegistroPoderesMockApi } from './apps/registro-poderes/api';
+import { PostulacionesMockApi } from './apps/postulaciones/api';
+import { CrearAsambleaMockApi } from './apps/crear-asamblea/api';
+import { AsitenciaAsambleaMockApi } from './apps/asistencia-asamblea/api';
 
 export const mockApiServices = [
     AcademyMockApi,
@@ -32,4 +37,9 @@ export const mockApiServices = [
     NotificationsMockApi,
     SearchMockApi,
     ShortcutsMockApi,
+    CreateTemplateMockApi,
+    RegistroPoderesMockApi,
+    PostulacionesMockApi,
+    CrearAsambleaMockApi,
+    AsitenciaAsambleaMockApi,
 ];

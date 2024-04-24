@@ -1,3 +1,4 @@
+<fuse-loading-bar></fuse-loading-bar>
 <div class="w-full">
 
     <mat-tab-group [selectedIndex]="0" class="w-full">
@@ -24,19 +25,19 @@
                             <div class="flex  flex-auto flex-row  items-center w-full mb-5 ml-5 overflow-hidden justify-between">
 
 
-                                <mat-vertical-stepper [linear]="false" #stepper class="w-full">
+                                <mat-vertical-stepper [linear]="false" #stepper class="w-full"  [selectedIndex]="pasoActual">
                                     <mat-step>
                                         <form [formGroup]="formularioPreguntas">
                                             <!-- encabezado titulo -->
                                             <ng-template matStepLabel><span class="text-primary font-extrabold">Contexto
-                                                    Preguntas Asamblea No. 023</span></ng-template>
+                                                    Preguntas Asamblea No. {{consecutivoAsamblea}}</span></ng-template>
 
                                             <!-- Tipo de Asamble -->
                                             <div class=" mr-5 mb-5 flex flex-row w-full">
                                                 <mat-form-field class="w-80">
                                                     <mat-label class="text-primary font-semibold mt-2">Tipo de
                                                         Asamblea</mat-label>
-                                                    <mat-select formControlName="tipoAsamblea">
+                                                    <mat-select formControlName="tipoAsamblea" >
                                                         <mat-option value="Informativa">Informativa</mat-option>
                                                         <mat-option value="Decision">Decisión</mat-option>
                                                     </mat-select>
@@ -54,7 +55,7 @@
                                                 <div class="flex flex-wrap">
                                                     <ng-container *ngFor="let tema of temasAsamblea">
                                                         <section class="flex flex-col w-1/2">
-                                                            <mat-checkbox (change)="toggleCheckbox(tema)" [checked]="tema.selected">
+                                                            <mat-checkbox (change)="toggleCheckbox(tema)" [checked]="tema.selected" [disabled]="esEditableTemasAsamblea" >
                                                                 <p class="text-primary font-semibold">{{ tema.nombre }}</p>
                                                             </mat-checkbox>
                                                         </section>
@@ -64,7 +65,7 @@
 
                                             <div class="flex justify-end mt-6">
                                                 <button mat-raised-button color="primary" class="w-40"
-                                                    matStepperNext [disabled]="!algunaOpcionSeleccionada() || !estaTipoAsambleaSeleccionada()">&nbsp;
+                                                    matStepperNext [disabled]=" !estaTipoAsambleaSeleccionada()" (click)="abrirDialogo(dialogTemplate)">&nbsp;
                                                     Siguiente
                                                     <mat-icon svgIcon="heroicons_outline:arrow-right"></mat-icon>
                                                 </button>
@@ -135,7 +136,7 @@
                                                 *ngIf="asignacionPregunta.value.tipoRespuesta === 'multiple'">
                                                 <mat-form-field class="w-full">
                                                     <mat-label class="text-primary font-semibold">Ingresa las opciones
-                                                        dela pregunta</mat-label>
+                                                        de la pregunta</mat-label>
                                                     <textarea matInput placeholder="Escribe aqui la pregunta"
                                                         [formControl]="respuestaOpcionMultiple"></textarea>
                                                 </mat-form-field>
@@ -162,7 +163,7 @@
                                                         *ngFor="let respuesta of respuestasOpcionMultiple; let i = index">
                                                         <mat-form-field class="w-full">
                                                             <input matInput placeholder="Escribe aqui la pregunta"
-                                                                [value]="respuesta" />
+                                                                [value]="respuesta" (change)="actualizarRespuesta($event.target.value, i)" />
                                                         </mat-form-field>
 
                                                         <div class="ml-4">
@@ -177,10 +178,10 @@
                                         </form>
 
 
-                                        <!-- boton agregar pregunta -->
+                                        <!-- boton agregar pregunta existePreguntaMultiple || asignacionPregunta.invalid ||-->
                                         <div class="flex justify-end mt-8">
                                             <button mat-raised-button color="primary" class="w-40" matStepperNext
-                                                (click)="guardarPreguntas()">&nbsp;
+                                                (click)="guardarPreguntas()" [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 2) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )">&nbsp;
                                                 Guardar
                                                 <mat-icon fontSet="../../"></mat-icon>
                                             </button>
@@ -213,7 +214,22 @@
                 <app-resumen-preguntas-asamblea />
             </div>
         </mat-tab>
-
     </mat-tab-group>
-
 </div>
+
+
+<ng-template #dialogTemplate>
+    <div class="flex flex-row">
+        <mat-icon svgIcon="heroicons_solid:exclamation-triangle" color="accent" class="mr-2"></mat-icon>
+        <h2 mat-dialog-title class="font-extrabold"> Importante!</h2>
+    </div>
+    <mat-dialog-content>
+        ¿Estás seguro del contexto y los temas a tratar en la asamblea No. "{{consecutivoAsamblea}}"
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close (click)="cerrarDialogo()" ><span
+                class="font-bold text-warn">Regresar</span></button>
+        <button mat-button mat-dialog-close cdkFocusInitial class="font-bold" (click)="aprobarDialogo()" > <span
+                class="font-bold text-accent">Continuar</span></button>
+    </mat-dialog-actions>
+</ng-template>

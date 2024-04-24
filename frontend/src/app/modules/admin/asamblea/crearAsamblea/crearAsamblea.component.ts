@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, ViewChild, } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +10,10 @@ import { DateTime } from 'luxon';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { eebpTheme } from '../../../../shared/imports/temaPicker/temaPicker';
+import { AsambleaService } from '../asamblea.service';
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseAlertComponent } from '@fuse/components/alert';
 
 @Component({
     selector: 'app-crear-asamblea',
@@ -17,19 +21,28 @@ import { eebpTheme } from '../../../../shared/imports/temaPicker/temaPicker';
     imports: [
         CommonModule,
         FormsModule,
-        AngularMaterialModules,
+        ButtonCargarDocumentosComponent,
         TimepickerModule,
         ReactiveFormsModule,
         NgxMaterialTimepickerModule,
-        ButtonCargarDocumentosComponent,
+        FuseLoadingBarComponent,
+        FuseAlertComponent,
+        AngularMaterialModules,
 
     ],
     templateUrl: 'crearAsamblea.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.Emulated,
+    animations: fuseAnimations,
 })
 export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
 
+    //inyeccion de dependencias
     private formBuilder = inject(FormBuilder);
+    private asambleaService = inject(AsambleaService);
+
+
+    //validaciones
+    botonActivo = false
 
     //temaEEBP
     eebpTheme = eebpTheme;
@@ -42,33 +55,35 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     archivoImagen: any;
 
     //formulario
-
     crearAsamblea = this.formBuilder.group({
-        consecutivoAsamblea: [],
+        consecutivoAsamblea: ['', [Validators.required,]],
         fechaAsamblea: ['', [Validators.required,]],
         horaAsamblea: ['', Validators.required],
         tipoAsamblea: ['', Validators.required],
         estado: ['Activa']
     });
 
+    //nombre y validacion archivo
+    nombreArchivo: string
+
+    //Componentes Hijos
+    @ViewChild(ButtonCargarDocumentosComponent) buttonCargarDocumentosComponent: ButtonCargarDocumentosComponent;
+
     //tabla
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     displayedColumns: string[] = ['CONSECUTIVO', 'FECHA_ASAMBLEA', 'HORA_ASAMBLEA', 'TIPO', 'ESTADO', 'VER_MAS', 'ACCIONES'];
-    ejemplo = [
-        { consecutivo: 23, fechaAsamble: '23/04/2024', horaAsamblea: '9:30 PM', tipoAsamblea: 'Ordinaria', estado: 'Activa', },
-        { consecutivo: 24, fechaAsamble: '18/12/2023', horaAsamblea: '10:30 AM', tipoAsamblea: 'Extraordinaria', estado: 'Inactiva', },
-        { consecutivo: 25, fechaAsamble: '24/08/2023', horaAsamblea: '3:45 PM', tipoAsamblea: 'Ordinaria', estado: 'Inactiva', },
-    ];
-    dataSource = new MatTableDataSource<any>(this.ejemplo)
+    dataSource: any = []
+    consecutivoAsamblea: any;
+
 
 
     constructor() {
     }
 
     ngOnInit(): void {
-        //TODO:recibir consecutivo de backend
-        this.crearAsamblea.get('consecutivoAsamblea').setValue(23);
+        this.CargarDatos()
+        this.obtenerConsecutivo()
     }
 
 
@@ -77,13 +92,70 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
 
-    enviarAsamblea() {
+    CargarDatos() {
+        this.asambleaService.obtenerAsambleas().subscribe(
+            {
+                next: (data) => {
+                    this.dataSource = new MatTableDataSource<any>(data)
+                    this.dataSource.paginator = this.paginator;
+                },
+                error: (data) => {
+                    this.dataSource = []
+                }
+            }
+        )
+
+    }
+
+    obtenerConsecutivo() {
+        this.asambleaService.obtenerConsecutivosAsamblea().subscribe({
+            next: (data: any) => {
+                this.consecutivoAsamblea = data.consecutivoAsamblea;
+                this.crearAsamblea.get('consecutivoAsamblea').setValue(this.consecutivoAsamblea);
+            },
+            error: (data) => {
+                this.dataSource = []
+            }
+        })
+    }
+
+    enviarFormularioAsamblea() {
+        this.botonActivo = true
         const formValue = this.crearAsamblea.value;
         const fechaAsamblea = new Date(formValue.fechaAsamblea);
         const fechaFormateada = DateTime.fromJSDate(fechaAsamblea).toFormat('dd/MM/yyyy');
         const valoresActualizados = { ...formValue, fechaAsamblea: fechaFormateada };
-        console.log(valoresActualizados);
+        this.nombreArchivo = `imagen_asamblea_numero_${this.consecutivoAsamblea}`
+        this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivo)
+        this.enviarPeticionAsamblea(valoresActualizados)
     }
+
+    enviarPeticionAsamblea(data) {
+        this.asambleaService.crearAsamblea(data).subscribe({
+            next: (data) => {
+                this.asambleaService.enviarArchivo(this.archivoImagen).subscribe(
+                    {
+                        next: (data) => {
+                            this.botonActivo = false
+                            this.mostrarAlertaExitosa();
+                        },
+                        error: (data) => {
+                            this.botonActivo = false
+                            this.mostrarAlertaFallida()
+                        },
+                        complete: () => {
+                            this.botonActivo = false
+
+                        }
+                    }
+                )
+            },
+            error: (data) => {
+                this.botonActivo = false
+            }
+        })
+    }
+
 
     //tablas
     applyFilter(event: Event) {
@@ -94,6 +166,9 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
             this.dataSource.paginator.firstPage();
         }
     }
+
+    //peticiones http
+
 
     contieneArchivo(valor: boolean) {
         this.existeDocumento = valor

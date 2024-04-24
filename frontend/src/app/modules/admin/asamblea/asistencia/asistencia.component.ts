@@ -1,8 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
+import { AsambleaService } from '../asamblea.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PorcentajeDirective } from 'app/shared/directives/porcentaje.directive';
 
 @Component({
     selector: 'app-asistencia',
@@ -10,73 +17,79 @@ import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMater
     imports: [
         CommonModule,
         InputAutocompleteComponent,
+        FuseLoadingBarComponent,
+        ReactiveFormsModule,
+        PorcentajeDirective,
+        FormsModule,
         AngularMaterialModules
     ],
     templateUrl: 'asistencia.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: fuseAnimations,
 })
-export class AsistenciaComponent {
+export class AsistenciaComponent implements OnInit {
+
+    //inyeccion de Dependencias
+    private _asambleaService = inject(AsambleaService)
+    private _fb = inject(FormBuilder)
+
+    //Tabla
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    dataSource: any = []
+
+    //formulario
+    datosAsamblea = this._fb.group({
+        numeroAccionistas: [''],
+        numeroAcciones: [''],
+        qorum: ['']
+      });
+    formBuilder: any;
+
+    ngOnInit(): void {
+        this.cargarDatos();
+        this.obtenerDatosAsamblea()
+    }
+
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
 
     loading: boolean;
     showAlert: any;
     poderdante: string;
     valorInput: string
-    ejemplo = [
-        {
-          idAsistente: 1,
-          asistencia: false,
-          acciones: 80,
-          codUsuario: "A123",
-          nombres: "Juan",
-          apellidos: "Perez",
-          celPersona: "123456789",
-          correoPersona: "juan@example.com"
-        },
-        {
-          idAsistente: 2,
-          asistencia: false,
-          acciones: 75,
-          codUsuario: "B456",
-          nombres: "María",
-          apellidos: "Gómez",
-          celPersona: "987654321",
-          correoPersona: "maria@example.com"
-        },
-        {
-          idAsistente: 3,
-          asistencia: false,
-          acciones: 85,
-          codUsuario: "C789",
-          nombres: "Pedro",
-          apellidos: "López",
-          celPersona: "654987321",
-          correoPersona: "pedro@example.com"
-        },
-        {
-          idAsistente: 4,
-          asistencia: 92,
-          acciones: 78,
-          codUsuario: "D101",
-          nombres: "Ana",
-          apellidos: "Martínez",
-          celPersona: "321456987",
-          correoPersona: "ana@example.com"
-        },
-        {
-          idAsistente: 5,
-          asistencia: 88,
-          acciones: 82,
-          codUsuario: "E202",
-          nombres: "Luis",
-          apellidos: "Rodríguez",
-          celPersona: "789123654",
-          correoPersona: "luis@example.com"
-        }
-      ];
 
 
-    displayedColumns: string[] = ['NUMERO','ASISTENCIA' ,'ACCIONES', 'IDENTIFICACION', 'NOMBRES', 'APELLIDOS', 'TELEFONO', 'CORREO'];
-    dataSource = new MatTableDataSource<any>(this.ejemplo)
+    cargarDatos() {
+        this._asambleaService.obtenerAsistentes().subscribe({
+            next: (data) => {
+                console.log(data)
+                this.dataSource = new MatTableDataSource<any>(data)
+                this.dataSource.paginator = this.paginator;
+            }
+        })
+    }
+
+    obtenerDatosAsamblea(){
+        this._asambleaService.obtenerDatosAsamblea().subscribe({
+            next:(data:any)=>{
+                console.log(data)
+                this.datosAsamblea.patchValue({
+                    numeroAccionistas: data.numeroAccionistas,
+                    numeroAcciones: data.numeroAcciones,
+                    qorum: data.quorum
+                  });
+            },
+            error:(data)=>{
+                console.log(data)
+            }
+        })
+    }
+
+    displayedColumns: string[] = ['NUMERO', 'ASISTENCIA', 'ACCIONES', 'IDENTIFICACION', 'NOMBRES', 'APELLIDOS', 'TELEFONO', 'CORREO'];
+
 
     obtenerPoderdante(valor: string) {
         this.poderdante = valor;
@@ -97,5 +110,5 @@ export class AsistenciaComponent {
         row.asistencia = !row.asistencia;
         console.log('Información de la fila:', row);
         // Aquí puedes hacer lo que quieras con la fila, como imprimir sus propiedades o enviarla a otro lugar
-      }
+    }
 }

@@ -129,4 +129,8 @@ export class InputAutocompleteComponent implements OnInit {
             this.errorFormulario.emit(validacion)
         });
     }
+
+    borrarFormulario(){
+        this.buscarAccionista.reset()
+    }
 }

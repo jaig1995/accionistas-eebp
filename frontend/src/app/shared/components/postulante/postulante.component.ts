@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 import { InputAutocompleteComponent } from '../inputAutocomplete/inputAutocomplete.component';
 import { SharedComponentsService } from '../sharedComponents.service';
@@ -26,6 +25,9 @@ export class PostulanteComponent implements OnInit {
     // Inyección de dependencias
     private sharedComponentsService = inject(SharedComponentsService)
     private fb = inject(FormBuilder)
+
+    @ViewChild(InputAutocompleteComponent) inputAutocompleteComponent: InputAutocompleteComponent;
+
 
     //variables para componentes padres
     @Output() datosDelPostulante = new EventEmitter<any>();
@@ -128,6 +130,15 @@ export class PostulanteComponent implements OnInit {
      */
     enviarPostulante() {
         this.datosDelPostulante.emit(this.datosPostulante)
+    }
+
+    /**
+     * Método utilizado para borrar los formularios.
+     * tanto el componente hijo como el formulario del padre.
+     */
+    borrarFormulario(){
+        this.datosPostulante.reset()
+        this.inputAutocompleteComponent.borrarFormulario()
     }
 
 }
