@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 
 @Component({
@@ -10,11 +10,30 @@ import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMater
         AngularMaterialModules
 
     ],
-    templateUrl:'planchaPostulante.component.html',
+    templateUrl: 'planchaPostulante.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlanchaPostulanteComponent {
+export class PlanchaPostulanteComponent implements OnInit {
 
-    @Input() modoPlanchaUnPostulante: boolean;
-    @Input() modoVotacion: boolean;
+    @Input() modoVotacion: any;
+    @Input() datos: any;
+
+    nombrePlancha:any;
+    nombresApellidos: any;
+
+    ngOnInit(): void {
+        this.recuperarPlanchaNombres()
+    }
+
+
+    recuperarPlanchaNombres() {
+        const primerElemento = this.datos[0];
+        this.nombrePlancha = Object.keys(primerElemento)[0];
+        const accionistas = primerElemento[this.nombrePlancha];
+        this.nombresApellidos = accionistas.map(accionista => accionista.nombresApellidos);
+    }
+
+
+
+
 }

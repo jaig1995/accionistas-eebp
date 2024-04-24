@@ -1,9 +1,8 @@
 
 
-import { AfterViewInit, Component, inject, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, inject, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { catchError, forkJoin, throwError } from 'rxjs';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -19,7 +18,10 @@ import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCar
 import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
+import { FuseLoadingService } from '@fuse/services/loading';
 
+import { read, utils, writeFile, writeFileXLSX } from 'xlsx';
 @Component({
     selector: 'app-registro-poderes',
     standalone: true,
@@ -30,6 +32,7 @@ import { fuseAnimations } from '@fuse/animations';
         FuseAlertComponent,
         InputAutocompleteComponent,
         ButtonCargarDocumentosComponent,
+        FuseLoadingBarComponent,
         AngularMaterialModules
     ],
     templateUrl: 'registroPoderes.component.html',
@@ -37,12 +40,18 @@ import { fuseAnimations } from '@fuse/animations';
     animations: fuseAnimations,
 })
 export class RegistroPoderesComponent implements AfterViewInit {
+
+    @ViewChildren(InputAutocompleteComponent) inputAutocompleteComponents: QueryList<InputAutocompleteComponent>;
+
     private asambleaService = inject(AsambleaService);
+    // private _fuseLoadingService = inject(FuseLoadingService);
 
     //alertas o validaciones
     loading: boolean;
     showSuccesAlert = false;
     showFailedAlert = false;
+    botonActivo = false
+
 
     //variables componentes
     poderdante: AccionistaInputAutoComplete
@@ -67,12 +76,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     displayedColumns: string[] = ['CONSECUTIVO', 'DOCUMENTO PODERDANTE', 'PODERDANTE', 'N.ACCIONES', 'APODERADO', 'DOCUMENTO APODERADO', 'ESTADO', 'ACCIONES'];
-    ejemplo = [
-        { consecutivo: 1, idPoderdante: '1144160583', nombrePoderdante: 'John Chicaiza', accionesPoderdante: 125, nombreApoderado: 'Mayerlin Yandar', idApoderado: '1085331567', estado: "Tramite" },
-        { consecutivo: 2, idPoderdante: '1133432341', nombrePoderdante: 'Alexander Gavilanes', accionesPoderdante: 777, nombreApoderado: 'Mireya Rosero', idApoderado: '1085234678', estado: "Aprobado" },
-        { consecutivo: 3, idPoderdante: '1084765234', nombrePoderdante: 'Alejandro Chicaiza', accionesPoderdante: 670, nombreApoderado: 'Aida Jimenez', idApoderado: '1133567234', estado: "Rechazado" }
-    ]
-    dataSource = new MatTableDataSource<any>(this.ejemplo)
+    dataSource: any = []
 
     //variables para formularios
     poderdanteExiste: boolean = false;
@@ -85,9 +89,19 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     // dialogo
     dialogRef: MatDialogRef<any>;
+    consecutivo: any = 25;
 
     constructor(public dialog: MatDialog) {
         DateTime.local().setLocale('es');
+        this.cargarDatos()
+    }
+
+    cargarDatos() {
+        this.asambleaService.obtenerRegistradosPoderes().subscribe(data => {
+            this.dataSource = new MatTableDataSource<any>(data)
+            this.dataSource.paginator = this.paginator;
+        }
+        )
     }
 
     ngAfterViewInit() {
@@ -132,6 +146,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     recibirArchivo(archivo) {
         this.archivoRegistroPoderantes = archivo
+        console.log(archivo)
     }
 
     contieneArchivo(valor: boolean) {
@@ -152,7 +167,8 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     // enviar el formulario de registro y el archivo
     enviarRegistroPoderes() {
-        this.mostrarAlertaExitosa()
+
+
         if (!this.poderdanteValor || !this.apoderadoValor) return
         let fecha = DateTime.now().toFormat('dd/MM/yy', { locale: "es" })
         let hora = DateTime.local().toFormat('hh:mm a');
@@ -169,24 +185,38 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     //peticiones http
     enviarPeticionRegistro(registroPoderes: any) {
-        forkJoin([
-            this.asambleaService.enviarArchivo(this.archivoRegistroPoderantes).pipe(
-                catchError(error => {
-                    console.error('Error en enviarArchivo:', error);
-                    return throwError(error);
-                })
-            ),
-            this.asambleaService.enviarRegistroPoderesregistro(registroPoderes).pipe(
-                catchError(error => {
-                    console.error('Error en enviarRegistroPoderesregistro:', error);
-                    return throwError(error);
-                })
-            )
-        ]).subscribe(([archivoRespuesta, registroRespuesta]) => {
-            // Maneja las respuestas aquí si es necesario
-            console.log('Respuesta de enviarArchivo:', archivoRespuesta);
-            console.log('Respuesta de enviarRegistroPoderesregistro:', registroRespuesta);
-        });
+        //TODO: borrar
+        this.botonActivo = true
+
+        this.asambleaService.registrarPoder(registroPoderes).subscribe(
+            {
+                next: (data) => {
+                    console.log("data")
+                    this.asambleaService.enviarArchivo(this.archivoRegistroPoderantes).subscribe(
+                        {
+                            next: (data) => {
+                                this.mostrarAlertaExitosa();
+                            },
+                            error: (data) => {
+                                this.mostrarAlertaFallida()
+                            },
+                            complete: () => {
+                                this.botonActivo = false
+                                this.inputAutocompleteComponents.forEach(c => {
+                                    c.borrarFormulario()
+                                })
+                            }
+                        }
+                    )
+                },
+                error: (data) => {
+                    this.mostrarAlertaFallida()
+                },
+                complete: () => {
+                    this.botonActivo = false
+                }
+            }
+        )
     }
 
     //alerta de dialogo
@@ -209,12 +239,12 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
 
     //Acciones solicitudes
-    aprobarSolicitud(solicitud){
+    aprobarSolicitud(solicitud) {
         solicitud.estado = 'Aprobado';
         console.log(solicitud);
     }
 
-    editarSolicitud(solicitud){
+    editarSolicitud(solicitud) {
         console.log(solicitud);
     }
 
@@ -248,5 +278,22 @@ export class RegistroPoderesComponent implements AfterViewInit {
         }, 3000);
     }
 
+
+    generarExcel() {
+
+        //datos para exportar a PDF
+        const datosRegistroPoderes = this.dataSource.data
+        //se renombra los datos del objeto para que sean cabeceras de excel
+        const ws_registro_poderes = datosRegistroPoderes.map(({ consecutivo: consecutivo, idPoderdante: documento_poderdante, nombrePoderdante: nombre_poderdante, accionesPoderdante: acciones_poderdante, idApoderado: documento_apoderado, nombreApoderado: nombre_apoderado, ...resto }) => ({ consecutivo, documento_poderdante, nombre_poderdante, acciones_poderdante, documento_apoderado, nombre_apoderado, ...resto }));
+        //se agrega una hoja excel
+        const ws = utils.json_to_sheet(ws_registro_poderes);
+        //se crea un libro de excel
+        const wb = utils.book_new();
+        //agregamos una hoja al libro (wb workBook) (ws workSheet)
+        utils.book_append_sheet(wb, ws, "Registro_poderes");
+        //exportamos el libro excel
+        writeFileXLSX(wb, `Registro_poderes_asamblea_${this.consecutivo}.xlsx`, { compression: true });
+
+    }
 
 }

@@ -1,20 +1,27 @@
 import { Directive, ElementRef, Input,} from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { FormControl, NgModel } from '@angular/forms';
 
 @Directive({
   selector: '[porcentaje]',
   standalone: true,
 })
 export class PorcentajeDirective {
-    @Input() porcentajes: string;
+    @Input() porcentaje: string;
+    control: FormControl;
 
-    constructor(private el: ElementRef, private ngModel: NgModel) { }
+    constructor(private el: ElementRef) { }
 
-    ngAfterViewInit() {
-        this.ngModel.valueChanges.subscribe((valorActual: any) => {
-          const esPorcentaje = typeof valorActual === 'string' && valorActual.includes('%');
-          let valorVisual = esPorcentaje ? valorActual : valorActual + '%';
-          this.el.nativeElement.value = valorVisual;
-        });
+    ngOnInit(): void {
+      this.control = this.el.nativeElement.control;
+      if (!this.control) {
+        console.error('El elemento no tiene un FormControl asociado.');
+        return;
       }
+
+      this.control.valueChanges.subscribe((valorActual: any) => {
+        const esPorcentaje = typeof valorActual === 'string' && valorActual.includes('%');
+        let valorVisual = esPorcentaje ? valorActual : valorActual + '%';
+        this.el.nativeElement.value = valorVisual;
+      });
+    }
 }
