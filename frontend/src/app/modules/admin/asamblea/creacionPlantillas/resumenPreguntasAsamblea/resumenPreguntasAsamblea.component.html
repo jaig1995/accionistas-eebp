@@ -5,65 +5,383 @@
             class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
             Resumen General de preguntas Asamblea No.023 </div>
 
-
-        <!-- alertas -->
-        <!-- <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
-            <span fuseAlertTitle>Aprobación exitosa</span>
-            ¡Solicitud aprobada!
-        </fuse-alert> -->
-        <!-- fin alertas -->
-
         <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
             <div class="p-10">
+                <form [formGroup]="preguntasGenerales" (ngSubmit)="enviarFormulario()">
 
-                <div class="flex flex-col">
-                    <p class="font-bold text-lg my-4"> Estados financieros</p>
-                    <div class="w-full flex flex-row justify-center items-center px-5">
-                        <mat-form-field class="w-full">
-                            <input matInput placeholder="Escribe aqui la pregunta" />
-                        </mat-form-field>
+                    <mat-accordion>
 
-                        <div class="ml-4">
-                            <button mat-mini-fab color="warn" class="mb-5"
-                                aria-label="Example icon button with a bookmark icon">
-                                <mat-icon svgIcon="heroicons_solid:minus"></mat-icon>
-                            </button>
-                        </div>
-                    </div>
+                        <!-- junta directiva -->
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="juntaDirectivaPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white"
+                                [class.bg-gray-300]="juntaDirectivaPreguntas.length === 0">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'junta directiva' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="juntaDirectiva">
 
-                </div>
+                                <div *ngFor="let pregunta of juntaDirectivaPreguntas.controls" class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta" class="w-full  mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'juntaDirectiva')">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        <p class="w-full font-semibold text-xl text-end p-3 text-primary">Tipo de
+                                            Respuesta: {{ pregunta.value.tipoRespuesta }}</p>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                            </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
 
 
-                <div class="flex flex-col">
-                    <p class="font-bold text-lg my-4"> Distribución Utilidades</p>
-                    <div class="w-full flex flex-row justify-center items-center px-5">
-                        <mat-form-field class="w-full">
-                            <input matInput placeholder="Escribe aqui la pregunta" />
-                        </mat-form-field>
+                        <!-- reformaEstatutos  -->
 
-                        <div class="ml-4">
-                            <button mat-mini-fab color="warn" class="mb-5"
-                                aria-label="Example icon button with a bookmark icon">
-                                <mat-icon svgIcon="heroicons_solid:minus"></mat-icon>
-                            </button>
-                        </div>
-                    </div>
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="reformaEstatutosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'reforma estatutos' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
 
-                </div>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="reformaEstatutos">
+
+                                <div *ngFor="let pregunta of reformaEstatutosPreguntas.controls"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'reformaEstatutos')">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+
+                        </mat-expansion-panel>
+
+                        <!-- distribucionUtilidades  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="distribucionUtilidadesPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'distribución de utilidades' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="distribucionUtilidades">
+
+                                <div *ngFor="let pregunta of distribucionUtilidadesPreguntas.controls"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'distribucionUtilidades')">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- revisoriaFiscal  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="revisoriaFiscalPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'revisoria Fiscal' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="revisoriaFiscal">
+
+                                <div *ngFor="let pregunta of revisoriaFiscalPreguntas.controls" class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'revisoriaFiscal')">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                                                    </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- estadosFinancieros  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="estadosFinancierosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'estados financieros' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="estadosFinancieros">
+
+                                <div *ngFor="let pregunta of estadosFinancierosPreguntas.controls"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'estadosFinancieros')">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                        </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
+
+                        <!-- proposicionesVarios  -->
+
+                        <mat-expansion-panel class="bg-white hover:bg-gray-200"
+                            *ngIf="proposicionesVariosPreguntas.length != 0">
+                            <mat-expansion-panel-header class="bg-primary hover:bg-primary hover:text-white">
+                                <mat-panel-title class="text-white hover:text-white">
+                                    {{'proposiciones y varios' | titlecase}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <!-- formulario dinamico  -->
+                            <div formArrayName="proposicionesVarios">
+
+                                <div *ngFor="let pregunta of proposicionesVariosPreguntas.controls"
+                                    class="mt-5 rounded-lg">
+
+                                    <div [formGroup]="pregunta"
+                                        class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
+                                        <div class="flex flex-row ">
+                                            <p
+                                                class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
+                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                            <div
+                                                class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
+                                                <button class="bg-accent-100"
+                                                    matTooltip="Esta acción eliminará la pregunta."
+                                                    (click)="eliminarPregunta(pregunta.value.id,'proposicionesVarios')" *ngIf="!botonActivo">
+                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
+                                                        color="text-warn"></mat-icon>
+                                                </button>
+                                                <mat-progress-spinner *ngIf="botonActivo" [diameter]="24"
+                                                    [mode]="'indeterminate'" class="mb-3"></mat-progress-spinner>
+
+                                            </div>
+                                        </div>
+                                        <mat-form-field class="w-full p-3">
+                                            <mat-label class=" ">Pregunta</mat-label>
+                                            <textarea formControlName="pregunta" matInput>
+
+                                        </textarea>
+
+                                        </mat-form-field>
+                                        <p class="p-3 text-lg text-primary font-semibold"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
+                                            multiple</p>
+                                        <div formArrayName="respuestas" class="w-full p-3"
+                                            *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
+                                            <div
+                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                <mat-form-field class="w-full">
+                                                    <mat-label>Respuesta {{i + 1}}: </mat-label>
+                                                    <input matInput [formControlName]="i">
+
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN formulario dinamico  -->
+                        </mat-expansion-panel>
 
 
+                    </mat-accordion>
 
+
+                        <button mat-flat-button  color="accent" class="flex items-center gap-2  color-accent w-full mt-4">
+                            <mat-icon svgIcon="feather:save"></mat-icon>
+                            <span>Guardar</span>
+                        </button>
+
+                </form>
 
             </div>
 
         </div>
-
-
-        <!-- Spinner carga -->
-        <!-- <div class="flex justify-center items-center h-100 bg-card " >
-            <mat-spinner diameter="50" color="accent"></mat-spinner>
-        </div> -->
-
-
     </div>
 </div>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ServicesConfig } from 'app/services.config';
 import { Observable, tap } from 'rxjs';
+import { PlantillaPreguntas } from './creacionPlantillas/interfaces/asamblea.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -48,11 +49,11 @@ export class AsambleaService {
 
     //Pantalla crear Asamblea
     crearAsamblea(data) {
-        return this.http.post<any[]>('api/asamblea/crear-asamblea', data)
+        return this.http.post<any[]>(`${this._baseUrl}/api/asamblea/crear-asamblea`, data)
     }
 
     obtenerAsambleas() {
-        return this.http.get<any[]>('api/asamblea/obtener-asambleas')
+        return this.http.get<any[]>(`${this._baseUrl}/api/asamblea/obtener-asambleas`)
     }
 
     enviarInvitacionAsamblea() {
@@ -73,6 +74,24 @@ export class AsambleaService {
 
     obtenerDatosAsamblea(){
         return this.http.get<any[]>('api/asamblea/obtener-datos-asamblea')
+    }
+
+
+    //creacion de plantillas preguntas asamblea y init de votaciones
+
+
+    obtenerPreguntasAsamblea(){
+        return this.http.get<PlantillaPreguntas>('api/creacion-plantillas-preguntas')
+    }
+
+    //Seccion votaciones
+
+    obtenerFormularioAccionista(datosVotante){
+        return this.http.get<PlantillaPreguntas>('api/obtener-formulario-accionista', datosVotante)
+    }
+
+    inicializarFormularioAccionista(formulario){
+        return this.http.post<PlantillaPreguntas>('api/inicializar-formulario-asamblea',formulario)
     }
 
 

@@ -14,6 +14,8 @@ import { AsambleaService } from '../asamblea.service';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent } from '@fuse/components/alert';
+import { MatDialog } from '@angular/material/dialog';
+import { VerMasModalComponent } from './verMasModal/verMasModal.component';
 
 @Component({
     selector: 'app-crear-asamblea',
@@ -31,7 +33,7 @@ import { FuseAlertComponent } from '@fuse/components/alert';
 
     ],
     templateUrl: 'crearAsamblea.component.html',
-    encapsulation: ViewEncapsulation.Emulated,
+    encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
 })
 export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
@@ -39,6 +41,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     //inyeccion de dependencias
     private formBuilder = inject(FormBuilder);
     private asambleaService = inject(AsambleaService);
+    private dialog = inject(MatDialog)
 
 
     //validaciones
@@ -56,11 +59,11 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
 
     //formulario
     crearAsamblea = this.formBuilder.group({
-        consecutivoAsamblea: ['', [Validators.required,]],
+
         fechaAsamblea: ['', [Validators.required,]],
         horaAsamblea: ['', Validators.required],
         tipoAsamblea: ['', Validators.required],
-        estado: ['Activa']
+
     });
 
     //nombre y validacion archivo
@@ -75,6 +78,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['CONSECUTIVO', 'FECHA_ASAMBLEA', 'HORA_ASAMBLEA', 'TIPO', 'ESTADO', 'VER_MAS', 'ACCIONES'];
     dataSource: any = []
     consecutivoAsamblea: any;
+    datosTabla: any[];
 
 
 
@@ -83,21 +87,23 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.CargarDatos()
-        this.obtenerConsecutivo()
+        // this.obtenerConsecutivo()
     }
 
 
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        // this.obtenerConsecutivo()
+        this.CargarDatos()
     }
 
     CargarDatos() {
         this.asambleaService.obtenerAsambleas().subscribe(
             {
                 next: (data) => {
-                    this.dataSource = new MatTableDataSource<any>(data)
+                    this.datosTabla = data
+                    this.dataSource = new MatTableDataSource<any>(this.datosTabla)
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
                 },
                 error: (data) => {
                     this.dataSource = []
@@ -111,7 +117,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
         this.asambleaService.obtenerConsecutivosAsamblea().subscribe({
             next: (data: any) => {
                 this.consecutivoAsamblea = data.consecutivoAsamblea;
-                this.crearAsamblea.get('consecutivoAsamblea').setValue(this.consecutivoAsamblea);
+                // this.crearAsamblea.get('consecutivoAsamblea').setValue(this.consecutivoAsamblea);
             },
             error: (data) => {
                 this.dataSource = []
@@ -123,7 +129,8 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
         this.botonActivo = true
         const formValue = this.crearAsamblea.value;
         const fechaAsamblea = new Date(formValue.fechaAsamblea);
-        const fechaFormateada = DateTime.fromJSDate(fechaAsamblea).toFormat('dd/MM/yyyy');
+        console.log(fechaAsamblea)
+        const fechaFormateada = DateTime.fromJSDate(fechaAsamblea).toFormat('yyyy-MM-dd');
         const valoresActualizados = { ...formValue, fechaAsamblea: fechaFormateada };
         this.nombreArchivo = `imagen_asamblea_numero_${this.consecutivoAsamblea}`
         this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivo)
@@ -138,6 +145,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
                         next: (data) => {
                             this.botonActivo = false
                             this.mostrarAlertaExitosa();
+                            this.CargarDatos();
                         },
                         error: (data) => {
                             this.botonActivo = false
@@ -203,4 +211,30 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
                 return 'black';
         }
     }
+
+
+
+
+    /**
+    * Método para rechazar una transacción.
+    * @param {any} element - Elemento que se va a rechazar.
+    */
+    abirModalVerMas(asamblea) {
+        const dialogRef = this.dialog.open(VerMasModalComponent, {
+            width: '550px',
+            height: '400px',
+            data: {
+                asamblea
+            },
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result.success) {
+                // this.mostrarAlertaExitosa()
+            } else {
+                // this.mostrarAlertaFallida()
+            }
+        });
+    }
+
+
 }

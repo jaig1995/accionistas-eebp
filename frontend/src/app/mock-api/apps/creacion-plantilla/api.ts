@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
-import { FuseMockApiService, FuseMockApiUtils } from '@fuse/lib/mock-api';
-import { contacts as contactsData, countries as countriesData, tags as tagsData } from 'app/mock-api/apps/contacts/data';
-import { assign, cloneDeep } from 'lodash-es';
-import { from, map } from 'rxjs';
-import { DataPrueba } from './data';
+import { FuseMockApiService } from '@fuse/lib/mock-api';
+import { cloneDeep } from 'lodash-es';
+import { DataPrueba, DataPruebaSegundaCarga } from './data';
 
-@Injectable({providedIn: 'root'})
-export class CreateTemplateMockApi
-{
-    private _data: any[] = DataPrueba;
+@Injectable({ providedIn: 'root' })
+export class CreateTemplateMockApi {
+    private _data: any = DataPrueba;
+    private _data2: any = DataPruebaSegundaCarga;
 
 
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
-    {
+    constructor(private _fuseMockApiService: FuseMockApiService) {
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -27,13 +24,32 @@ export class CreateTemplateMockApi
     /**
      * Register Mock API handlers
      */
-    registerHandlers(): void{
+    registerHandlers(): void {
 
         this._fuseMockApiService
-            .onGet('api/pruebas',250)
+            .onGet('api/creacion-plantillas-preguntas', 250)
             .reply(() => {
                 const contacts = cloneDeep(this._data);
                 return [200, contacts];
             })
+
+        this._fuseMockApiService
+            .onGet('api/obtener-formulario-accionista', 250)
+            .reply(() => {
+                const res = cloneDeep(this._data2);
+                return [500, res];
+            })
+
+        this._fuseMockApiService
+            .onPost('api/inicializar-formulario-asamblea', 250)
+            .reply(() => {
+                const res = {
+                    status: 'ok'
+                }
+                return [200, res];
+            })
     }
+
+
+
 }

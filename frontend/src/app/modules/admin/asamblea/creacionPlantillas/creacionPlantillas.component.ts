@@ -9,6 +9,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { FuseLoadingService } from '@fuse/services/loading';
 import { AsambleaService } from '../asamblea.service';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
+import { PlantillaPreguntas } from './interfaces/asamblea.interface';
 
 @Component({
     selector: 'app-creacion-plantillas',
@@ -94,8 +95,9 @@ export class CreacionPlantillasComponent implements OnInit {
         this.consecutivoAsamblea = 25;
 
 
+
         //TODO:si ya esxiste entonces no crear
-        if (true) {
+        if (false) {
             this.esEditableTemasAsamblea = true;
 
             this.pasoActual = 1;
@@ -113,11 +115,12 @@ export class CreacionPlantillasComponent implements OnInit {
         }
     }
 
-maricada
+
+
 
     /**
- * Show the loading bar
- */
+     * Show the loading bar
+     */
     showLoadingBar(): void {
         this._fuseLoadingService.show();
     }

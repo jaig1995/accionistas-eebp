@@ -39,7 +39,7 @@
                         <mat-form-field>
                             <mat-label>Consecutivo</mat-label>
                             <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
-                            <input formControlName="consecutivoAsamblea" matInput readonly>
+                            <input  matInput readonly>
                         </mat-form-field>
                     </div>
 
@@ -58,10 +58,10 @@
                     <div class="mr-5">
                         <mat-form-field class="w-40">
                             <mat-label>Hora Asamblea</mat-label>
-                            <input matInput formControlName="horaAsamblea" [ngxTimepicker]="Timer" readonly>
+                            <input matInput formControlName="horaAsamblea" [ngxTimepicker]="Timer" readonly [format]="12">
                             <mat-icon matSuffix svgIcon="heroicons_solid:clock"></mat-icon>
                         </mat-form-field>
-                        <ngx-material-timepicker #Timer [theme]="eebpTheme"></ngx-material-timepicker>
+                        <ngx-material-timepicker #Timer  [theme]="eebpTheme" ></ngx-material-timepicker>
                     </div>
 
                     <!-- cargar archivos -->
@@ -75,8 +75,8 @@
                 <!-- checkbox -->
                 <div>
                     <mat-radio-group aria-label="Select an option" formControlName="tipoAsamblea">
-                        <mat-radio-button value="Ordinaria">Ordinaria</mat-radio-button>
-                        <mat-radio-button value="Extraordinaria">Extraordinaria</mat-radio-button>
+                        <mat-radio-button value="ORDINARIA">Ordinaria</mat-radio-button>
+                        <mat-radio-button value="EXTRAORDINARIA">Extraordinaria</mat-radio-button>
                     </mat-radio-group>
                 </div>
 
@@ -87,7 +87,7 @@
                             [disabled]="crearAsamblea.invalid || !existeDocumento || botonActivo" (click)="enviarFormularioAsamblea()"><mat-icon
                                 svgIcon="heroicons_solid:plus-small" *ngIf="!botonActivo" ></mat-icon>
                             <span *ngIf="!botonActivo">
-                                Agregarr
+                                Agregar
                             </span>
                             <mat-progress-spinner *ngIf="botonActivo" [diameter]="24"
                                 [mode]="'indeterminate'"></mat-progress-spinner>
@@ -128,7 +128,7 @@
                 <!-- Progress Column -->
                 <ng-container matColumnDef="FECHA_ASAMBLEA">
                     <th mat-header-cell *matHeaderCellDef class="text-center">FECHA ASAMBLEA </th>
-                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.fechaAsamble}} </td>
+                    <td mat-cell *matCellDef="let row" class="text-center"> {{row.fechaAsamblea}} </td>
                 </ng-container>
 
                 <!-- Name Column -->
@@ -152,7 +152,7 @@
                 <ng-container matColumnDef="VER_MAS">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> VER MÁS </th>
                     <td mat-cell *matCellDef="let row" class="text-center">
-                        <button mat-stroked-button color="primary" [disabled]="row.estado === 'Inactiva'">
+                        <button mat-stroked-button color="primary" [disabled]="row.estado === 'Inactiva'" (click)="abirModalVerMas(row)">
                             <mat-icon svgIcon="heroicons_solid:eye"></mat-icon>
                             &nbsp;Ver más</button>
                     </td>
@@ -162,7 +162,7 @@
                     <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
                     <td mat-cell *matCellDef="let row" class="text-center">
 
-                        <button mat-stroked-button color="accent" [disabled]="row.estado === 'Inactiva'">
+                        <button mat-stroked-button color="accent" [disabled]="row.estado === 'Inactiva'" >
                             <mat-icon svgIcon="heroicons_solid:envelope"></mat-icon>
                             &nbsp;Enviar Invitación</button>
                     </td>

@@ -1,0 +1,230 @@
+<form [formGroup]="respuestasAsamblea" class="w-full card-header  grid gap-8 bg-gradient-to-br  ">
+
+
+    <!-- SECCIÓN PREGUNTAS JUNTA DIRECTIVA -->
+    <section formArrayName="juntaDirectiva" class="rounded-lg text-black shadow-2xl"
+        *ngIf="mostrarSeccionJuntaDirectiva">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Sección Junta Directiva <span> <mat-icon *ngIf="validacionCheckJuntaDirectivas.valid"
+                                    svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1" #tooltip="matTooltip"  matTooltip="Esta sección ya fue finalizada"  matTooltipPosition="above" ></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <div *ngFor="let pregunta of obtenerJuntaDirectiva.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+    <!-- SECCIÓN PREGUNTAS REFORMA ESTATUTOS -->
+
+    <section formArrayName="reformaEstatutos" class="bg-gray-300 rounded-md text-black"
+        *ngIf="mostrarSeccionReformaEstatutos">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Reforma Estatutos <span> <mat-icon *ngIf="validacionCheckReformaEstatutos.valid"
+                                    svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1" #tooltip="matTooltip"  matTooltip="Esta sección ya fue finalizada"  matTooltipPosition="above"></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <!-- contenido -->
+                    <div *ngFor="let pregunta of obtenerReformaEstatutos.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+
+
+    <!-- SECCION PREGUNTAS REFORMA ESTATUTOS -->
+    <section formArrayName="distribucionUtilidades" *ngIf="mostrarSeccionDistribucionUtilidades">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Distribución y Utilidades <span> <mat-icon
+                                    *ngIf="validacionCheckDistribucionUtilidades.valid" svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <!-- contenido -->
+                    <div *ngFor="let pregunta of obtenerDistribucionUtilidades.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+
+
+    <!-- SECCION PREGUNTAS REVISORIA FISCAL -->
+    <section formArrayName="revisoriaFiscal" *ngIf="mostrarSeccionrevisoriaFiscal">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Revisoria Fiscal <span> <mat-icon *ngIf="validacionCheckRevisoriaFiscal.valid"
+                                    svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <!-- contenido -->
+                    <div *ngFor="let pregunta of obtenerRevisoriaFiscal.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+
+
+     <!-- SECCION PREGUNTAS ESTADOS FINANCIEROS -->
+    <section formArrayName="estadosFinancieros" *ngIf="mostrarSeccionEstadosFinancieros">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Estados Financieros <span> <mat-icon *ngIf="validacionCheckEstadosFinanciero.valid"
+                                    svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <!-- contenido -->
+                    <div *ngFor="let pregunta of obtenerEstadosFinancieros.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+
+
+     <!-- SECCION PREGUNTAS PROPOSICIONES Y VARIOS -->
+    <section formArrayName="proposicionesVarios"  *ngIf="mostrarSeccionProposicionesVarios">
+        <mat-accordion>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+                    <mat-panel-title
+                        class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
+                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                            Proposiciones y Varios <span> <mat-icon *ngIf="validacionCheckProposicionesVarios.valid"
+                                    svgIcon="mat_solid:check_circle"
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
+                            </span>
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="h-160">
+                    <!-- contenido -->
+                    <div *ngFor="let pregunta of obtenerProposicionesVarios.controls; let i = index"
+                        class=" bg-gradient-to-r from-slate-200 mt-5">
+                        <div [formGroupName]="i">
+                            <h2
+                                class="w-full bg-primary text-white  flex justify-start  px-5 items-center h-10 rounded-t-lg mb-5">
+                                Pregunta {{ i + 1 }}</h2>
+                            <p class="px-5">{{ pregunta.value.pregunta | insertarSignos }}</p>
+                            <!-- Mostrar respuestas -->
+                            <mat-radio-group formControlName="respuestaAccionista" class="flex flex-col px-5 ">
+                                <mat-radio-button *ngFor="let respuesta of pregunta.value.respuestas"
+                                    [value]="respuesta">{{
+                                    respuesta }}</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </cdk-virtual-scroll-viewport>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
+</form>
