@@ -1,0 +1,54 @@
+<div class="w-full">
+
+    <div class="w-full flex justify-center bg-primary h-10 items-center mb-6 rounded-lg">
+        <h2 class="font-semibold text-white">Asamblea No.{{asambleaForm.value?.consecutivo}}</h2>
+    </div>
+
+    <div class="w-full">
+
+        <form [formGroup]="asambleaForm" class="w-full flex  justify-center items-center flex-col gap-2">
+            <div class="w-full flex  flex-row gap-2 justify-center">
+                <mat-form-field class="w-72">
+                    <mat-label>&nbsp;Fecha Asamblea</mat-label>
+                    <input formControlName="fechaAsamblea" matInput #input [matDatepicker]="Date" readonly>
+                    <mat-datepicker-toggle matIconSuffix [for]="Date"></mat-datepicker-toggle>
+                    <mat-datepicker #Date></mat-datepicker>
+                </mat-form-field>
+
+                <div class="w-72 h-13 ">
+                    <mat-label>&nbsp;Fecha Asamblea</mat-label>
+                    <ngx-timepicker-field formControlName="horaAsamblea" [controlOnly]="true"
+                        [defaultTime]="horaAsamblea"></ngx-timepicker-field>
+                </div>
+            </div>
+
+            <div class="w-full flex flex-row gap-2 justify-center">
+                <mat-form-field class="w-72"  >
+                    <mat-label> &nbsp;Tipo Asamblea</mat-label>
+                    <mat-select type="text" id="tipoRepresentante"  formControlName="tipoAsamblea" class="mt-1" value="">
+                        <mat-option value="ORDINARIA">
+                            ORDINARIA</mat-option>
+                        <mat-option value="EXTRAORDINARIA">
+                            EXTRAORDINARIA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-72"  >
+                    <mat-label> &nbsp;Estado</mat-label>
+                    <mat-select formControlName="estado" class="mt-1" >
+                        <mat-option value="ACTIVA">
+                            ACTIVA</mat-option>
+                        <mat-option value="INACTIVA">
+                            INACTIVA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </form>
+
+        <div class="w-full mt-6">
+            <button mat-stroked-button color="primary" class="w-full" (click)="modificarAsamblea()">Modificar</button>
+        </div>
+    </div>
+
+</div>

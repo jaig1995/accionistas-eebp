@@ -2,14 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { ServicesConfig } from 'app/services.config';
+import CryptoJS from 'crypto-js';
 
 @Injectable({providedIn: 'root'})
 export class AuthService
 {
     private _authenticated: boolean = false;
     private _baseUrl: string = ServicesConfig.apiUrl;
+    private _userInfo: any;
+
+    private _userInfoSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    userInfo$: Observable<any> = this._userInfoSubject.asObservable();
+
+
+
+    get userInfo(): any {
+        return this._userInfo;
+      }
 
     /**
      * Constructor
@@ -80,6 +91,7 @@ export class AuthService
         return this._httpClient.post(this._baseUrl + '/api/auth/sign-in', credentials).pipe(
             switchMap((response: any) =>
             {
+                console.log(response)
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
 
@@ -89,11 +101,21 @@ export class AuthService
                 // Store the user on the user service
                 this._userService.user = response.user;
 
+                this._userInfo = response.user;
+                this._userInfoSubject.next(response.user);
+                this.encryptUser(JSON.stringify(response.user))
                 // Return a new observable with the response
                 return of(response);
             }),
         );
     }
+
+
+    encryptUser(user: string): void {
+        const encryptedToken = CryptoJS.AES.encrypt(user, 'secret-key').toString();
+        localStorage.setItem('encryptedToken', encryptedToken);
+      }
+
 
     /**
      * Sign in using the access token

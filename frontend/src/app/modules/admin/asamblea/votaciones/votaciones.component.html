@@ -4,39 +4,54 @@
     <div class="flex-auto">
 
     </div>
-    <mat-tab-group [selectedIndex]="0">
-        <mat-tab label="Individual">
+    <mat-tab-group [selectedIndex]="1">
+        <mat-tab label="Individual" [disabled]="false">
             <div class="w-full h-auto">
+                <!-- ALERTA FUSE EXPLICACIÓN -->
+                <div class="animated-box my-4">
+                    <fuse-alert [appearance]="'soft'" [dismissible]="true" [dismissed]="false" [name]="''"
+                        [type]="'success'">
+                        "La función de <b>votación individual </b> te permite visualizar a cada uno de tus
+                        representantes y responder de manera individual a los respectivos formularios de cada
+                        asociado."
 
-                  <mat-accordion class="flex flex-col justify-between" multi>
+                    </fuse-alert>
+                </div>
 
-                    <mat-expansion-panel *ngFor="let item of poderDantes">
-                      <mat-expansion-panel-header class="flex flex-row justify-between w-full">
-                        <mat-panel-title class="w-full">
-                          Poderdante
-                        </mat-panel-title>
-                        <mat-panel-description class="flex flex-row justify-between w-full">
-                          {{item}}
-                          <mat-icon>account_circle</mat-icon>
-                        </mat-panel-description>
-                      </mat-expansion-panel-header>
+                <mat-accordion class="flex flex-col justify-between" multi>
 
-                      <h2>Aqui El componente Hijo(Logica votaciones en el componente hijo)</h2>
+                    <mat-expansion-panel *ngFor="let item of pruebas.poderDantes"  class="">
+                        <mat-expansion-panel-header class="flex flex-row justify-between w-full">
+                            <mat-panel-title class="w-full ">
+                                Poderdante
+                            </mat-panel-title>
+                            <mat-panel-description class="flex flex-row justify-between w-full">
+                                {{item.Nombres}}
 
+                                <mat-icon>account_circle</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="w-full mb-4">
+
+                            <app-formulario-votaciones  [datosVotante]="item"/>
+                        </div>
                     </mat-expansion-panel>
-
-                  </mat-accordion>
-
+                </mat-accordion>
             </div>
         </mat-tab>
 
 
-
-
         <!-- seccion dos -->
         <mat-tab label="Bloque">
-
+            <div class="animated-box my-4">
+                <fuse-alert [appearance]="'soft'" [dismissible]="true" [dismissed]="false" [name]="'alertBox4'"
+                    [type]="'success'">
+                    "La <b>votación en bloque </b>te permite responder con un único formulario, el cual será la
+                    respuesta para todos tus representados."
+                </fuse-alert>
+            </div>
             <div class="w-full h-auto">
+                <app-formulario-votaciones />
             </div>
         </mat-tab>
 
