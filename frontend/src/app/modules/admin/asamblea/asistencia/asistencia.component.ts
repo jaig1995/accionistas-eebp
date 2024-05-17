@@ -10,7 +10,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PorcentajeDirective } from 'app/shared/directives/porcentaje.directive';
-
+import { utils, writeFileXLSX } from 'xlsx';
+import { PorcentajesPipe } from 'app/shared/pipes/procentajes.pipe';
+import { Invitado } from '../creacionPlantillas/interfaces/asamblea.interface';
+import { FuseAlertComponent } from '@fuse/components/alert';
+import { AccionistasService } from '../../control-accionistas/addaccionista/accionistas.service';
 @Component({
     selector: 'app-asistencia',
     standalone: true,
@@ -21,94 +25,180 @@ import { PorcentajeDirective } from 'app/shared/directives/porcentaje.directive'
         ReactiveFormsModule,
         PorcentajeDirective,
         FormsModule,
+        PorcentajesPipe,
+        FuseAlertComponent,
         AngularMaterialModules
     ],
     templateUrl: 'asistencia.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     animations: fuseAnimations,
 })
 export class AsistenciaComponent implements OnInit {
 
     //inyeccion de Dependencias
     private _asambleaService = inject(AsambleaService)
+    private _accionistasService = inject(AccionistasService)
     private _fb = inject(FormBuilder)
 
     //Tabla
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    displayedColumns: string[] = ['NUMERO', 'ASISTENCIA', 'ACCIONES', 'IDENTIFICACION', 'NOMBRES', 'APELLIDOS', 'TELEFONO', 'CORREO'];
     dataSource: any = []
 
+    //validacione
+    showSuccesAlert = false;
+    showFailedAlert = false;s
+    loading: boolean;
+    showAlert: any;
+    asistente: Invitado;
+    valorInput: string
+
+    //validaciones por medio de huella Digital
+    message: any;
+    base64: any;
     //formulario
+    formBuilder: any;
     datosAsamblea = this._fb.group({
         numeroAccionistas: [''],
         numeroAcciones: [''],
         qorum: ['']
-      });
-    formBuilder: any;
+    });
+    consecutivoAsamblea: any;
 
     ngOnInit(): void {
+        this.obtenerConsecutivoAsamblea()
         this.cargarDatos();
         this.obtenerDatosAsamblea()
     }
 
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    // ngAfterViewInit() {
+    //     this.dataSource.paginator = this.paginator;
+    //     this.dataSource.sort = this.sort;
+    // }
+
+    obtenerConsecutivoAsamblea(){
+        this._asambleaService.obtenerConsecutivosAsamblea().subscribe({
+            next:(data)=>{
+                this.consecutivoAsamblea = data.consecutivo
+            },
+            error:(error)=>{
+
+            }
+        })
     }
-
-    loading: boolean;
-    showAlert: any;
-    poderdante: string;
-    valorInput: string
-
 
     cargarDatos() {
         this._asambleaService.obtenerAsistentes().subscribe({
             next: (data) => {
-                console.log(data)
                 this.dataSource = new MatTableDataSource<any>(data)
                 this.dataSource.paginator = this.paginator;
-            }
-        })
-    }
-
-    obtenerDatosAsamblea(){
-        this._asambleaService.obtenerDatosAsamblea().subscribe({
-            next:(data:any)=>{
-                console.log(data)
-                this.datosAsamblea.patchValue({
-                    numeroAccionistas: data.numeroAccionistas,
-                    numeroAcciones: data.numeroAcciones,
-                    qorum: data.quorum
-                  });
             },
-            error:(data)=>{
+            error: (error) => {
+                console.log(error)
+            }
+        })
+    }
+
+    obtenerDatosAsamblea() {
+        this._asambleaService.obtenerDatosAsamblea().subscribe({
+            next: (data: any) => {
+                this.datosAsamblea.patchValue({
+                    numeroAccionistas: data.totalRegistros,
+                    numeroAcciones: data.totalAcciones,
+                    qorum: data.quorum
+                });
+            },
+            error: (data) => {
                 console.log(data)
             }
         })
     }
 
-    displayedColumns: string[] = ['NUMERO', 'ASISTENCIA', 'ACCIONES', 'IDENTIFICACION', 'NOMBRES', 'APELLIDOS', 'TELEFONO', 'CORREO'];
 
 
-    obtenerPoderdante(valor: string) {
-        this.poderdante = valor;
-        console.log("desde obtenerPoderdante", valor)
+
+    obtenerPoderdante(valor: Invitado) {
+        this.asistente = valor;
     }
     obtenerValorInput(valor: string) {
         this.valorInput = valor
-        console.log("desde obtenerValorInput", valor)
     }
 
     buscarAccionista() {
+        // if(!this.asistente || this.valorInput) return;
 
+        if(!this.asistente){
+            const valor = this.valorInput
+            this.enviarPeticion(valor)
+        }else{
+            const { idPer } = this.asistente
+            this.enviarPeticion(idPer)
+        }
+    }
 
+    enviarPeticion(data){
+        this._asambleaService.registrarAsistente({idePer : data, huella:null}).subscribe({
+            next:(data)=>{
+                this.mostrarAlertaExitosa()
+                this.obtenerConsecutivoAsamblea()
+                this.cargarDatos();
+                this.obtenerDatosAsamblea()
+            },
+            error(){
+                this.mostrarAlertafallida()
+            }
+        })
     }
 
 
     imprimirFila(row: any): void {
         row.asistencia = !row.asistencia;
-        console.log('Información de la fila:', row);
-        // Aquí puedes hacer lo que quieras con la fila, como imprimir sus propiedades o enviarla a otro lugar
+    }
+
+    mostrarAlertaExitosa(): void {
+        this.showSuccesAlert = true;
+        setTimeout(() => {
+            this.showSuccesAlert = false;
+        }, 3000);
+    }
+
+    mostrarAlertaFallida(): void {
+        this.showFailedAlert = true;
+        setTimeout(() => {
+            this.showFailedAlert = false;
+        }, 3000);
+    }
+
+
+    obtenerHuella() {
+        this._accionistasService.peticionGetHuella().subscribe(
+          (response) => {
+            const base64Data = response.fingerprint.message;
+            this.message = base64Data;
+            this.base64 = base64Data;
+            // this.accionistasForm.get('huella').setValue(this.base64);
+          },
+          (error) => {
+            console.error('Error en la petición:', error);
+          }
+        );
+      }
+
+
+    generarExcel() {
+        //datos para exportar a PDF
+        const datosRegistroPoderes = this.dataSource.data
+        //se renombra los datos del objeto para que sean cabeceras de excel
+        const ws_registro_poderes = this.dataSource.data
+        //se agrega una hoja excel
+        const ws = utils.json_to_sheet(ws_registro_poderes);
+        //se crea un libro de excel
+        const wb = utils.book_new();
+        //agregamos una hoja al libro (wb workBook) (ws workSheet)
+        utils.book_append_sheet(wb, ws, "Registro_poderes");
+        //exportamos el libro excel
+        writeFileXLSX(wb, `Asistencia_listado_${this.consecutivoAsamblea}.xlsx`, { compression: true });
+
     }
 }

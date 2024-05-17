@@ -26,8 +26,10 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
 
     //validaciones y alertas
     botonActivo = true
+    consecutivoAsamblea: any;
 
     ngOnInit(): void {
+        this.obtenerConsecutivoAsamblea()
         this.cargarDatosFormulario()
         this.inicializarFormulario()
     }
@@ -102,51 +104,75 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     }
 
     cargarDatosFormulario() {
-
-        this.asambleaService.obtenerPreguntasAsamblea().subscribe({
-            next:(data:PlantillaPreguntas) => {
-                this.cargarDatosCategoria(data.juntaDirectiva, 'juntaDirectiva');
-                this.cargarDatosCategoria(data.reformaEstatutos, 'reformaEstatutos');
-                this.cargarDatosCategoria(data.distribucionUtilidades, 'distribucionUtilidades');
-                this.cargarDatosCategoria(data.revisoriaFiscal, 'revisoriaFiscal');
-                this.cargarDatosCategoria(data.estadosFinancieros, 'estadosFinancieros');
-                this.cargarDatosCategoria(data.proposicionesVarios, 'proposicionesVarios');
-                this.botonActivo= false
+        this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
+            next:(data)=>{
+                this.consecutivoAsamblea = data.ultimoConsecutivo
+                this.asambleaService.obtenerPreguntasAsamblea2(this.consecutivoAsamblea).subscribe({
+                    next: (data: PlantillaPreguntas) => {
+                        // console.log(data)
+                        this.cargarDatosCategoria(data.juntaDirectiva, 'juntaDirectiva');
+                        this.cargarDatosCategoria(data.reformaEstatutos, 'reformaEstatutos');
+                        this.cargarDatosCategoria(data.distribucionUtilidades, 'distribucionUtilidades');
+                        this.cargarDatosCategoria(data.revisoriaFiscal, 'revisoriaFiscal');
+                        this.cargarDatosCategoria(data.estadosFinancieros, 'estadosFinancieros');
+                        this.cargarDatosCategoria(data.proposicionesVarios, 'proposicionesVarios');
+                        this.botonActivo = false
+                    },
+                    error: (error) => {
+                        console.log(error)
+                    },
+                    complete: () => {
+                        this.botonActivo = false
+                    }
+                });
             },
             error:(error)=>{
-                console.log(error)
-            },
-            complete:()=>{
-                this.botonActivo= false
+                this.consecutivoAsamblea = ''
             }
-        });
+        })
+
+
+    }
+
+    obtenerConsecutivoAsamblea(){
+        this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
+            next:(data)=>{
+                console.log(this.consecutivoAsamblea)
+                this.consecutivoAsamblea = data.ultimoConsecutivo
+            },
+            error:(error)=>{
+                this.consecutivoAsamblea = ''
+            }
+        })
     }
 
     cargarDatosCategoria(data: any[], categoria: string) {
         const preguntas = this.preguntasGenerales.get(`${categoria}.preguntas`) as FormArray;
+        if (!data) return
         preguntas.clear();
 
         data.forEach(pregunta => {
+            console.log(pregunta)
             const nuevaPregunta = this.fb.group({
                 id: pregunta.id,
                 tipoRespuesta: pregunta.tipoRespuesta,
                 pregunta: pregunta.pregunta,
-                respuestas: this.fb.array(pregunta.respuestas.map(respuesta => this.fb.control(respuesta)))
+                opcionesRespuesta: this.fb.array(pregunta.opcionesRespuesta.map(respuesta => this.fb.control(respuesta.opcRespuesta)))
             });
             preguntas.push(nuevaPregunta);
         });
     }
 
-    eliminarPregunta(id:string, contexto:string){
+    eliminarPregunta(id: string, contexto: string) {
         const data = {
-            [contexto] : id
+            [contexto]: id
         }
 
         // TODO:llamado a refrescar todo el formulario
         this.cargarDatosFormulario()
         //
         console.log(data)
-        this.botonActivo= true
+        this.botonActivo = true
     }
 
 

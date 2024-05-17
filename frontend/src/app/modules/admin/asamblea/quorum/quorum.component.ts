@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PorcentajeDirective } from 'app/shared/directives/porcentaje.directive';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import Chart, { ChartType } from 'chart.js/auto';
+import { AsambleaService } from '../asamblea.service';
+import { PorcentajesPipe } from 'app/shared/pipes/procentajes.pipe';
 
 @Component({
     selector: 'app-quorum',
@@ -11,19 +13,27 @@ import Chart, { ChartType } from 'chart.js/auto';
     imports: [
         CommonModule,
         FormsModule,
+        PorcentajesPipe,
         ReactiveFormsModule,
         AngularMaterialModules,
         PorcentajeDirective
 
     ],
     templateUrl: 'quorum.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
 })
-export class QuorumComponent {
-    valor:any =123
+export class QuorumComponent implements OnInit {
+
+    //Inyeccion de dependencias
+    private _asambleaService = inject(AsambleaService)
+
+    //variables data informacion quorum
+    datosQuorum: any
+
     public chart: Chart;
 
     ngOnInit(): void {
+        this.obtenerDatosQuorum()
 
         const data = {
             labels: [
@@ -48,8 +58,19 @@ export class QuorumComponent {
     }
 
 
-    mostrar(){
-        console.log("desde ", this.valor)
-        this.valor = "2"
+    validarQuorum(){
+
+    }
+
+    obtenerDatosQuorum() {
+        this._asambleaService.obtenerDatosAsamblea().subscribe({
+            next: (data) => {
+                this.datosQuorum = data
+                console.log(data)
+            },
+            error: (error) => {
+
+            }
+        })
     }
 }

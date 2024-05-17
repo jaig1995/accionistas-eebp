@@ -53,10 +53,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">
@@ -114,10 +114,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">
@@ -174,10 +174,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">
@@ -232,10 +232,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">
@@ -291,10 +291,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">
@@ -352,10 +352,10 @@
                                         <p class="p-3 text-lg text-primary font-semibold"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">Respuestas de la opción
                                             multiple</p>
-                                        <div formArrayName="respuestas" class="w-full p-3"
+                                        <div formArrayName="opcionesRespuesta" class="w-full p-3"
                                             *ngIf="pregunta.value.tipoRespuesta === 'multiple'">
                                             <div
-                                                *ngFor="let respuesta of pregunta.get('respuestas').controls; let i = index">
+                                                *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
                                                     <input matInput [formControlName]="i">

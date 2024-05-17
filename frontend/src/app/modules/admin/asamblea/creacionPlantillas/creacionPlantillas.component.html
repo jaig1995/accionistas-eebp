@@ -12,20 +12,39 @@
 
 
                     <!-- alertas -->
-                    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
-                        <span fuseAlertTitle>Aprobación exitosa</span>
-                        ¡Solicitud aprobada!
-                    </fuse-alert>
+                    <div class="flex justify-end fixed top-7 right-9 mt-20 w-full z-50 animated-box">
+
+                        <div class="w-100 mb-4 ">
+
+                            <div class="fixed  top-5 right-9 mt-20 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+                                <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content"
+                                    @zoomIn>
+                                    <span fuseAlertTitle>Información</span>
+                                    ¡Transacción exitosa!
+                                </fuse-alert>
+                            </div>
+
+                            <div class="fixed  top-5 right-9 mt-20 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+                                <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content"
+                                    @shake>
+                                    <span fuseAlertTitle>Información</span>
+                                    ¡Transacción no exitosa!
+                                </fuse-alert>
+                            </div>
+                        </div>
+                    </div>
                     <!-- fin alertas -->
 
                     <div class="flex flex-auto w-full px-3 pt-10 bg-card shadow rounded overflow-hidden ">
 
                         <div class="flex flex-row justify-between w-full">
                             <!-- Formulario Plantilla de creación de preguntas -->
-                            <div class="flex  flex-auto flex-row  items-center w-full mb-5 ml-5 overflow-hidden justify-between">
+                            <div
+                                class="flex  flex-auto flex-row  items-center w-full mb-5 ml-5 overflow-hidden justify-between">
 
 
-                                <mat-vertical-stepper [linear]="false" #stepper class="w-full"  [selectedIndex]="pasoActual">
+                                <mat-vertical-stepper [linear]="false" #stepper class="w-full"
+                                    [selectedIndex]="pasoActual">
                                     <mat-step>
                                         <form [formGroup]="formularioPreguntas">
                                             <!-- encabezado titulo -->
@@ -33,15 +52,26 @@
                                                     Preguntas Asamblea No. {{consecutivoAsamblea}}</span></ng-template>
 
                                             <!-- Tipo de Asamble -->
-                                            <div class=" mr-5 mb-5 flex flex-row w-full">
-                                                <mat-form-field class="w-80">
-                                                    <mat-label class="text-primary font-semibold mt-2">Tipo de
-                                                        Asamblea</mat-label>
-                                                    <mat-select formControlName="tipoAsamblea" >
-                                                        <mat-option value="Informativa">Informativa</mat-option>
-                                                        <mat-option value="Decision">Decisión</mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
+                                            <div class=" mr-5 mb-5 flex flex-row w-full justify-between">
+                                                <div class="ml-7">
+
+                                                    <mat-form-field class="w-80">
+                                                        <mat-label class="text-primary font-semibold mt-2">Tipo de
+                                                            Asamblea</mat-label>
+                                                        <mat-select formControlName="tipoEncuesta">
+                                                            <mat-option value="Informativa">Informativa</mat-option>
+                                                            <mat-option value="Decision">Decisión</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div>
+                                                    <mat-form-field class="w-80">
+                                                        <mat-label class="text-primary font-semibold mt-2">Nombre
+                                                            Encuesta</mat-label>
+                                                        <input matInput placeholder="Ingresa el nombre encuesta"
+                                                            formControlName="nombreEncuesta">
+                                                    </mat-form-field>
+                                                </div>
                                             </div>
 
                                             <mat-divider class="mb-7" />
@@ -55,8 +85,11 @@
                                                 <div class="flex flex-wrap">
                                                     <ng-container *ngFor="let tema of temasAsamblea">
                                                         <section class="flex flex-col w-1/2">
-                                                            <mat-checkbox (change)="toggleCheckbox(tema)" [checked]="tema.selected" [disabled]="esEditableTemasAsamblea" >
-                                                                <p class="text-primary font-semibold">{{ tema.nombre }}</p>
+                                                            <mat-checkbox (change)="toggleCheckbox(tema)"
+                                                                [checked]="tema.selected"
+                                                                [disabled]="esEditableTemasAsamblea" [value]="tema.id">
+                                                                <p class="text-primary font-semibold">{{ tema.nombre }}
+                                                                </p>
                                                             </mat-checkbox>
                                                         </section>
                                                     </ng-container>
@@ -64,8 +97,9 @@
                                             </div>
 
                                             <div class="flex justify-end mt-6">
-                                                <button mat-raised-button color="primary" class="w-40"
-                                                    matStepperNext [disabled]=" !estaTipoAsambleaSeleccionada()" (click)="abrirDialogo(dialogTemplate)">&nbsp;
+                                                <button mat-raised-button color="primary" class="w-40" matStepperNext
+                                                    [disabled]="formularioPreguntas.invalid"
+                                                    (click)="abrirDialogo(dialogTemplate)" [disabled]="esEditableTemasAsamblea">&nbsp;
                                                     Siguiente
                                                     <mat-icon svgIcon="heroicons_outline:arrow-right"></mat-icon>
                                                 </button>
@@ -91,11 +125,13 @@
                                                         <mat-label class="text-primary font-semibold">
                                                             Escoge el tema al que quieras agregar una pregunta
                                                         </mat-label>
-                                                        <mat-select class="text-accent font-semibold" formControlName="contextoPregunta">
+                                                        <mat-select class="text-accent font-semibold"
+                                                            formControlName="idTema">
                                                             <ng-container *ngFor="let opcion of temasAsamblea">
                                                                 <ng-container *ngIf="opcion.selected">
                                                                     <mat-option [value]="opcion.id">
-                                                                        <p class="text-primary font-semibold">{{ opcion.nombre }}</p>
+                                                                        <p class="text-primary font-semibold">{{
+                                                                            opcion.nombre }}</p>
                                                                     </mat-option>
                                                                 </ng-container>
                                                             </ng-container>
@@ -163,7 +199,8 @@
                                                         *ngFor="let respuesta of respuestasOpcionMultiple; let i = index">
                                                         <mat-form-field class="w-full">
                                                             <input matInput placeholder="Escribe aqui la pregunta"
-                                                                [value]="respuesta" (change)="actualizarRespuesta($event.target.value, i)" />
+                                                                [value]="respuesta"
+                                                                (change)="actualizarRespuesta($event.target.value, i)" />
                                                         </mat-form-field>
 
                                                         <div class="ml-4">
@@ -177,11 +214,10 @@
                                             </div>
                                         </form>
 
-
                                         <!-- boton agregar pregunta existePreguntaMultiple || asignacionPregunta.invalid ||-->
                                         <div class="flex justify-end mt-8">
                                             <button mat-raised-button color="primary" class="w-40" matStepperNext
-                                                (click)="guardarPreguntas()" [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 2) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )">&nbsp;
+                                                (click)="guardarPreguntas()" [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 1 || !asignacionPregunta.valid) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )" >&nbsp;
                                                 Guardar
                                                 <mat-icon fontSet="../../"></mat-icon>
                                             </button>
@@ -227,9 +263,12 @@
         ¿Estás seguro del contexto y los temas a tratar en la asamblea No. "{{consecutivoAsamblea}}"
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button mat-button mat-dialog-close (click)="cerrarDialogo()" ><span
+        <button mat-button mat-dialog-close (click)="cerrarDialogo()"><span
                 class="font-bold text-warn">Regresar</span></button>
-        <button mat-button mat-dialog-close cdkFocusInitial class="font-bold" (click)="aprobarDialogo()" > <span
+        <button mat-button mat-dialog-close cdkFocusInitial class="font-bold" (click)="aprobarDialogo()"> <span
                 class="font-bold text-accent">Continuar</span></button>
     </mat-dialog-actions>
 </ng-template>
+<!-- [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 2) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )" -->
+
+
