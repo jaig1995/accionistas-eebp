@@ -61,7 +61,7 @@
             <div class=" mb-5 mr-3 flex">
                 <div class="flex items-end mb-2">
                     <button mat-raised-button color="primary" class="w-40" (click)="enviarRegistroPoderes()"
-                        [disabled]="!esValidoPoderdante || !esValidoApoderado || !existeDocumento ||!botonActivo"><mat-icon
+                        [disabled]="!esValidoPoderdante || !esValidoApoderado || !existeDocumento || botonActivo "><mat-icon
                             svgIcon="heroicons_solid:user-plus" *ngIf="!botonActivo"></mat-icon>&nbsp;
                         <span *ngIf="!botonActivo">
                             Registrar
@@ -103,59 +103,70 @@
         <div class="mat-elevation-z8 mb-5">
             <table mat-table [dataSource]="dataSource" matSort>
 
-                <!-- ID Column -->
+                <!-- consecutivo -->
                 <ng-container matColumnDef="CONSECUTIVO">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> NO. </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.consecutivo}} </td>
                 </ng-container>
 
-                <!-- Progress Column -->
+                <!-- Documento Poderdante -->
                 <ng-container matColumnDef="DOCUMENTO PODERDANTE">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> DOCUMENTO PODERDANTE </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.idPoderdante}}</td>
                 </ng-container>
 
-                <!-- Name Column -->
+                <!-- Nombre Poderdante -->
                 <ng-container matColumnDef="PODERDANTE">
                     <th mat-header-cell *matHeaderCellDef> PODERDANTE </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombrePoderdante}} </td>
                 </ng-container>
 
-                <!-- Fruit Column -->
+                <!-- No.Acciones -->
                 <ng-container matColumnDef="N.ACCIONES">
                     <th mat-header-cell *matHeaderCellDef> N.ACCIONES </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.accionesPoderdante}} </td>
                 </ng-container>
-                <!-- Fruit Column -->
+
+                <!-- Apoderado-->
                 <ng-container matColumnDef="APODERADO">
                     <th mat-header-cell *matHeaderCellDef> APODERADO </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.nombreApoderado}} </td>
                 </ng-container>
 
-                <!-- Fruit Column -->
+                <!-- Documento Apoderado -->
                 <ng-container matColumnDef="DOCUMENTO APODERADO">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">DOCUMENTO
                             APODERADO</span> </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> {{row.idApoderado}} </td>
                 </ng-container>
 
-                <!-- Fruit Column -->
+                <!-- Estado -->
                 <ng-container matColumnDef="ESTADO">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> <span class="text-center">ESTADO
                             APODERADO</span> </th>
                     <td mat-cell *matCellDef="let row" class="text-center"> <span class="font-semibold"
                             [ngStyle]="{ 'color': getColor(row.estado) }">{{row.estado}}</span> </td>
                 </ng-container>
+
                 <!-- Fruit Column -->
                 <ng-container matColumnDef="ACCIONES">
                     <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
                     <td mat-cell *matCellDef="let row" class="text-center">
                         <div class="flex fle-row justify-between">
                             <button mat-stroked-button color="primary">Documento</button>
-                            <button mat-stroked-button color="accent" class="ml-2"
-                                (click)="aprobarSolicitud(row)">Aprobar</button>
+                            <button mat-stroked-button color="accent" class="ml-2" (click)="aprobarSolicitud(row)"><span
+                                    *ngIf="!botonActivoAcciones">
+                                    Aprobar
+                                </span>
+                                <mat-progress-spinner *ngIf="botonActivoAcciones" [diameter]="24"
+                                    [mode]="'indeterminate'"></mat-progress-spinner></button>
+
                             <button mat-stroked-button color="warn" class="ml-2"
-                                (click)="abrirDialogo(dialogTemplate, row)">Rechazar</button>
+                                (click)="abrirDialogo(dialogTemplate, row)"><span *ngIf="!botonActivoAcciones">
+                                    Rechazar
+                                </span>
+                                <mat-progress-spinner *ngIf="botonActivoAcciones" [diameter]="24" [mode]="'indeterminate'"
+                                    ></mat-progress-spinner></button>
                         </div>
                     </td>
                 </ng-container>

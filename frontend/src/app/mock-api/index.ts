@@ -19,6 +19,7 @@ import { RegistroPoderesMockApi } from './apps/registro-poderes/api';
 import { PostulacionesMockApi } from './apps/postulaciones/api';
 import { CrearAsambleaMockApi } from './apps/crear-asamblea/api';
 import { AsitenciaAsambleaMockApi } from './apps/asistencia-asamblea/api';
+import { VotacionesMockApi } from './apps/votaciones/api';
 
 export const mockApiServices = [
     AcademyMockApi,
@@ -42,4 +43,5 @@ export const mockApiServices = [
     PostulacionesMockApi,
     CrearAsambleaMockApi,
     AsitenciaAsambleaMockApi,
+    VotacionesMockApi
 ];

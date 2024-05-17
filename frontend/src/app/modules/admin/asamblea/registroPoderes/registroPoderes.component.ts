@@ -19,9 +19,7 @@ import { InputAutocompleteComponent } from 'app/shared/components/inputAutocompl
 import { MatTableDataSource } from '@angular/material/table';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
-import { FuseLoadingService } from '@fuse/services/loading';
-
-import { read, utils, writeFile, writeFileXLSX } from 'xlsx';
+import { utils, writeFileXLSX } from 'xlsx';
 @Component({
     selector: 'app-registro-poderes',
     standalone: true,
@@ -36,7 +34,7 @@ import { read, utils, writeFile, writeFileXLSX } from 'xlsx';
         AngularMaterialModules
     ],
     templateUrl: 'registroPoderes.component.html',
-    encapsulation: ViewEncapsulation.Emulated,
+    // encapsulation: ViewEncapsulation.Emulated,
     animations: fuseAnimations,
 })
 export class RegistroPoderesComponent implements AfterViewInit {
@@ -51,6 +49,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
     showSuccesAlert = false;
     showFailedAlert = false;
     botonActivo = false
+    botonActivoAcciones = false
 
 
     //variables componentes
@@ -97,9 +96,14 @@ export class RegistroPoderesComponent implements AfterViewInit {
     }
 
     cargarDatos() {
-        this.asambleaService.obtenerRegistradosPoderes().subscribe(data => {
-            this.dataSource = new MatTableDataSource<any>(data)
-            this.dataSource.paginator = this.paginator;
+        this.asambleaService.obtenerRegistradosPoderes().subscribe({
+            next: (data) => {
+                this.dataSource = new MatTableDataSource<any>(data)
+                this.dataSource.paginator = this.paginator
+            },
+            error: (data) => {
+                this.dataSource = []
+            }
         }
         )
     }
@@ -175,9 +179,8 @@ export class RegistroPoderesComponent implements AfterViewInit {
         this.nombreArchivo = `formatoRegistroPoder_${this.poderdanteValor}`
         let registroPoderes = {
             idPoderdante: this.poderdanteValor,
-            idApoderadoValor: this.apoderadoValor,
-            fecha,
-            hora
+            idApoderado: this.apoderadoValor,
+
         }
         this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivo)
         this.enviarPeticionRegistro(registroPoderes)
@@ -213,7 +216,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
                     this.mostrarAlertaFallida()
                 },
                 complete: () => {
-                    this.botonActivo = false
+
                 }
             }
         )
@@ -224,9 +227,35 @@ export class RegistroPoderesComponent implements AfterViewInit {
         this.dialogRef = this.dialog.open(template);
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) return
-            solicitud.estado = 'Rechazado';
-            console.log("solicitud", solicitud)
+            const { estado, consecutivo } = solicitud
+            this.aprobarRechazarPoder(consecutivo, { estado: 'RECHAZADO' })
         });
+    }
+
+    //Acciones solicitudes
+    aprobarSolicitud(solicitud) {
+        if (!solicitud) return
+        const { estado, consecutivo } = solicitud
+        this.aprobarRechazarPoder(consecutivo, { estado: 'APROBADO' })
+        this.cargarDatos()
+    }
+
+
+    aprobarRechazarPoder(consecutivo, estado) {
+        this.asambleaService.aprobarRechazarPoder(consecutivo, estado).subscribe(
+            {
+                next: (data) => {
+                    this.mostrarAlertaExitosa();
+                    this.cargarDatos()
+                },
+                error: (error) => {
+                    this.mostrarAlertaFallida
+                },
+                complete: () => {
+                    this.botonActivoAcciones = false
+                }
+            }
+        )
     }
 
     cerrarDialogo() {
@@ -237,32 +266,22 @@ export class RegistroPoderesComponent implements AfterViewInit {
         this.dialogRef.close(true);
     }
 
-
-    //Acciones solicitudes
-    aprobarSolicitud(solicitud) {
-        solicitud.estado = 'Aprobado';
-        console.log(solicitud);
-    }
-
     editarSolicitud(solicitud) {
         console.log(solicitud);
     }
 
-
-
     getColor(estado: string): string {
         switch (estado) {
-            case 'Tramite':
+            case 'TRAMITE':
                 return '#002E5F';
-            case 'Aprobado':
+            case 'APROBADO':
                 return '#5A9C30';
-            case 'Rechazado':
+            case 'RECHAZADO':
                 return '#DC2625';
             default:
                 return 'black';
         }
     }
-
 
     mostrarAlertaExitosa(): void {
         this.showSuccesAlert = true;
@@ -278,9 +297,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
         }, 3000);
     }
 
-
     generarExcel() {
-
         //datos para exportar a PDF
         const datosRegistroPoderes = this.dataSource.data
         //se renombra los datos del objeto para que sean cabeceras de excel

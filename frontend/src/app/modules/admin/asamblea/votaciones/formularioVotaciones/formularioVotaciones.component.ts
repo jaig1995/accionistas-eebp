@@ -9,6 +9,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AuthService } from 'app/core/auth/auth.service';
 import CryptoJS from 'crypto-js';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
     selector: 'app-formulario-votaciones',
@@ -41,38 +42,56 @@ export class FormularioVotacionesComponent implements OnInit {
     claseActual: string = '';
 
     //recibir objeto con datos del accionista para el formulario
-    @Input() datosVotante: string;
+    @Input() datosVotante: any | undefined;
+    @Input() poderDantes: any;
+    consecutivoAsamblea: any;
+
+    //bandera de inicializacion
+    private formInitialized = false;
 
 
     ngOnInit(): void {
-
-
         this.inicializarFormularioVacio()
         this.obtenerFormularioAsociado()
         this.subscripcionFormularioRespuestaAsamblea()
-        // console.log("token", this.decryptToken())
-
     }
 
     subscripcionFormularioRespuestaAsamblea() {
-        this.respuestasAsamblea.statusChanges.subscribe(status => {
-            if (status === 'VALID') {
-                console.log('El formulario es VALIDO');
-                const { value: formulario } = this.respuestasAsamblea;
-                this.asambleaService.inicializarFormularioAccionista(formulario)
-                // console.log('FORMULARIO FINAL cvalido', this.respuestasAsamblea.value)
-            } else {
-                console.log('El formulario no es válido');
-                const { value: formulario } = this.respuestasAsamblea;
-                this.asambleaService.inicializarFormularioAccionista(formulario)
-                console.log('FORMULARIO FINAL invludo', this.respuestasAsamblea.value)
-            }
-        });
+        this.respuestasAsamblea.valueChanges
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+            )
+            .subscribe(formulario => {
+                if (this.formInitialized) {
+                    console.log('entre')
+                    this.enviarFormularioVotaciones(formulario);
+
+                }else{
+                    console.log('no entre')
+                    this.formInitialized = true;
+                }
+            });
+
+        // Establecer la bandera a true después de la inicialización completa
+
+    }
+
+
+    enviarFormularioVotaciones(formulario) {
+        this.asambleaService.votar(formulario).subscribe({
+            next: (value) => {
+                console.log(value)
+            }, error: (err) => {
+                console.log(err)
+            },
+        })
     }
 
     inicializarFormularioVacio() {
         this.respuestasAsamblea = this.fb.group({
-            datosVotante: [this.datosVotante],
+            datosPoderdantes: [this.poderDantes ? this.poderDantes : []],
+            datosVotante: [[this.datosVotante]],
             juntaDirectiva: this.fb.array([]),
             reformaEstatutos: this.fb.array([]),
             distribucionUtilidades: this.fb.array([]),
@@ -84,48 +103,67 @@ export class FormularioVotacionesComponent implements OnInit {
 
 
     obtenerFormularioAsociado() {
-        this.asambleaService.obtenerFormularioAccionista(this.datosVotante).subscribe(
+
+        const codigoUsuarioVotante = this.datosVotante.codUsuario
+
+        console.log(codigoUsuarioVotante)
+        this.asambleaService.obtenerFormularioAccionista2(codigoUsuarioVotante).subscribe(
             {
-                next: (data:any) => {
-                    this.insertarPreguntasFormularioAsamblea(data.juntaDirectiva, 'juntaDirectiva');
+                next: (data: any) => {
+                    console.log(data)
+                    this.insertarPreguntasFormularioAsamblea(data?.juntaDirectiva, 'juntaDirectiva');
+                    this.insertarPreguntasFormularioAsamblea(data?.revisoriaFiscal, 'revisoriaFiscal');
                     this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                     this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
-                    this.insertarPreguntasFormularioAsamblea(data.revisoriaFiscal, 'revisoriaFiscal');
                     this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
                     this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
                 },
-                error: () => {
-                    this.asambleaService.obtenerPreguntasAsamblea().subscribe(
-                        {
-                            next: (data) => {
-                                this.insertarPreguntasFormularioAsamblea(data.juntaDirectiva, 'juntaDirectiva');
-                                this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
-                                this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
-                                this.insertarPreguntasFormularioAsamblea(data.revisoriaFiscal, 'revisoriaFiscal');
-                                this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
-                                this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
-                                const { value: formulario } = this.respuestasAsamblea;
-                                this.asambleaService.inicializarFormularioAccionista(formulario);
-                            }
+                error: (error) => {
+                    console.log(error)
+                    this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
+                        next: (data) => {
+                            console.log(data)
+                            this.consecutivoAsamblea = data.ultimoConsecutivo
+                            this.asambleaService.obtenerPreguntasAsamblea2(this.consecutivoAsamblea).subscribe(
+                                {
+                                    next: (data) => {
+                                        console.log(data)
+                                        this.insertarPreguntasFormularioAsamblea(data.juntaDirectiva, 'juntaDirectiva');
+                                        this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
+                                        this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
+                                        this.insertarPreguntasFormularioAsamblea(data.revisoriaFiscal, 'revisoriaFiscal');
+                                        this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
+                                        this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
+                                        const { value: formulario } = this.respuestasAsamblea;
+                                        this.asambleaService.inicializarFormularioAccionista(formulario);
+                                    }
+                                }
+                            )
+                        },
+                        error: (error) => {
+                            this.consecutivoAsamblea = ''
                         }
-                    )
+                    })
+
                 }
             }
         )
     }
 
 
-    //metodo pruebas obtener informacion del usuario
+    //metodo desemcriptar y  obtener informacion del usuario desde el token y el localstorage
     decryptToken(): string {
         const encryptedToken = localStorage.getItem('encryptedToken');
         if (encryptedToken) {
             const bytes = CryptoJS.AES.decrypt(encryptedToken, 'secret-key');
-            console.log(bytes)
             return bytes.toString(CryptoJS.enc.Utf8);
         } else {
             return null;
         }
     }
+
+
+
 
     // recuperar controls
 
@@ -209,13 +247,15 @@ export class FormularioVotacionesComponent implements OnInit {
 
     insertarPreguntasFormularioAsamblea(data: any[], contextoPregunta: string) {
         const controlSubFormularioRespuestasAsamblea = this.respuestasAsamblea.get(contextoPregunta) as FormArray;
+        if (!data) return
         data.forEach(item => {
             const nuevoFormGroup = this.fb.group({
                 id: [item.id],
                 tipoRespuesta: [item.tipoRespuesta],
                 pregunta: [item.pregunta],
-                respuestas: [item.respuestas],
-                respuestaAccionista: [!!item.respuestaAccionista ? item.respuestaAccionista : '', !!item.respuestas ? Validators.required : null]
+                opcionesRespuesta: [item.opcionesRespuesta],
+                respuestaAccionista: [item.respuestaAccionista, Validators.required]
+                // respuestaAccionista: [!!item.respuestaAccionista ? item.respuestaAccionista : '', !!item.opcionesRespuesta.opcRespuesta ? Validators.required : null]
             });
             controlSubFormularioRespuestasAsamblea.push(nuevoFormGroup);
         });

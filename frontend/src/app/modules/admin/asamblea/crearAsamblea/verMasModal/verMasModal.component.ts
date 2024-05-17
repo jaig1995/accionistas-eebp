@@ -7,6 +7,7 @@ import { eebpTheme } from 'app/shared/imports/temaPicker/temaPicker';
 import { DateTime } from 'luxon';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { AsambleaService } from '../../asamblea.service';
 
 @Component({
     selector: 'app-ver-mas-modal',
@@ -22,14 +23,17 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 })
 export class VerMasModalComponent implements OnInit {
 
+    private dialogRef = inject(MatDialogRef<VerMasModalComponent>);
+    private formBuilder = inject(FormBuilder);
+    private _asambleaService = inject(AsambleaService);
+
     estadoBoton
     asambleaForm
     eebpTheme = eebpTheme;
     horaAsamblea: any;
     tipoAsamblea: any;
 
-    constructor(public dialogRef: MatDialogRef<VerMasModalComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any, private formBuilder: FormBuilder) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any,) {
     }
 
     ngOnInit(): void {
@@ -38,8 +42,6 @@ export class VerMasModalComponent implements OnInit {
     }
 
     inicializarDatos() {
-
-
         this.estadoBoton = this.data.asamblea.estado
         this.horaAsamblea = this.data.asamblea.horaAsamblea
         this.tipoAsamblea = this.data.asamblea.tipoAsamblea
@@ -60,7 +62,19 @@ export class VerMasModalComponent implements OnInit {
         const fechaAsamblea = new Date(formValue.fechaAsamblea);
         const fechaFormateada = DateTime.fromJSDate(fechaAsamblea).toFormat('yyyy-dd-MM');
         const valoresActualizados = { ...formValue, fechaAsamblea: fechaFormateada };
-        console.log(valoresActualizados)
+        this.enviarPeticionModificarAsamblea(valoresActualizados)
+    }
+
+
+    enviarPeticionModificarAsamblea(data){
+        this._asambleaService.modificarAsamblea(data).subscribe({
+            next:(data)=>{
+                this.dialogRef.close({ success: true });
+            },
+            error:(error)=>{
+                this.dialogRef.close({ success: false });
+            }
+        })
     }
 
 

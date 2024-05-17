@@ -5,12 +5,26 @@
     <div class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
         Asamblea </div>
 
-
     <!-- alertas -->
-    <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
-        <span fuseAlertTitle>Aprobación exitosa</span>
-        ¡Solicitud aprobada!
-    </fuse-alert>
+    <div class="flex justify-end fixed top-7 right-9 mt-13 w-full z-50 animated-box">
+
+        <div class="w-100 mb-4 ">
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+                <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción exitosa!
+                </fuse-alert>
+            </div>
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+                <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción no exitosa!
+                </fuse-alert>
+            </div>
+        </div>
+    </div>
     <!-- fin alertas -->
 
     <div class="flex-auto px-3 pt-10 bg-card shadow rounded overflow-hidden ">
@@ -25,37 +39,42 @@
                         <app-input-autocomplete [labelInput]="'Buscar'" (accionista)="obtenerPoderdante($event)"
                             (valorInput)="obtenerValorInput($event)" />
                     </div>
-                    <div class="mt-7 ml-2">
+                    <div class="mt-7 ml-2 flex flex-row">
                         <button mat-flat-button [color]="'accent'" (click)="buscarAccionista()"><mat-icon
                                 svgIcon="heroicons_solid:magnifying-glass-plus"></mat-icon> Ingresar</button>
+                                <button class="fuse-mat-button sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerHuella()">
+                                    <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
+                                    Huella
+                                  </button>
                     </div>
                 </div>
 
                 <form [formGroup]="datosAsamblea" class="flex flex-row">
                     <!-- Número de accionistas-->
                     <div class="mr-5">
-                        <mat-form-field class="w-50">
+                        <mat-form-field class="w-25">
                             <mat-icon svgIcon="heroicons_solid:user-group"></mat-icon>
-                            <mat-label>Número de accionistas</mat-label>
-                            <input matInput formControlName="numeroAccionistas">
+                            <mat-label>Accionistas</mat-label>
+                            <input matInput formControlName="numeroAccionistas" readonly>
                         </mat-form-field>
                     </div>
 
                     <!-- Número de acciones-->
                     <div class="mr-5">
-                        <mat-form-field class="w-40">
-                            <mat-label>Número de acciones</mat-label>
+                        <mat-form-field class="w-30">
+                            <mat-label>No.Acciones</mat-label>
                             <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
-                            <input matInput formControlName="numeroAcciones">
+                            <input matInput formControlName="numeroAcciones" readonly>
                         </mat-form-field>
                     </div>
 
                     <!-- QORUM-->
                     <div class="mr-5">
-                        <mat-form-field class="w-40">
+                        <mat-form-field class="w-24">
                             <mat-label>QORUM</mat-label>
                             <mat-icon svgIcon="heroicons_solid:chart-pie"></mat-icon>
-                            <input matInput formControlName="qorum" porcentaje>
+                            <input matInput formControlName="qorum"
+                                [value]="datosAsamblea.get('qorum').value | porcentajesQuorum" readonly>
                         </mat-form-field>
                     </div>
                 </form>
@@ -85,8 +104,7 @@
                 <button mat-fab [matMenuTriggerFor]="menu" [color]="'accent'"><mat-icon
                         svgIcon="heroicons_solid:document-arrow-down"></mat-icon></button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item>Excel</button>
-                    <button mat-menu-item>PDF</button>
+                    <button mat-menu-item (click)="generarExcel()">Excel</button>
                 </mat-menu>
             </div>
 

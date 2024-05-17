@@ -4,8 +4,9 @@
     <div class="flex-auto">
 
     </div>
-    <mat-tab-group [selectedIndex]="1">
-        <mat-tab label="Individual" [disabled]="false">
+    <mat-tab-group [selectedIndex]="modoSeleccionado">
+        <!-- seccion uno -->
+        <mat-tab label="Individual" [disabled]="bloque">
             <div class="w-full h-auto">
                 <!-- ALERTA FUSE EXPLICACIÓN -->
                 <div class="animated-box my-4">
@@ -20,20 +21,38 @@
 
                 <mat-accordion class="flex flex-col justify-between" multi>
 
-                    <mat-expansion-panel *ngFor="let item of pruebas.poderDantes"  class="">
+                    <!-- panel de datos apoderado -->
+                    <mat-expansion-panel *ngFor="let item of datosVotoApoderado" class="">
+                        <mat-expansion-panel-header class="flex flex-row justify-between w-full">
+                            <mat-panel-title class="w-full text-accent">
+                                Apoderado
+                            </mat-panel-title>
+                            <mat-panel-description class="flex flex-row justify-between w-full text-accent">
+                                {{item.nombres}}
+
+                                <mat-icon svgIcon="heroicons_solid:user-group"></mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="w-full mb-4">
+
+                            <app-formulario-votaciones [datosVotante]="item" />
+                        </div>
+                    </mat-expansion-panel>
+
+                    <!-- panel de datos poderdantes -->
+                    <mat-expansion-panel *ngFor="let item of datosVotoPoderdante" class="">
                         <mat-expansion-panel-header class="flex flex-row justify-between w-full">
                             <mat-panel-title class="w-full ">
                                 Poderdante
                             </mat-panel-title>
                             <mat-panel-description class="flex flex-row justify-between w-full">
-                                {{item.Nombres}}
+                                {{item.nombres}}
 
                                 <mat-icon>account_circle</mat-icon>
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="w-full mb-4">
-
-                            <app-formulario-votaciones  [datosVotante]="item"/>
+                            <app-formulario-votaciones [datosVotante]="item"  />
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -41,8 +60,8 @@
         </mat-tab>
 
 
-        <!-- seccion dos -->
-        <mat-tab label="Bloque">
+        <!-- seccion dos (VOTACION EN BLOQUE E INDIVIDUAL CUANDO NO TIENE PODERDANTES) -->
+        <mat-tab label="Bloque" [disabled]="individual">
             <div class="animated-box my-4">
                 <fuse-alert [appearance]="'soft'" [dismissible]="true" [dismissed]="false" [name]="'alertBox4'"
                     [type]="'success'">
@@ -50,8 +69,8 @@
                     respuesta para todos tus representados."
                 </fuse-alert>
             </div>
-            <div class="w-full h-auto">
-                <app-formulario-votaciones />
+            <div class="w-full h-auto" *ngFor="let item of datosVotoApoderado ">
+                    <app-formulario-votaciones [datosVotante]="item" [poderDantes]="datosVotoPoderdante"  />
             </div>
         </mat-tab>
 

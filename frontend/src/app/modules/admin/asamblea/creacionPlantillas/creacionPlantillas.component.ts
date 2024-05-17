@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { ResumenPreguntasAsambleaComponent } from './resumenPreguntasAsamblea/resumenPreguntasAsamblea.component';
@@ -10,6 +10,8 @@ import { FuseLoadingService } from '@fuse/services/loading';
 import { AsambleaService } from '../asamblea.service';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { PlantillaPreguntas } from './interfaces/asamblea.interface';
+import { FuseAlertComponent } from '@fuse/components/alert';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
     selector: 'app-creacion-plantillas',
@@ -19,11 +21,13 @@ import { PlantillaPreguntas } from './interfaces/asamblea.interface';
         FormsModule,
         ResumenPreguntasAsambleaComponent,
         ReactiveFormsModule,
+        FuseAlertComponent,
         FuseLoadingBarComponent,
         AngularMaterialModules
     ],
     templateUrl: 'creacionPlantillas.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
+    animations: fuseAnimations
 })
 export class CreacionPlantillasComponent implements OnInit {
 
@@ -38,7 +42,8 @@ export class CreacionPlantillasComponent implements OnInit {
     // alertas y cargas
     showAlert
     loading
-
+    showSuccesAlert = false;
+    showFailedAlert = false;
     // arrays
     contextoPreguntas: any = [];
     respuestasOpcionMultiple: any = []
@@ -47,189 +52,201 @@ export class CreacionPlantillasComponent implements OnInit {
     temasAsamblea: any = []
     esEditableTemasAsamblea = false
 
-
     // dialogo
     dialogRef: MatDialogRef<any>;
 
-
-    // formulario Plantilla preguntas
-    respuestaOpcionMultiple = new FormControl
-
-    formularioPreguntas = this.fb.group({
-        tipoAsamblea: ['', Validators.required],
-        temasAsamblea: ['', Validators.required],
-    })
-
-    asignacionPregunta = this.fb.group({
-        contextoPregunta: ['', Validators.required],
-        tipoRespuesta: ['', Validators.required],
-        pregunta: ['', Validators.required],
-        respuestas: this.fb.array([]),
-    });
-
-    // Fin formularios
-
-
-    //
+    //cons asamblea
     consecutivoAsamblea: any;
+
+    // asamblea arrays
     preguntasAsamblea: any;
     existePreguntaMultiple: boolean;
 
-    temasAsambleaPrueba = [
-        { nombre: 'Junta Directiva', id: 'juntaDirectiva', selected: true },
-        { nombre: 'Revisoría Fiscal', id: 'revisoriaFiscal', selected: true },
-        { nombre: 'Reforma Estatutos', id: 'reformaEstatutos', selected: false },
-        { nombre: 'Estados Financieros', id: 'estadosFinancieros', selected: false },
-        { nombre: 'Distribución Utilidades', id: 'distribucionUtilidades', selected: true },
-        { nombre: 'Proposiciones y Varios', id: 'proposicionesYVarios', selected: true },
-
-    ];
-
-
+    // formulario Plantilla preguntas
+    respuestaOpcionMultiple = new FormControl
+    formularioPreguntas = this.fb.group({
+        tipoEncuesta: ['', Validators.required],
+        fechaCreacion: [formatDate(new Date(), 'yyyy-MM-dd', 'en-US'), Validators.required],
+        idsTemas: ['', Validators.required],
+        estadoEncuesta: ['Activa'],
+        nombreEncuesta: ['', Validators.required]
+    })
+    asignacionPregunta = this.fb.group({
+        idTema: ['', Validators.required],
+        tipoPregunta: ['',],
+        pregunta: ['', Validators.required],
+        tipoRespuesta: ['',],
+        opcionesRespuesta: this.fb.array([]),
+    });
+    // Fin formularios
 
     constructor(public dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) { }
 
     ngOnInit(): void {
+        this.obtenerConsecutivoAsamblea()
 
-        //TODO:recibir el consecutivo del backend
-        this.consecutivoAsamblea = 25;
-
-
-
-        //TODO:si ya esxiste entonces no crear
-        if (false) {
-            this.esEditableTemasAsamblea = true;
-
-            this.pasoActual = 1;
-            const tipoAsambleaPredeterminado = 'Informativa';
-            this.temasAsamblea = this.temasAsambleaPrueba
-
-            this.formularioPreguntas = this.fb.group({
-                tipoAsamblea: [{ value: tipoAsambleaPredeterminado, disabled: true }, Validators.required],
-                temasAsamblea: [{ value: this.temasAsamblea, disabled: true }, Validators.required],
-            });
-        } else {
-
-            this.pasoActual = 0;
-            this.temasAsamblea = TemasAsamblea
-        }
     }
 
+    //peticiones HTTP
+    async obtenerDatosEncuesta() {
+        this.temasAsamblea = TemasAsamblea
+        console.log(this.consecutivoAsamblea)
+        this.asambleaService.obtenerDatosEncuesta(this.consecutivoAsamblea).subscribe(
+            {
+                next: (data: any) => {
+                    //habilitar seccion escoge los temas a tratar checkbox
+                    //TODO: continuar aqui esperar respuesta de JUAN
+                    this.esEditableTemasAsamblea = true
+
+                    const ultimoId = data.reduce((maxId, item) => {
+                        return item.idEncuesta > maxId ? item.idEncuesta : maxId;
+                      }, 0);
+
+                      console.log("first", ultimoId)
+                    // Recibir los datos
+                    const datosEncuesta = data[18]
+                    console.log("first", datosEncuesta)
 
 
-
-    /**
-     * Show the loading bar
-     */
-    showLoadingBar(): void {
-        this._fuseLoadingService.show();
+                    const pr = this.temasAsamblea.filter(item => {
+                        if (datosEncuesta.temas.includes(item.id)) {
+                            item.selected = true;
+                            return true;
+                        }
+                        return false;
+                    });
+                    this.formularioPreguntas = this.fb.group({
+                        tipoEncuesta: [{ value: datosEncuesta.tipoEncuesta, disabled: true },],
+                        fechaCreacion: [{ value: datosEncuesta.fechaCreacion, disabled: true }, ''],
+                        idsTemas: [{ value: pr, disabled: true }, Validators.required],
+                        nombreEncuesta: [{ value: datosEncuesta.nombreEncuesta, disabled: true }],
+                        estadoEncuesta: [{ value: datosEncuesta.estadoEncuesta, disabled: true }],
+                    });
+                },
+                error: (error) => {
+                    this.pasoActual = 0;
+                    this.temasAsamblea = TemasAsamblea
+                }
+            }
+        )
     }
 
-    /**
-     * Hide the loading bar
-     */
-    hideLoadingBar(): void {
-        this._fuseLoadingService.hide();
+    //Enviar peticiones para crear la encuesta stpe 1 contexto preguntas asamblea NO.consecutivoAsamblea
+    enviarPeticionEncuesta(encuesta) {
+        this.asambleaService.enviarEncuestaCreacionPLantillas(encuesta).subscribe({
+            next: (data) => {
+                this.mostrarAlertaExitosa()
+            },
+            error: (error) => {
+                this.mostrarAlertaFallida()
+            }
+        })
     }
 
+    obtenerConsecutivoAsamblea() {
+        this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
+            next: (data) => {
+                this.consecutivoAsamblea = data.ultimoConsecutivo
+                this.obtenerDatosEncuesta()
+            },
+            error: (error) => {
+                this.consecutivoAsamblea = ''
+            }
+        })
+    }
+
+    // fin peticiones http
 
     goToFirstStep(): void {
         this.stepper.previous();
     }
 
-
     // seccion agregar y eliminar respuestas de seleccion multiple
     agregarOpcion() {
         const opcion = this.respuestaOpcionMultiple.value;
-
         if (opcion) {
             this.respuestasOpcionMultiple.push(opcion);
             this.respuestaOpcionMultiple.reset();
         }
-
-        console.log(this.respuestasOpcionMultiple.length >= 2)
     }
 
     eliminarOpcion(index: number) {
         this.respuestasOpcionMultiple.splice(index, 1);
     }
 
-    // Fin seccion agregar
-
-
-
     // Método para agregar una nueva pregunta al FormArray
     agregarPregunta() {
-
-        const { contextoPregunta, tipoRespuesta, pregunta } = this.asignacionPregunta.value;
-
+        const { idTema, tipoRespuesta, pregunta } = this.asignacionPregunta.value;
         const respuestas = this.respuestasOpcionMultiple
         const pruebas = {
-            [contextoPregunta]: {
-                tipoRespuesta: tipoRespuesta,
-                pregunta: pregunta,
-                respuestas: respuestas
-            }
+            idEncuesta: this.consecutivoAsamblea,
+            idTema: idTema,
+            pregunta: pregunta,
+            tipoPregunta: tipoRespuesta,
+            opcionesRespuesta: respuestas
+
         };
         this.preguntasAsamblea = pruebas;
+        this.enviarPreguntas(this.preguntasAsamblea)
+    }
+    // Fin seccion agregar
+
+    enviarPreguntas(preguntas) {
+        this.asambleaService.enviarPreguntasAsamblea(preguntas).subscribe({
+            next: (data) => {
+                this.mostrarAlertaExitosa()
+            },
+            error: (error) => {
+                this.mostrarAlertaFallida()
+            }
+        })
     }
 
-
-
+    //actualizar respuestas seccion asignacion de preguntas del array de respuestas para opcion multiple
     actualizarRespuesta(nuevoValor: string, indice: number) {
         if (nuevoValor.trim() !== '') {
             this.respuestasOpcionMultiple[indice] = nuevoValor;
             this.existePreguntaMultiple = false
         } else {
-            // Mostrar un mensaje de error, lanzar una alerta, etc.
-            console.log('El campo no puede estar vacío.');
-            // this.respuestasOpcionMultiple[indice] = this.respuestasOpcionMultiple[indice];
             this.existePreguntaMultiple = true
         }
     }
 
+    // Enviar Preguntas al BackEnd
     guardarPreguntas() {
-
         this.agregarPregunta()
-
-        console.log("Formulario Para enviar :", this.preguntasAsamblea)
-
     }
 
-
+    //modificador y seleccionador de opciones del del escoger los temas a tratar
     toggleCheckbox(tema: any,) {
-
         tema.selected = !tema.selected;
-
         const index = this.temasAsamblea.findIndex(item => item.id === tema.id);
         if (index !== -1) {
             this.temasAsamblea[index].selected = tema.selected;
         }
-
-        this.formularioPreguntas.get('temasAsamblea').patchValue(this.temasAsamblea);
+        let seleccionadosToogle = this.temasAsamblea.filter(item => item.selected === true);
+        let idsSeleccionados = seleccionadosToogle.map(item => item.id)
+        this.formularioPreguntas.get('idsTemas').patchValue(idsSeleccionados);
     }
 
     // validaciones Formularios
-    algunaOpcionSeleccionada(): boolean {
-        return this.contextoPreguntas.length > 0;
-    }
+    // algunaOpcionSeleccionada(): boolean {
+    //     console.log(this.contextoPreguntas.length > 0)
+    //     return this.contextoPreguntas.length > 0;
+    // }
 
-    estaTipoAsambleaSeleccionada(): boolean {
-        return this.formularioPreguntas.get('tipoAsamblea').valid;
-    }
+    // estaTipoAsambleaSeleccionada(): boolean {
+    //   console.log(this.formularioPreguntas.get('tipoAsamblea').valid)
+    //     return this.formularioPreguntas.get('tipoAsamblea').valid;
+    // }
     // FIN validaciones
 
-
-
-
     //Seccion Abrir dialogo
-    //alerta de dialogo
     abrirDialogo(template: TemplateRef<any>): void {
         this.dialogRef = this.dialog.open(template);
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) return
-
-
+            this.enviarPeticionEncuesta(this.formularioPreguntas.value)
         });
     }
 
@@ -242,6 +259,19 @@ export class CreacionPlantillasComponent implements OnInit {
         this.dialogRef.close(true);
     }
 
+    //alertas
+    mostrarAlertaExitosa(): void {
+        this.showSuccesAlert = true;
+        setTimeout(() => {
+            this.showSuccesAlert = false;
+        }, 3000);
+    }
 
-    //Fin seccion
+    mostrarAlertaFallida(): void {
+        this.showFailedAlert = true;
+        setTimeout(() => {
+            this.showFailedAlert = false;
+        }, 3000);
+    }
+
 }

@@ -47,7 +47,7 @@
         </form>
 
         <div class="w-full mt-6">
-            <button mat-stroked-button color="primary" class="w-full" (click)="modificarAsamblea()">Modificar</button>
+            <button mat-stroked-button color="primary" class="w-full" (click)="modificarAsamblea()" [disabled]="asambleaForm.invalid">Modificar</button>
         </div>
     </div>
 

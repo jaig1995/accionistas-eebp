@@ -7,3 +7,8 @@ export interface PlantillaPreguntas {
     estadosFinancieros: any[];
     proposicionesVarios: any[];
 }
+
+
+export interface Invitado{
+    idPer: string, Nombres:string
+ }

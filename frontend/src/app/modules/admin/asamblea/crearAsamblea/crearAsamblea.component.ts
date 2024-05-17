@@ -125,6 +125,18 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
         })
     }
 
+
+    enviarInvitacion(consecutivo){
+        console.log(consecutivo)
+        this.asambleaService.enviarInvitacionAsamblea(consecutivo).subscribe({
+            next:(data)=>{
+                this.mostrarAlertaExitosa()
+            },
+            error:() =>{
+                this.mostrarAlertaFallida()
+            }
+        })
+    }
     enviarFormularioAsamblea() {
         this.botonActivo = true
         const formValue = this.crearAsamblea.value;
@@ -213,8 +225,6 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     }
 
 
-
-
     /**
     * Método para rechazar una transacción.
     * @param {any} element - Elemento que se va a rechazar.
@@ -229,9 +239,11 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result.success) {
-                // this.mostrarAlertaExitosa()
+
+                this.mostrarAlertaExitosa()
+                this.CargarDatos()
             } else {
-                // this.mostrarAlertaFallida()
+                this.mostrarAlertaFallida()
             }
         });
     }
