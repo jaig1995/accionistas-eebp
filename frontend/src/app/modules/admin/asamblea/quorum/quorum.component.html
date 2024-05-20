@@ -1,5 +1,8 @@
-<div class="w-full p-6 sm:p-10">
+<fuse-loading-bar></fuse-loading-bar>
+
+<div class="w-full p-6 sm:p-10" >
     <!-- titulos -->
+
 
 
     <div class="flex px-3 pt-10 bg-card shadow rounded overflow-hidden md:items-center md:justify-center">
@@ -19,14 +22,14 @@
                         <div class="flex flex-row justify-between items-center">
                             <p class="font-semibold text-primary sm:text-xl xsm:text-md">ASAMBLEA NÚMERO </p>
                             <mat-form-field class="example-full-width w-40">
-                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum.consecutivoAsamblea">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.consecutivoAsamblea">
                                 <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
                               </mat-form-field>
                         </div>
                         <div class="flex flex-row justify-between items-center">
                             <p class="font-semibold text-primary sm:text-xl xsm:text-md">TOTAL ASAMBLEA </p>
                             <mat-form-field class="example-full-width w-40">
-                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum.totalRegistros">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalRegistros">
                                 <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
                               </mat-form-field>
                         </div>
@@ -38,14 +41,14 @@
                         <div class="flex flex-row justify-between items-center">
                             <p class="font-semibold text-primary sm:text-xl xsm:text-md">ACCIONES ASAMBLEA </p>
                             <mat-form-field class="example-full-width w-40">
-                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum.totalAccionesAsamblea" >
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalAccionesAsamblea" >
                                 <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
                               </mat-form-field>
                         </div>
                         <div class="flex flex-row justify-between items-center">
                             <p class="font-semibold text-primary sm:text-xl xsm:text-md">TOTAL ACCIONES </p>
                             <mat-form-field class="example-full-width w-40">
-                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum.totalAcciones">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" [value]="datosQuorum?.totalAcciones">
                                 <mat-icon svgIcon="heroicons_solid:hashtag"></mat-icon>
                               </mat-form-field>
                         </div>
@@ -56,7 +59,7 @@
                         <div class="flex flex-row justify-between items-center">
                             <p class="font-semibold text-primary sm:text-xl xsm:text-md">QUORUM </p>
                             <mat-form-field class="example-full-width w-40">
-                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" readonly [value]="datosQuorum.quorum | porcentajesQuorum">
+                                <input type="tel" matInput class="sm:text-2xl xsm:text-md" readonly [value]="datosQuorum?.quorum | porcentajesQuorum">
                                 <mat-icon svgIcon="heroicons_solid:receipt-percent"></mat-icon>
                               </mat-form-field>
                         </div>
@@ -74,3 +77,5 @@
 
 
     </div>
+
+

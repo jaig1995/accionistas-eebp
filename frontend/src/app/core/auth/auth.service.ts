@@ -91,7 +91,6 @@ export class AuthService
         return this._httpClient.post(this._baseUrl + '/api/auth/sign-in', credentials).pipe(
             switchMap((response: any) =>
             {
-                console.log(response)
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
 
@@ -164,6 +163,8 @@ export class AuthService
     {
         // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('mode');
+        localStorage.removeItem('encryptedToken');
 
         // Set the authenticated flag to false
         this._authenticated = false;

@@ -218,9 +218,8 @@
                                         <div class="flex justify-end mt-8">
                                             <button mat-raised-button color="primary" class="w-40" matStepperNext
                                                 (click)="guardarPreguntas()" [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 1 || !asignacionPregunta.valid) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )" >&nbsp;
-                                                Guardar
-                                                <mat-icon fontSet="../../"></mat-icon>
-                                            </button>
+                                                <mat-icon svgIcon="feather:save"></mat-icon>
+                                                <span>Guardar</span></button>
                                         </div>
 
                                     </mat-step>

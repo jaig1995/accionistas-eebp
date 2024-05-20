@@ -90,7 +90,6 @@ export class CreacionPlantillasComponent implements OnInit {
     //peticiones HTTP
     async obtenerDatosEncuesta() {
         this.temasAsamblea = TemasAsamblea
-        console.log(this.consecutivoAsamblea)
         this.asambleaService.obtenerDatosEncuesta(this.consecutivoAsamblea).subscribe(
             {
                 next: (data: any) => {
@@ -102,10 +101,8 @@ export class CreacionPlantillasComponent implements OnInit {
                         return item.idEncuesta > maxId ? item.idEncuesta : maxId;
                       }, 0);
 
-                      console.log("first", ultimoId)
                     // Recibir los datos
                     const datosEncuesta = data[18]
-                    console.log("first", datosEncuesta)
 
 
                     const pr = this.temasAsamblea.filter(item => {
@@ -183,8 +180,7 @@ export class CreacionPlantillasComponent implements OnInit {
             idTema: idTema,
             pregunta: pregunta,
             tipoPregunta: tipoRespuesta,
-            opcionesRespuesta: respuestas
-
+            opcionesRespuesta:tipoRespuesta ==='unica' ? ['si', 'no'] :respuestas
         };
         this.preguntasAsamblea = pruebas;
         this.enviarPreguntas(this.preguntasAsamblea)

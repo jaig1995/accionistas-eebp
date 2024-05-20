@@ -39,7 +39,8 @@ export class EscogerModoModalComponent {
     }
 
     cerraModal() {
-        this.dialogRef.close()
+        this.dialogRef.close(null)
         this._router.navigate(['/']);
+
     }
 }

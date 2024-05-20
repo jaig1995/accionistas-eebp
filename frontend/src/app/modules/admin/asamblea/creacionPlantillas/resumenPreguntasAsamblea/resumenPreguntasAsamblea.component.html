@@ -1,4 +1,4 @@
-<div class="w-full h-auto">
+<div class="w-full h-auto" *ngIf="!pantallaDeCarga">
     <div class="flex-auto p-6 sm:p-10">
         <!-- titulos -->
         <div
@@ -32,12 +32,7 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'juntaDirectiva')">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
 
                                             </div>
                                         </div>
@@ -45,7 +40,7 @@
                                             Respuesta: {{ pregunta.value.tipoRespuesta }}</p>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                             </textarea>
 
@@ -59,7 +54,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -95,18 +90,13 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'reformaEstatutos')">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
 
                                             </div>
                                         </div>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                                                     </textarea>
 
@@ -120,7 +110,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -155,18 +145,13 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'distribucionUtilidades')">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
 
                                             </div>
                                         </div>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                                                     </textarea>
 
@@ -180,7 +165,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -213,18 +198,13 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'revisoriaFiscal')">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
 
                                             </div>
                                         </div>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                                                     </textarea>
 
@@ -238,7 +218,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -272,18 +252,13 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'estadosFinancieros')">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
 
                                             </div>
                                         </div>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                         </textarea>
 
@@ -297,7 +272,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -331,12 +306,7 @@
                                                 Pregunta No.{{ pregunta.value.id }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
-                                                <button class="bg-accent-100"
-                                                    matTooltip="Esta acción eliminará la pregunta."
-                                                    (click)="eliminarPregunta(pregunta.value.id,'proposicionesVarios')" *ngIf="!botonActivo">
-                                                    <mat-icon svgIcon="feather:trash-2" class="bg-accent-100 text-warn "
-                                                        color="text-warn"></mat-icon>
-                                                </button>
+
                                                 <mat-progress-spinner *ngIf="botonActivo" [diameter]="24"
                                                     [mode]="'indeterminate'" class="mb-3"></mat-progress-spinner>
 
@@ -344,7 +314,7 @@
                                         </div>
                                         <mat-form-field class="w-full p-3">
                                             <mat-label class=" ">Pregunta</mat-label>
-                                            <textarea formControlName="pregunta" matInput>
+                                            <textarea formControlName="pregunta" matInput readonly>
 
                                         </textarea>
 
@@ -358,7 +328,7 @@
                                                 *ngFor="let respuesta of pregunta.get('opcionesRespuesta').controls; let i = index">
                                                 <mat-form-field class="w-full">
                                                     <mat-label>Respuesta {{i + 1}}: </mat-label>
-                                                    <input matInput [formControlName]="i">
+                                                    <input matInput [formControlName]="i" readonly>
 
                                                 </mat-form-field>
                                             </div>
@@ -373,14 +343,23 @@
                     </mat-accordion>
 
 
-                        <button mat-flat-button  color="accent" class="flex items-center gap-2  color-accent w-full mt-4">
-                            <mat-icon svgIcon="feather:save"></mat-icon>
-                            <span>Guardar</span>
-                        </button>
-
                 </form>
 
             </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="  rounded-md p-4  w-full px-10 mt-5 " *ngIf="pantallaDeCarga">
+    <div class="animate-pulse flex space-x-4 px-3 w-full bg-white">
+        <div class="flex-1 space-y-6  px-15 py-8">
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
+            <div class="h-12 bg-slate-300 rounded "></div>
 
         </div>
     </div>
