@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PorcentajeDirective } from 'app/shared/directives/porcentaje.directive';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import Chart, { ChartType } from 'chart.js/auto';
 import { AsambleaService } from '../asamblea.service';
 import { PorcentajesPipe } from 'app/shared/pipes/procentajes.pipe';
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
     selector: 'app-quorum',
@@ -16,16 +18,20 @@ import { PorcentajesPipe } from 'app/shared/pipes/procentajes.pipe';
         PorcentajesPipe,
         ReactiveFormsModule,
         AngularMaterialModules,
-        PorcentajeDirective
+        PorcentajeDirective,
+        FuseLoadingBarComponent,
 
     ],
     templateUrl: 'quorum.component.html',
     changeDetection: ChangeDetectionStrategy.Default,
+    encapsulation: ViewEncapsulation.Emulated,
+    animations: fuseAnimations,
 })
 export class QuorumComponent implements OnInit {
 
     //Inyeccion de dependencias
     private _asambleaService = inject(AsambleaService)
+    pantallaDeCarga:boolean = true
 
     //variables data informacion quorum
     datosQuorum: any
@@ -35,41 +41,46 @@ export class QuorumComponent implements OnInit {
     ngOnInit(): void {
         this.obtenerDatosQuorum()
 
-        const data = {
-            labels: [
-                'Asistentes',
-                'Faltante',
-            ],
-            datasets: [{
-                label: 'Numero de asistentes',
-                data: [400, 300],
-                backgroundColor: [
-                    '#5A9C30',
-                    '#002E5F',
-                ],
-                hoverOffset: 4
-            }]
-        };
-        // Creamos la gráfica
-        this.chart = new Chart("chart", {
-            type: 'doughnut' as ChartType,
-            data
-        })
+
     }
 
 
     validarQuorum(){
-
+        this.obtenerDatosQuorum()
     }
 
     obtenerDatosQuorum() {
         this._asambleaService.obtenerDatosAsamblea().subscribe({
-            next: (data) => {
-                this.datosQuorum = data
-                console.log(data)
+            next: (datos) => {
+                this.datosQuorum = datos
+                const totalAccionesAccionesAsamblea = this.datosQuorum .totalAccionesAsamblea
+                const totalAcciones = this.datosQuorum .totalAcciones
+                const data = {
+                    labels: [
+                        'Acciones En Asamblea',
+                        'Total Acciones',
+                    ],
+                    datasets: [{
+                        label: 'Numero de asistentes',
+                        data: [totalAccionesAccionesAsamblea, totalAcciones],
+                        backgroundColor: [
+                            '#5A9C30',
+                            '#002E5F',
+                        ],
+                        hoverOffset: 4
+                    }]
+                };
+                // Creamos la gráfica
+                this.chart = new Chart("chart", {
+                    type: 'doughnut' as ChartType,
+                    data
+                })
             },
             error: (error) => {
 
+            },
+            complete:()=>{
+                this.pantallaDeCarga= false
             }
         })
     }

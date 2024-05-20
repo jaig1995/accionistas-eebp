@@ -64,11 +64,9 @@ export class FormularioVotacionesComponent implements OnInit {
             )
             .subscribe(formulario => {
                 if (this.formInitialized) {
-                    console.log('entre')
                     this.enviarFormularioVotaciones(formulario);
 
                 }else{
-                    console.log('no entre')
                     this.formInitialized = true;
                 }
             });
@@ -106,11 +104,9 @@ export class FormularioVotacionesComponent implements OnInit {
 
         const codigoUsuarioVotante = this.datosVotante.codUsuario
 
-        console.log(codigoUsuarioVotante)
         this.asambleaService.obtenerFormularioAccionista2(codigoUsuarioVotante).subscribe(
             {
                 next: (data: any) => {
-                    console.log(data)
                     this.insertarPreguntasFormularioAsamblea(data?.juntaDirectiva, 'juntaDirectiva');
                     this.insertarPreguntasFormularioAsamblea(data?.revisoriaFiscal, 'revisoriaFiscal');
                     this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
@@ -119,15 +115,12 @@ export class FormularioVotacionesComponent implements OnInit {
                     this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
                 },
                 error: (error) => {
-                    console.log(error)
                     this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
                         next: (data) => {
-                            console.log(data)
                             this.consecutivoAsamblea = data.ultimoConsecutivo
                             this.asambleaService.obtenerPreguntasAsamblea2(this.consecutivoAsamblea).subscribe(
                                 {
                                     next: (data) => {
-                                        console.log(data)
                                         this.insertarPreguntasFormularioAsamblea(data.juntaDirectiva, 'juntaDirectiva');
                                         this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                                         this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');

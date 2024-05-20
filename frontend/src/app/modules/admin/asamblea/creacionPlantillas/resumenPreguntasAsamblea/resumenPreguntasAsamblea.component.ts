@@ -27,6 +27,7 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     //validaciones y alertas
     botonActivo = true
     consecutivoAsamblea: any;
+    pantallaDeCarga: boolean;
 
     ngOnInit(): void {
         this.obtenerConsecutivoAsamblea()
@@ -104,12 +105,12 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     }
 
     cargarDatosFormulario() {
+        this.pantallaDeCarga = true
         this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
             next:(data)=>{
                 this.consecutivoAsamblea = data.ultimoConsecutivo
                 this.asambleaService.obtenerPreguntasAsamblea2(this.consecutivoAsamblea).subscribe({
                     next: (data: PlantillaPreguntas) => {
-                        // console.log(data)
                         this.cargarDatosCategoria(data.juntaDirectiva, 'juntaDirectiva');
                         this.cargarDatosCategoria(data.reformaEstatutos, 'reformaEstatutos');
                         this.cargarDatosCategoria(data.distribucionUtilidades, 'distribucionUtilidades');
@@ -123,6 +124,7 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
                     },
                     complete: () => {
                         this.botonActivo = false
+                        this.pantallaDeCarga = false
                     }
                 });
             },
@@ -137,7 +139,6 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     obtenerConsecutivoAsamblea(){
         this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
             next:(data)=>{
-                console.log(this.consecutivoAsamblea)
                 this.consecutivoAsamblea = data.ultimoConsecutivo
             },
             error:(error)=>{
@@ -152,7 +153,6 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
         preguntas.clear();
 
         data.forEach(pregunta => {
-            console.log(pregunta)
             const nuevaPregunta = this.fb.group({
                 id: pregunta.id,
                 tipoRespuesta: pregunta.tipoRespuesta,
@@ -171,7 +171,6 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
         // TODO:llamado a refrescar todo el formulario
         this.cargarDatosFormulario()
         //
-        console.log(data)
         this.botonActivo = true
     }
 

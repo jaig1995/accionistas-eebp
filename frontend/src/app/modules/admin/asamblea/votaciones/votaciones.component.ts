@@ -9,6 +9,7 @@ import { EscogerModoModalComponent } from './EscogerModoModal/EscogerModoModal.c
 import { AsambleaService } from '../asamblea.service';
 import { Votantes } from './interfaces/Votantes.interface';
 import CryptoJS from 'crypto-js';
+import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 
 
 @Component({
@@ -19,6 +20,7 @@ import CryptoJS from 'crypto-js';
         FormularioVotacionesComponent,
         FuseAlertComponent,
         AngularMaterialModules,
+        FuseLoadingBarComponent,
 
     ],
     templateUrl: 'votaciones.component.html',
@@ -27,6 +29,7 @@ import CryptoJS from 'crypto-js';
     changeDetection: ChangeDetectionStrategy.Default,
 })
 export class VotacionesComponent implements OnInit, AfterViewInit {
+    pantallaDeCarga: boolean= true;
 
 
     ngAfterViewInit(): void {
@@ -49,17 +52,15 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
 
         this.obetenerDatosVotaciones()
-        console.log(this.datosVotoApoderado)
 
     }
 
     //TODO: cambiar por el documento el numero 2, en el service esta quemado el numero de documento
     obetenerDatosVotaciones() {
+
         const {id:documentoVotante} = JSON.parse(this.decryptToken());
-        console.log(documentoVotante)
         this._asambleaService.obtenerpoderDantes(documentoVotante).subscribe({
             next: (data) => {
-                console.log(data)
                 if (data) {
 
                     this.datosVotoPoderdante = data.poderDantes
@@ -69,9 +70,8 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
                         this.modoSeleccionado = 0
                     } else {
                         let modoSeleccionadoVotar = localStorage.getItem('mode')
-                        console.log(modoSeleccionadoVotar)
 
-                        if(modoSeleccionadoVotar){
+                        if(modoSeleccionadoVotar !== null){
 
                             if(modoSeleccionadoVotar === 'individual'){
                                 this.individual = true;
@@ -83,6 +83,7 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
                         }else{
                             this.openModal()
 
+
                         }
 
                     }
@@ -93,7 +94,10 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
             },
             error: (error) => {
                 console.log(error)
-            }
+            },
+            complete:() =>{
+                this.pantallaDeCarga = false
+            },
         })
     }
 
@@ -119,16 +123,18 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result === true) {
                 this.bloque = true;
                 this.modoSeleccionado = 1
                 localStorage.setItem('mode', 'bloque')
-            } else {
+            } else if(result === false) {
                 this.individual = true;
                 this.modoSeleccionado = 0
                 localStorage.setItem('mode', 'individual')
+            }else if(result === null){
+                localStorage.removeItem('mode')
             }
 
-        });
+        })
     }
 }
