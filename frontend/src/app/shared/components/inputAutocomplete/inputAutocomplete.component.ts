@@ -132,5 +132,6 @@ export class InputAutocompleteComponent implements OnInit {
 
     borrarFormulario(){
         this.buscarAccionista.reset()
+
     }
 }

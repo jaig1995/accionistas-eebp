@@ -26,7 +26,7 @@
                     <mat-radio-group formControlName="tipoAccionista" class="flex-row flex text-primary font-extrabold">
                         <mat-radio-button color="accent" class="text-primary font-extrabold" value="principal"><span
                                 class="text-accent font-extrabold text-lg">Principal</span></mat-radio-button>
-                        <mat-radio-button color="primary" value="suplente"><span
+                        <mat-radio-button color="primary" value="suplente" *ngIf="!modoUnSoloPostulante"><span
                                 class="text-primary font-extrabold text-lg">Suplente</span></mat-radio-button>
                     </mat-radio-group>
                     <mat-error

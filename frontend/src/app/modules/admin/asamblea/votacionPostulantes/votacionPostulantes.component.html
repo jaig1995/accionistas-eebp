@@ -1,0 +1,83 @@
+<fuse-loading-bar></fuse-loading-bar>
+
+<!-- fin alertas -->
+<div class="w-full h-auto">
+    <mat-tab-group>
+        <mat-tab label="Votaciones">
+
+            <app-resumen-postulaciones [modoVotaciones]="true" />
+
+        </mat-tab>
+        <mat-tab label="Resultados">
+            <mat-expansion-panel class="hover:bg-primary-100" >
+                <mat-expansion-panel-header class="bg-accent  ">
+                    <mat-panel-title class="text-white ">
+                        {{'junta directiva' | titlecase}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="w-full h-auto">
+                    <div *ngFor="let item of resultadosPostulantes?.juntaDirectiva; let i = index" class="p-2 w-full bg-card shadow-md mt-4 mb-2 sm:h-30 rounded-sm sm:flex-row xsm:flex-col xsm:space-x-2 xsm:space-y-2 xsm:h-40">
+                        <h1 class="w-full text-center text-primary font-semibold "> Plancha No.{{i + 1}}</h1>
+                        <div class="flex justify-between">
+                            <div class="w full flex flex-col p-2">
+                                <p> <span class="font-semibold text-ellipsis ">Postulante Principal:</span> {{item.nombrePrincipal}}</p>
+                                <p><span class="font-semibold  text-ellipsis">Postulante Suplente:</span> {{item.nombreSuplente}}</p>
+                            </div>
+                            <div class="w-40 ">
+                                <h2> <span class="font-semibold ">Número de Votos :</span> {{item?.totalVotos}}</h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+
+            <!-- postulados para presidente asamblea -->
+            <mat-expansion-panel class="hover:bg-primary-100 mt-2" >
+                <mat-expansion-panel-header class="bg-accent ">
+                    <mat-panel-title class="text-white ">
+                        {{'revisor fiscal' | titlecase}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="w-full h-auto">
+                    <div *ngFor="let item of resultadosPostulantes?.revisorFiscal; let i = index" class="p-2 w-full bg-card shadow-md mt-4 mb-2 sm:h-30 rounded-sm sm:flex-row xsm:flex-col xsm:space-x-2 xsm:space-y-2 xsm:h-40">
+                        <h1 class="w-full text-center text-primary font-semibold "> Plancha No.{{i + 1}}</h1>
+                        <div class="flex justify-between">
+                            <div class="w full flex flex-col p-2">
+                                <p> <span class="font-semibold text-ellipsis ">Postulante Principal:</span> {{item.nombrePrincipal}}</p>
+                                <p><span class="font-semibold  text-ellipsis">Postulante Suplente:</span> {{item.nombreSuplente}}</p>
+                            </div>
+                            <div class="w-40 ">
+                                <h2> <span class="font-semibold ">Número de Votos :</span> {{item?.totalVotos}}</h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-tab>
+    </mat-tab-group>
+
+</div>
+
+
+
+<!-- alertas -->
+<div class="flex justify-end top-100 right-9 mt-13 w-auto  animated-box ">
+
+    <div class="w-full ">
+        <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+            <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                <span fuseAlertTitle>Información</span>
+                ¡Transacción exitosa!
+            </fuse-alert>
+        </div>
+
+        <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+            <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                <span fuseAlertTitle>Información</span>
+                ¡Transacción no exitosa!
+            </fuse-alert>
+        </div>
+    </div>
+</div>

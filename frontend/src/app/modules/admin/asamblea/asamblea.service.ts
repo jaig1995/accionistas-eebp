@@ -140,4 +140,26 @@ export class AsambleaService {
         return this.http.get<any>(`${this._baseUrl}/api/asamblea/poder/${consecutivoAsamblea}`)
     }
 
+    //Votaciones y postulaciones postulantes
+
+    obtenerResumenGeneralPostulantes() {
+        return this.http.get<any>(`${this._baseUrl}/api/plancha/resumen`)
+    }
+
+    enviarPostulante(postulante) {
+        return this.http.post<any>(`${this._baseUrl}/api/plancha`, postulante)
+    }
+
+    votarPorPostulante(datosVotacion) {
+        return this.http.post<any>(`${this._baseUrl}/api/votacion-plancha`, datosVotacion)
+    }
+
+    obtenerResultadosPostulantes(){
+        return this.http.get<any>(`${this._baseUrl}/api/votacion-plancha/votos`)
+    }
+
+
+    validacionVoto(idUsuario){
+        return this.http.get<any>(`${this._baseUrl}/api/votacion-plancha/${idUsuario}`)
+    }
 }
