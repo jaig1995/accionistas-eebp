@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormsModule, NgModel, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 
 @Component({
@@ -7,24 +8,29 @@ import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMater
     standalone: true,
     imports: [
         CommonModule,
-        AngularMaterialModules
+        FormsModule,
+        AngularMaterialModules,
+        ReactiveFormsModule
 
     ],
     templateUrl: 'planchaPostulante.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
 })
 export class PlanchaPostulanteComponent implements OnInit {
 
     @Input() modoVotacion: any;
     @Input() datos: any;
 
-    nombrePlancha:any;
+    //variables voto
+    voto
+
+    nombrePlancha: any;
     nombresApellidos: any;
 
     ngOnInit(): void {
         this.recuperarPlanchaNombres()
+        console.log('Consola desde:         clg');
     }
-
 
     recuperarPlanchaNombres() {
         const primerElemento = this.datos[0];
@@ -32,7 +38,6 @@ export class PlanchaPostulanteComponent implements OnInit {
         const accionistas = primerElemento[this.nombrePlancha];
         this.nombresApellidos = accionistas.map(accionista => accionista.nombresApellidos);
     }
-
 
 
 

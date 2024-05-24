@@ -1,78 +1,103 @@
 <fuse-loading-bar></fuse-loading-bar>
-<div class="w-full">
+<div class="w-full h-auto">
 
 
-        <!-- alertas -->
-        <div class="flex justify-end fixed top-7 right-9 mt-13 w-full z-50 animated-box">
 
-            <div class="w-100 mb-4 ">
 
-                <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
-                    <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
-                        <span fuseAlertTitle>Información</span>
-                        ¡Transacción exitosa!
-                    </fuse-alert>
-                </div>
+    <mat-tab-group>
 
-                <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
-                    <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
-                        <span fuseAlertTitle>Información</span>
-                        ¡Transacción no exitosa!
-                    </fuse-alert>
-                </div>
+        <!-- comite Escrutinio -->
+        <mat-tab label="Comite Escrutinio">
+            <div
+                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+                {{ 'comite Escrutinio' | titlecase }}</div>
+
+            <app-postulante (datosDelPostulante)="postulanteCE($event)" (campoVacio)="existenDatosCE($event)"
+                [modoUnSoloPostulante]="true" />
+
+            <div class="flex flex-row justify-end ">
+                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
+                    [disabled]="!validacionCE() || botonActivo" (click)="enviarPostulacionComiteEscrutinio()">
+                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
+                        class="text-lg">&nbsp;Postular</span></button>
             </div>
-        </div>
-        <!-- fin alertas -->
+        </mat-tab>
 
-    <mat-tab-group [selectedIndex]="0">
-        <mat-tab label="Comite Escrutador">
-            <!-- SECCIÓN COMITE ESCRUTADOR  -->
+        <!-- Presidente -->
+        <mat-tab label="Presidente">
+            <div
+                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+                {{ 'presidente' | titlecase }}</div>
+
+            <app-postulante (datosDelPostulante)="postulantePR($event)" (campoVacio)="existenDatosPresidente($event)"
+                [modoUnSoloPostulante]="true" />
+
+            <div class="flex flex-row justify-end ">
+                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
+                    [disabled]="!validacionPresidente() || botonActivo" (click)="enviarPostulacionRevisoriaFiscal()">
+                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
+                        class="text-lg">&nbsp;Postular</span></button>
+            </div>
+        </mat-tab>
+
+        <!-- Aporbacion acta -->
+        <mat-tab label="Aprobador Acta">
+            <div
+                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+                {{ 'aprobador acta"' | titlecase }}</div>
+
+                <app-postulante (datosDelPostulante)="postulanteAA($event)" (campoVacio)="existenDatosAA($event)"
+                [modoUnSoloPostulante]="true" />
+
+            <div class="flex flex-row justify-end ">
+                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
+                    [disabled]="!validacionAA() || botonActivo" (click)="enviarPostulacionRevisoriaFiscal()">
+                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
+                        class="text-lg">&nbsp;Postular</span></button>
+            </div>
+        </mat-tab>
+
+
+        <mat-tab label="Junta Directiva">
+            <!-- JUNTA DIRECTIVA -->
             <div class="w-full h-auto">
                 <div
                     class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
-                    {{ 'postular a comite escrutador' | titlecase }}</div>
-                <app-postulante (datosDelPostulante)="primerPostulanteCEscrutador($event)"
-                    (campoVacio)="existenDatosPrimerPostulanteCE($event)" />
-                <app-postulante (datosDelPostulante)="segundoPostulanteCEscrutador($event)"
-                    (campoVacio)="existenDatosSegundoPostulanteCE($event)" />
+                    {{ 'junta directiva' | titlecase }}</div>
+                <app-postulante (datosDelPostulante)="primerPostulanteJDirectiva($event)"
+                    (campoVacio)="existenDatosPrimerPostulanteJD($event)" />
+                <app-postulante (datosDelPostulante)="segundoPostulanteJDirectiva($event)"
+                    (campoVacio)="existenDatosSegundoPostulanteJD($event)" />
                 <div class="flex flex-row justify-end ">
                     <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
-                        [disabled]="!validacionComiteEscrutador() || botonActivo" (click)="enviarPostulacionComiteEscrutador()">
-                        <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays" *ngIf="!botonActivo"></mat-icon><span *ngIf="!botonActivo">
+                        [disabled]="!validacionJuntaDirectiva() || botonActivo"
+                        (click)="enviarPostulacionJuntaDirectiva()">
+                        <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays" *ngIf="!botonActivo"></mat-icon><span
+                            *ngIf="!botonActivo">
                             Postular
                         </span>
-                        <mat-progress-spinner *ngIf="botonActivo" [diameter]="24" [mode]="'indeterminate'"
-                            ></mat-progress-spinner></button>
+                        <mat-progress-spinner *ngIf="botonActivo" [diameter]="24"
+                            [mode]="'indeterminate'"></mat-progress-spinner></button>
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Presidente Asamblea">
-            <!-- SECCIÓN PRESIDENTE ASAMBLEA  -->
+        <mat-tab label="Revisor Fiscal">
+            <!-- REVISOR FISCAL  -->
             <div
                 class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
-                {{ 'postular a presidente asamblea' | titlecase }}</div>
-            <app-postulante/>
+                {{ 'revisor fiscal' | titlecase }}</div>
+            <app-postulante (datosDelPostulante)="postulanteRFiscal($event)"
+                (campoVacio)="existenDatosPostulanteRF($event)" [modoUnSoloPostulante]="true" />
 
             <div class="flex flex-row justify-end ">
-                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5">
+                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
+                    [disabled]="!validacionRevisorFiscal() || botonActivo" (click)="enviarPostulacionRevisoriaFiscal()">
                     <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
                         class="text-lg">&nbsp;Postular</span></button>
             </div>
 
         </mat-tab>
-        <mat-tab label="Comite Aprobacion acta">
-            <!-- SECCIÓN COMITE APROBADOR DE ACTA -->
-            <div
-                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
-                {{ 'postular a comite aprobacion de acta' | titlecase }}</div>
-            <app-postulante />
 
-            <div class="flex flex-row justify-end ">
-                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5">
-                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
-                        class="text-lg">&nbsp;Postular</span></button>
-            </div>
-        </mat-tab>
         <mat-tab label="Resumen">
             <!-- SECCIÓN RESUMEN -->
             <div
@@ -85,6 +110,28 @@
 </div>
 
 
+
+<!-- alertas -->
+<div class="flex justify-end fixed top-7 right-9 mt-13 w-full {{showSuccesAlert ? 'z-50' : ''}} animated-box">
+
+    <div class="w-100 mb-4 ">
+
+        <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+            <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                <span fuseAlertTitle>Información</span>
+                ¡Transacción exitosa!
+            </fuse-alert>
+        </div>
+
+        <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+            <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                <span fuseAlertTitle>Información</span>
+                ¡Transacción no exitosa!
+            </fuse-alert>
+        </div>
+    </div>
+</div>
+<!-- fin alertas -->
 <ng-template #dialogTemplate>
     <div class="flex flex-row">
         <mat-icon svgIcon="heroicons_solid:exclamation-triangle" class="mr-2 text-primary"></mat-icon>

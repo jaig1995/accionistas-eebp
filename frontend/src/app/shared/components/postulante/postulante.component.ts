@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -18,7 +18,7 @@ import { Accionista } from '../interfaces/accionista.interface';
         AngularMaterialModules,
     ],
     templateUrl: 'postulante.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class PostulanteComponent implements OnInit {
 
@@ -32,6 +32,9 @@ export class PostulanteComponent implements OnInit {
     //variables para componentes padres
     @Output() datosDelPostulante = new EventEmitter<any>();
     @Output() campoVacio = new EventEmitter<any>(false);
+
+    //variables de entrada al componente
+    @Input() modoUnSoloPostulante = false
 
     //Variables Imagenes
     imagenCargada: boolean = false;
@@ -51,7 +54,7 @@ export class PostulanteComponent implements OnInit {
 
     ngOnInit(): void {
         this.datosPostulante = this.fb.group({
-            tipoAccionista: ['', Validators.required],
+            tipoAccionista: [this.modoUnSoloPostulante ? 'principal' : '', Validators.required],
             nombresApellidos: ['', Validators.required],
             telefono: ['', Validators.required],
             documentoIdentidad: ['', Validators.required],
@@ -120,7 +123,8 @@ export class PostulanteComponent implements OnInit {
                 },
                 error: (data) => {
                     this.existenDatosAccionista = true
-                }
+                },
+
             })
     }
 
