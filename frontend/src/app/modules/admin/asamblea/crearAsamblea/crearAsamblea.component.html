@@ -40,7 +40,7 @@
                     <div class="mr-5">
                         <mat-form-field class="w-50">
                             <mat-label>Fecha Asamblea</mat-label>
-                            <input matInput formControlName="fechaAsamblea" [matDatepicker]="Date" readonly>
+                            <input matInput formControlName="fechaAsamblea" [matDatepicker]="Date" readonly [min]="today">
                             <mat-datepicker-toggle matIconSuffix [for]="Date"></mat-datepicker-toggle>
                             <mat-datepicker #Date></mat-datepicker>
                         </mat-form-field>

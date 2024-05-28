@@ -149,6 +149,8 @@ export class RegistroPoderesComponent implements AfterViewInit {
     }
 
     recibirArchivo(archivo) {
+        console.log('💻🔥 152, registroPoderes.component.ts: ', archivo);
+        //todo:corregir numero consecutivo
         this.archivoRegistroPoderantes = archivo
         console.log(archivo)
     }
@@ -188,7 +190,6 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     //peticiones http
     enviarPeticionRegistro(registroPoderes: any) {
-        //TODO: borrar
         this.botonActivo = true
 
         this.asambleaService.registrarPoder(registroPoderes).subscribe(
@@ -199,9 +200,11 @@ export class RegistroPoderesComponent implements AfterViewInit {
                         {
                             next: (data) => {
                                 this.mostrarAlertaExitosa();
+                                this.botonActivo = false
                             },
                             error: (data) => {
                                 this.mostrarAlertaFallida()
+                                this.botonActivo = false
                             },
                             complete: () => {
                                 this.botonActivo = false

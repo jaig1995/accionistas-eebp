@@ -99,7 +99,8 @@
                                             <div class="flex justify-end mt-6">
                                                 <button mat-raised-button color="primary" class="w-40" matStepperNext
                                                     [disabled]="formularioPreguntas.invalid"
-                                                    (click)="abrirDialogo(dialogTemplate)" [disabled]="esEditableTemasAsamblea">&nbsp;
+                                                    (click)="abrirDialogo(dialogTemplate)"
+                                                    [disabled]="esEditableTemasAsamblea">&nbsp;
                                                     Siguiente
                                                     <mat-icon svgIcon="heroicons_outline:arrow-right"></mat-icon>
                                                 </button>
@@ -115,7 +116,7 @@
                                             <ng-template matStepLabel><span
                                                     class="text-primary font-extrabold">Asignación
                                                     de preguntas para asamblea
-                                                    No.023</span></ng-template>
+                                                    No.{{consecutivoAsamblea}}</span></ng-template>
 
                                             <!-- Escoger Tipo de pregunta -->
                                             <div class=" mr-5 mb-5 flex flex-row justify-between w-full">
@@ -163,7 +164,7 @@
                                                     <mat-label class="text-primary font-semibold">Encabezado de la
                                                         pregunta:</mat-label>
                                                     <textarea matInput placeholder="Escribe aqui la pregunta"
-                                                        formControlName="pregunta"></textarea>
+                                                        formControlName="pregunta" (input)="filtrarCaracteres($event)"></textarea>
                                                 </mat-form-field>
                                             </div>
 
@@ -217,7 +218,8 @@
                                         <!-- boton agregar pregunta existePreguntaMultiple || asignacionPregunta.invalid ||-->
                                         <div class="flex justify-end mt-8">
                                             <button mat-raised-button color="primary" class="w-40" matStepperNext
-                                                (click)="guardarPreguntas()" [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 1 || !asignacionPregunta.valid) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )" >&nbsp;
+                                                (click)="guardarPreguntas()"
+                                                [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 1 || !asignacionPregunta.valid) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )">&nbsp;
                                                 <mat-icon svgIcon="feather:save"></mat-icon>
                                                 <span>Guardar</span></button>
                                         </div>
@@ -269,5 +271,3 @@
     </mat-dialog-actions>
 </ng-template>
 <!-- [disabled]=" (asignacionPregunta.value.tipoRespuesta === 'multiple' && respuestasOpcionMultiple.length <= 2) || (asignacionPregunta.value.tipoRespuesta === 'unica' && !asignacionPregunta.valid )" -->
-
-

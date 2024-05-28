@@ -93,16 +93,16 @@ export class CreacionPlantillasComponent implements OnInit {
         this.asambleaService.obtenerDatosEncuesta(this.consecutivoAsamblea).subscribe(
             {
                 next: (data: any) => {
+                    //TODO: aqui empezar a modificar datos asamblea
                     //habilitar seccion escoge los temas a tratar checkbox
-                    //TODO: continuar aqui esperar respuesta de JUAN
                     this.esEditableTemasAsamblea = true
 
                     const ultimoId = data.reduce((maxId, item) => {
                         return item.idEncuesta > maxId ? item.idEncuesta : maxId;
-                      }, 0);
+                    }, 0);
 
                     // Recibir los datos
-                    const datosEncuesta = data[18]
+                    const datosEncuesta = data[0]
 
 
                     const pr = this.temasAsamblea.filter(item => {
@@ -152,6 +152,13 @@ export class CreacionPlantillasComponent implements OnInit {
         })
     }
 
+
+    filtrarCaracteres(event: Event) {
+        const input = event.target as HTMLTextAreaElement;
+        const valorSinCaracteresProhibidos = input.value.replace(/\?/g, '');
+        this.asignacionPregunta.get('pregunta')?.setValue(valorSinCaracteresProhibidos, { emitEvent: false });
+    }
+
     // fin peticiones http
 
     goToFirstStep(): void {
@@ -173,6 +180,7 @@ export class CreacionPlantillasComponent implements OnInit {
 
     // Método para agregar una nueva pregunta al FormArray
     agregarPregunta() {
+        console.log('💻🔥 178, creacionPlantillas.component.ts: ', this.consecutivoAsamblea);
         const { idTema, tipoRespuesta, pregunta } = this.asignacionPregunta.value;
         const respuestas = this.respuestasOpcionMultiple
         const pruebas = {
@@ -180,7 +188,7 @@ export class CreacionPlantillasComponent implements OnInit {
             idTema: idTema,
             pregunta: pregunta,
             tipoPregunta: tipoRespuesta,
-            opcionesRespuesta:tipoRespuesta ==='unica' ? ['si', 'no'] :respuestas
+            opcionesRespuesta: tipoRespuesta === 'unica' ? ['si', 'no'] : respuestas
         };
         this.preguntasAsamblea = pruebas;
         this.enviarPreguntas(this.preguntasAsamblea)

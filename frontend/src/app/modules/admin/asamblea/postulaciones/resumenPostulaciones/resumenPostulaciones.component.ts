@@ -29,13 +29,16 @@ export class ResumenPostulacionesComponent implements OnInit {
     //variables votacion
     selectedOption: any;
 
+    votacionDeshabilitada : boolean = false
     //validaciones
     existeVotoJD: any;
     existeVotoRF: any;
+    validacionJD:boolean = false
 
     @ViewChild(MatAccordion) accordion: MatAccordion;
     @Input() modoVotaciones: any = false;
     datosPostulados: any;
+    validacionRF: boolean;
 
     ngOnInit(): void {
         this.validacionVotos()
@@ -48,9 +51,8 @@ export class ResumenPostulacionesComponent implements OnInit {
 
         this._asambleaService.obtenerResumenGeneralPostulantes().subscribe({
             next: (data: any) => {
-                //todo: aqui recibimos la data del backend
-                console.log('💻🔥 51, resumenPostulaciones.component.ts: ', data);
-                this.datosPostulados =data
+                console.log('💻🔥 51, resumenPostulaciones.component.ts: ', data.juntaDirectiva.postulantes.length);
+                this.datosPostulados = data
 
             },
             error: (data) => {
@@ -77,21 +79,21 @@ export class ResumenPostulacionesComponent implements OnInit {
 
 
     votar() {
-        const codUsuario = JSON.parse(this.decryptToken())
-        console.log('💻🔥 56, resumenPostulaciones.component.ts: ', { ...this.selectedOption, codUsuario: codUsuario?.id });
-        let datosVotacion= { ...this.selectedOption, idPersona: codUsuario?.id }
-        this.enviarVotacion(datosVotacion)
+        console.log('💻🔥 82, resumenPostulaciones.component.ts: ', this.selectedOption);
+
+        // let datosVotacion = { ...this.selectedOption, idPersona: codUsuario?.id }
+        // this.enviarVotacion(datosVotacion)
 
     }
 
-    enviarVotacion(votacion){
+    enviarPeticionVotacion(votacion) {
         this._asambleaService.votarPorPostulante(votacion).subscribe({
-            next:(data)=>{
+            next: (data) => {
                 console.log('💻🔥 65, resumenPostulaciones.component.ts: ', data);
-           },
-           error:(error)=>{
-            console.log('💻🔥 68, resumenPostulaciones.component.ts: ', error);
-           }
+            },
+            error: (error) => {
+                console.log('💻🔥 68, resumenPostulaciones.component.ts: ', error);
+            }
         })
     }
 
@@ -107,6 +109,27 @@ export class ResumenPostulacionesComponent implements OnInit {
             return null;
         }
     }
+
+
+
+    enviarVotacion(seccion) {
+
+        if (!this.selectedOption) return;
+
+        const codUsuario = JSON.parse(this.decryptToken())
+
+        if(seccion === 'validacionJD'){
+            this.validacionJD = true
+        }else if(seccion === 'validacionRF'){
+            this.validacionRF = true
+        }
+
+        console.log('💻🔥 126, resumenPostulaciones.component.ts: ',{ ...this.selectedOption, codUsuario: codUsuario?.id } );
+        this.enviarPeticionVotacion({ ...this.selectedOption, idPersona: codUsuario?.id })
+        this.accordion.closeAll()
+
+    }
+
 
 }
 

@@ -7,3 +7,6 @@
         <input type="file" #fileInput style="display: none;" [accept]="formatosAceptados" (change)="archivoSelecionado($event)">
     </div>
 </div>
+<div *ngIf="error" class="text-warn">
+    {{ error }}
+</div>
