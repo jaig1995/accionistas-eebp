@@ -55,7 +55,6 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
 
     }
 
-    //TODO: cambiar por el documento el numero 2, en el service esta quemado el numero de documento
     obetenerDatosVotaciones() {
 
         const {id:documentoVotante} = JSON.parse(this.decryptToken());

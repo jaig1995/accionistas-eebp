@@ -72,18 +72,14 @@ export class AsistenciaComponent implements OnInit {
         this.obtenerDatosAsamblea()
     }
 
-    // ngAfterViewInit() {
-    //     this.dataSource.paginator = this.paginator;
-    //     this.dataSource.sort = this.sort;
-    // }
 
-    obtenerConsecutivoAsamblea(){
-        this._asambleaService.obtenerConsecutivosAsamblea().subscribe({
-            next:(data)=>{
-                this.consecutivoAsamblea = data.consecutivo
+    obtenerConsecutivoAsamblea() {
+        this._asambleaService.obtenerConsecutivoAsamblea().subscribe({
+            next: (data) => {
+                this.consecutivoAsamblea = data.ultimoConsecutivo
             },
-            error:(error)=>{
-
+            error: (error) => {
+                this.consecutivoAsamblea = ''
             }
         })
     }
@@ -152,8 +148,20 @@ export class AsistenciaComponent implements OnInit {
     }
 
 
+
+
+
     imprimirFila(row: any): void {
         row.asistencia = !row.asistencia;
+        const data = {
+            idAsistente: row.idAsistente,
+            consecutivo: this.consecutivoAsamblea ,
+            asistencia: row.asistencia,
+            idePer: row.codUsuario,
+            huella:null
+        }
+        this.obtenerDatosAsamblea()
+        console.log('💻🔥 165, asistencia.component.ts: ', data);
     }
 
     mostrarAlertaExitosa(): void {

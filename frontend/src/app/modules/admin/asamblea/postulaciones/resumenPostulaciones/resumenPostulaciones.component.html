@@ -1,58 +1,69 @@
-<!-- postulados para comite escrutador -->
+<!-- postulados para Junta directiva -->
 <mat-accordion multi>
-    <mat-expansion-panel class="hover:bg-primary-300" [disabled]="existeVotoJD !== 'NO' ">
-        <mat-expansion-panel-header class="bg-primary  {{existeVotoJD === 'SI' ? 'bg-zinc-300': ''}}">
+    <mat-expansion-panel class="hover:bg-primary-300" [disabled]="existeVotoJD !== 'NO' || validacionJD ">
+        <mat-expansion-panel-header class="bg-primary  {{(existeVotoJD  === 'SI' || validacionJD ) ? 'bg-zinc-300': ''}}">
             <mat-panel-title class="text-white ">
                 {{'junta directiva' | titlecase}}
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="grid md:grid-cols-2 xsm:grid-cols-1 gap-3 md:w-full xsm:w-full justify-center">
             <!-- Primer conjunto de elementos -->
-            <div class="flex-1 md:w-full xsm:w-full" *ngFor="let item of datosPostulados?.juntaDirectiva.postulantes; let i = index">
+            <div class="flex-1 md:w-full xsm:w-full"
+                *ngFor="let item of datosPostulados?.juntaDirectiva.postulantes; let i = index">
                 <div class="bg-gray w-full flex flex-col  mt-8 rounded-lg bg-white shadow-md">
                     <h2 class="text-center mt-4 font-extrabold text-primary py-2">
                         Plancha No.{{i+1}}
                     </h2>
-
-                    <div class="flex rounded-lg xsm:flex-col md:flex-row px-3 md:w-full xsm:w-full" >
+                    <div class="flex rounded-lg xsm:flex-col md:flex-row px-3 md:w-full xsm:w-full">
                         <!-- Postulantes -->
-                        <div class="flex-1 bg-red-500 rounded-lg justify-center xsm:flex-col md:w-full xsm:w-full " *ngFor="let postulante of item">
+                        <div class="flex-1 bg-red-500 rounded-lg justify-center xsm:flex-col md:w-full xsm:w-full "
+                            *ngFor="let postulante of item ; let i = index">
                             <div class=" bg-white rounded-lg flex justify-center md:w-full xsm:w-full">
                                 <div class=" flex flex-col justify-center items-center">
                                     <!-- imagen postulante -->
                                     <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
                                         class="object-cover w-50 flex justify-center h-50 rounded-md opacity-90 hover:opacity-100 shadow-md" />
-                                    <div class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
-                                        <h3 class=" font-extrabold text-center py-2 text-ellipsis overflow-hidden w-50 ">
+                                    <div
+                                        class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
+                                        <h3
+                                            class=" font-extrabold text-center py-2 text-ellipsis overflow-hidden w-50 ">
                                             {{ postulante.nombres }}
                                         </h3>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <!-- checkbox -->
-                    <div class="flex flex-row justify-center my-5" *ngIf="modoVotaciones">
+                    <div class="flex flex-row justify-center my-5" *ngIf="modoVotaciones || i === 0">
                         <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption" (change)="votar()">
-                            <mat-radio-button [value]="{idPlancha: item[i]?.idPlancha, idComite: item[i]?.idComite}">
+                            <mat-radio-button [value]="{idPlancha: item[0]?.idPlancha, idComite: item[0]?.idComite}">
                                 <span class="text-accent font-extrabold"> Seleccionar </span>
                             </mat-radio-button>
                         </mat-radio-group>
                         <!-- Muestra la opción seleccionada -->
                     </div>
+
                 </div>
             </div>
         </div>
+        <div class="w-full mt-2 py-2" *ngIf="modoVotaciones">
+            <button mat-flat-button color="accent" class="w-full"
+                (click)="enviarVotacion('validacionJD')">Votar</button>
+        </div>
     </mat-expansion-panel>
 
-    <!-- postulados para presidente asamblea -->
-    <mat-expansion-panel class="hover:bg-primary-300 -mt-5 " [disabled]="existeVotoRF !== 'NO' ">
-        <mat-expansion-panel-header class="bg-primary {{existeVotoRF === 'SI' ? 'bg-zinc-300 cursor:not-allowed': ''}}  ">
+    <!-- postulados revisor Fiscal -->
+    <mat-expansion-panel class="hover:bg-primary-300 " [disabled]=" validacionRF ">
+        <mat-expansion-panel-header
+            class="bg-primary {{(existeVotoRF  === 'SI' || validacionRF )? 'bg-zinc-300 cursor:not-allowed': ''}}  ">
             <mat-panel-title class="text-white ">
                 {{'revisor fiscal' | titlecase}}
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="flex flex-row max-h-screen overflow-y-auto overflow-x-hidden ">
+
             <!-- Primer conjunto de elementos -->
             <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center my-4">
                 <!-- Primer conjunto de elementos -->
@@ -65,13 +76,15 @@
 
                         <div class="flex rounded-lg  px-3 ">
                             <!-- Postulantes -->
-                            <div class="flex-1 bg-white rounded-lg justify-center " *ngFor="let postulante of item">
+                            <div class="flex-1 bg-white rounded-lg justify-center "
+                                *ngFor="let postulante of item ; let i = index">
                                 <div class=" bg-white rounded-lg flex justify-center">
                                     <div class=" flex flex-col justify-center items-center">
                                         <!-- imagen postulante -->
                                         <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
                                             class="object-cover w-50 flex justify-center h-50 rounded-md opacity-90 hover:opacity-100 shadow-md" />
-                                        <div class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
+                                        <div
+                                            class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
                                             <h3 class=" font-extrabold text-center py-2">
                                                 {{ postulante.nombres }}
                                             </h3>
@@ -84,7 +97,8 @@
                         <div class="flex flex-row justify-center items-center my-5" *ngIf="modoVotaciones">
                             <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption"
                                 (change)="votar()">
-                                <mat-radio-button [value]="{idPlancha: item[0]?.idPlancha, idComite: item[0]?.idComite}">
+                                <mat-radio-button
+                                    [value]="{idPlancha: item[0]?.idPlancha, idComite: item[0]?.idComite}">
                                     <span class="text-accent font-extrabold"> Seleccionar </span>
                                 </mat-radio-button>
                             </mat-radio-group>
@@ -94,9 +108,160 @@
                 </div>
             </div>
         </div>
+        <div class="w-full mt-2 py-2"  *ngIf="modoVotaciones">
+            <button mat-flat-button color="accent" class="w-full"
+                (click)="enviarVotacion('validacionRF')">Votar</button>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- postulados comite aprobador de acta -->
+    <mat-expansion-panel class="hover:bg-primary-300" [disabled]="existeVotoJD !== 'NO' ">
+        <mat-expansion-panel-header class="bg-primary  {{existeVotoJD === 'SI' ? 'bg-zinc-300': ''}}">
+            <mat-panel-title class="text-white ">
+                {{'aprobador de acta' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid md:grid-cols-2 xsm:grid-cols-1 gap-3 md:w-full xsm:w-full justify-center">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1 md:w-full xsm:w-full"
+                *ngFor="let item of datosPostulados?.aprobadorActa.postulantes; let i = index">
+                <div class="bg-gray w-full flex flex-col  mt-8 rounded-lg bg-white shadow-md">
+                    <h2 class="text-center mt-4 font-extrabold text-primary py-2">
+                        Plancha No.{{i+1}}
+                    </h2>
+
+                    <div class="flex rounded-lg xsm:flex-col md:flex-row px-3 md:w-full xsm:w-full">
+                        <!-- Postulantes -->
+                        <div class="flex-1 bg-red-500 rounded-lg justify-center xsm:flex-col md:w-full xsm:w-full "
+                            *ngFor="let postulante of item ; let i = index">
+                            <div class=" bg-white rounded-lg flex justify-center md:w-full xsm:w-full">
+                                <div class=" flex flex-col justify-center items-center">
+                                    <!-- imagen postulante -->
+                                    <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
+                                        class="object-cover w-50 flex justify-center h-50 rounded-md opacity-90 hover:opacity-100 shadow-md" />
+                                    <div
+                                        class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
+                                        <h3
+                                            class=" font-extrabold text-center py-2 text-ellipsis overflow-hidden w-50 ">
+                                            {{ postulante.nombres }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- checkbox -->
+                    <div class="flex flex-row justify-center my-5" *ngIf="votacionDeshabilitada">
+                        <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption" (change)="votar()">
+                            <mat-radio-button [value]="{idPlancha: item[i]?.idPlancha, idComite: item[i]?.idComite}">
+                                <span class="text-accent font-extrabold"> Seleccionar </span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <!-- Muestra la opción seleccionada -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- postulados presidente -->
+    <mat-expansion-panel class="hover:bg-primary-300" [disabled]="existeVotoJD !== 'NO' ">
+        <mat-expansion-panel-header class="bg-primary  {{existeVotoJD === 'SI' ? 'bg-zinc-300': ''}}">
+            <mat-panel-title class="text-white ">
+                {{'presidente' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid md:grid-cols-2 xsm:grid-cols-1 gap-3 md:w-full xsm:w-full justify-center">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1 md:w-full xsm:w-full"
+                *ngFor="let item of datosPostulados?.presidente.postulantes; let i = index">
+                <div class="bg-gray w-full flex flex-col  mt-8 rounded-lg bg-white shadow-md">
+                    <h2 class="text-center mt-4 font-extrabold text-primary py-2">
+                        Plancha No.{{i+1}}
+                    </h2>
+
+                    <div class="flex rounded-lg xsm:flex-col md:flex-row px-3 md:w-full xsm:w-full">
+                        <!-- Postulantes -->
+                        <div class="flex-1 bg-red-500 rounded-lg justify-center xsm:flex-col md:w-full xsm:w-full "
+                            *ngFor="let postulante of item ; let i = index">
+                            <div class=" bg-white rounded-lg flex justify-center md:w-full xsm:w-full">
+                                <div class=" flex flex-col justify-center items-center">
+                                    <!-- imagen postulante -->
+                                    <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
+                                        class="object-cover w-50 flex justify-center h-50 rounded-md opacity-90 hover:opacity-100 shadow-md" />
+                                    <div
+                                        class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
+                                        <h3
+                                            class=" font-extrabold text-center py-2 text-ellipsis overflow-hidden w-50 ">
+                                            {{ postulante.nombres }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- checkbox -->
+                    <div class="flex flex-row justify-center my-5" *ngIf="votacionDeshabilitada">
+                        <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption" (change)="votar()">
+                            <mat-radio-button [value]="{idPlancha: item[i]?.idPlancha, idComite: item[i]?.idComite}">
+                                <span class="text-accent font-extrabold"> Seleccionar </span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <!-- Muestra la opción seleccionada -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- postulados comite escrutador -->
+    <mat-expansion-panel class="hover:bg-primary-300" [disabled]="existeVotoJD !== 'NO' ">
+        <mat-expansion-panel-header class="bg-primary  {{existeVotoJD === 'SI' ? 'bg-zinc-300': ''}}">
+            <mat-panel-title class="text-white ">
+                {{'comité escrutador' | titlecase}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="grid md:grid-cols-2 xsm:grid-cols-1 gap-3 md:w-full xsm:w-full justify-center">
+            <!-- Primer conjunto de elementos -->
+            <div class="flex-1 md:w-full xsm:w-full"
+                *ngFor="let item of datosPostulados?.comiteEscrutador.postulantes; let i = index">
+                <div class="bg-gray w-full flex flex-col  mt-8 rounded-lg bg-white shadow-md">
+                    <h2 class="text-center mt-4 font-extrabold text-primary py-2">
+                        Plancha No.{{i+1}}
+                    </h2>
+
+                    <div class="flex rounded-lg xsm:flex-col md:flex-row px-3 md:w-full xsm:w-full">
+                        <!-- Postulantes -->
+                        <div class="flex-1 bg-red-500 rounded-lg justify-center xsm:flex-col md:w-full xsm:w-full "
+                            *ngFor="let postulante of item ; let i = index">
+                            <div class=" bg-white rounded-lg flex justify-center md:w-full xsm:w-full">
+                                <div class=" flex flex-col justify-center items-center">
+                                    <!-- imagen postulante -->
+                                    <img src="../../../../assets/images/avatars/1010086199.jpg" alt=""
+                                        class="object-cover w-50 flex justify-center h-50 rounded-md opacity-90 hover:opacity-100 shadow-md" />
+                                    <div
+                                        class="flex justify-center items-center {{modoVotaciones ?' h-14' : 'h-30'}} mt-6 p-5">
+                                        <h3
+                                            class=" font-extrabold text-center py-2 text-ellipsis overflow-hidden w-50 ">
+                                            {{ postulante.nombres }}
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- checkbox -->
+                    <div class="flex flex-row justify-center my-5" *ngIf="votacionDeshabilitada">
+                        <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption" (change)="votar()">
+                            <mat-radio-button [value]="{idPlancha: item[i]?.idPlancha, idComite: item[i]?.idComite}">
+                                <span class="text-accent font-extrabold"> Seleccionar </span>
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <!-- Muestra la opción seleccionada -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </mat-expansion-panel>
 
 </mat-accordion>
-
-
-

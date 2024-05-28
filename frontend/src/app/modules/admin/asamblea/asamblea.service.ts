@@ -87,7 +87,6 @@ export class AsambleaService {
 
     //creacion de plantillas preguntas asamblea y init de votaciones
 
-    //TODO: iniciar aqui asambleas
     obtenerPreguntasAsamblea() {
         return this.http.get<PlantillaPreguntas>(`api/asamblea/creacion-plantillas-preguntas`)
     }

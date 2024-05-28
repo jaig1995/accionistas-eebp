@@ -182,19 +182,20 @@ export class PostulacionesComponent {
         }
         //todo:falta id
         const data = {
-            idComite: 5,
+            idComite: 3,
             ...postulacion
         }
         this.enviarPostulacion(data)
     }
 
     enviarPostulacionPresidente() {
+        console.log('💻🔥 193, postulaciones.component.ts: ', this.postulantePresidente)
         let postulacion = {
             idPrincipal: this.postulantePresidente?.value.documentoIdentidad,
         }
         //todo:falta id
         const data = {
-            idComite: 5,
+            idComite: 2,
             ...postulacion
         }
         this.enviarPostulacion(data)
@@ -206,7 +207,7 @@ export class PostulacionesComponent {
         }
         //todo:falta id
         const data = {
-            idComite: 5,
+            idComite: 4,
             ...postulacion
         }
         this.enviarPostulacion(data)

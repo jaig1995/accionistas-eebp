@@ -43,6 +43,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     private asambleaService = inject(AsambleaService);
     private dialog = inject(MatDialog)
 
+    today: Date = new Date();
 
     //validaciones
     botonActivo = false

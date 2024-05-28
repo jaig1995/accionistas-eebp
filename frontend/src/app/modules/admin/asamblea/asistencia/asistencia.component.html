@@ -42,10 +42,11 @@
                     <div class="mt-7 ml-2 flex flex-row">
                         <button mat-flat-button [color]="'accent'" (click)="buscarAccionista()"><mat-icon
                                 svgIcon="heroicons_solid:magnifying-glass-plus"></mat-icon> Ingresar</button>
-                                <button class="fuse-mat-button sm:ml-4" mat-stroked-button [color]="'primary'" type="button" (click)="obtenerHuella()">
-                                    <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
-                                    Huella
-                                  </button>
+                        <button class="fuse-mat-button sm:ml-4" mat-stroked-button [color]="'primary'" type="button"
+                            (click)="obtenerHuella()">
+                            <mat-icon class="sm:ml-4" svgIcon="fingerprint"></mat-icon>
+                            Huella
+                        </button>
                     </div>
                 </div>
 
@@ -111,13 +112,13 @@
             <div class="mat-elevation-z8 mb-5">
                 <table mat-table [dataSource]="dataSource" matSort>
 
-                    <!-- ID Column -->
+                    <!-- Consecutivo -->
                     <ng-container matColumnDef="NUMERO">
                         <th mat-header-cell *matHeaderCellDef class="text-center"> CONS </th>
                         <td mat-cell *matCellDef="let row" class="text-center"> {{row.idAsistente}} </td>
                     </ng-container>
 
-                    <!-- Progress Column -->
+                    <!-- Asistencias -->
                     <ng-container matColumnDef="ASISTENCIA">
                         <th mat-header-cell *matHeaderCellDef class="text-center">ASISTENCIA</th>
                         <td mat-cell *matCellDef="let row" class="text-center"> <mat-checkbox color="warn"
@@ -125,7 +126,7 @@
                             </mat-checkbox> </td>
                     </ng-container>
 
-                    <!-- Progress Column -->
+                    <!-- Acciones -->
                     <ng-container matColumnDef="ACCIONES">
                         <th mat-header-cell *matHeaderCellDef class="text-center">ACCIONES</th>
                         <td mat-cell *matCellDef="let row" class="text-center"> {{row.acciones}} </td>

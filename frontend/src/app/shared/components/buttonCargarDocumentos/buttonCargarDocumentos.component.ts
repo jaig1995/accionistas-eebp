@@ -24,14 +24,22 @@ export class ButtonCargarDocumentosComponent {
     @Input() formatosAceptados: string;
 
     archivoSeleccionado: any;
+    error: string | null = null;
+    readonly maxFileSize: number = 2 * 1024 * 1024;
 
 
 
     archivoSelecionado(event: any) {
         const file: File = event.target.files[0];
         if (file) {
-            this.archivoSeleccionado = file
-            this.contieneArchivo.emit(true)
+            if (file.size > this.maxFileSize) {
+                this.error = 'Tamaño máximo permitido de 2 MB.';
+                this.contieneArchivo.emit(false);
+            } else {
+                this.archivoSeleccionado = file;
+                this.contieneArchivo.emit(true);
+                this.error = null; // Clear any previous error
+            }
         }
     }
 
