@@ -7,34 +7,68 @@
         Carga de Actas </div>
 
 
+
     <!-- alertas -->
-    <!-- <fuse-alert [type]="'success'" [appearance]="'outline'" class="mb-5" *ngIf="showAlert">
-        <span fuseAlertTitle>Aprobación exitosa</span>
-        ¡Solicitud aprobada!
-    </fuse-alert> -->
+    <div class="flex justify-end fixed top-7 right-9 mt-13 w-full z-50 animated-box">
+
+        <div class="w-100 mb-4 ">
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showSuccesAlert">
+                <fuse-alert [type]="'success'" [appearance]="'outline'" class="animated-box-content" @zoomIn>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción exitosa!
+                </fuse-alert>
+            </div>
+
+            <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
+                <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
+                    <span fuseAlertTitle>Información</span>
+                    ¡Transacción no exitosa!
+                </fuse-alert>
+            </div>
+        </div>
+    </div>
     <!-- fin alertas -->
 
     <!-- Tabla con registros -->
     <div class="grid grid-cols-2 gap-4 bg-card py-4 shadow rounded">
         <div class=" p-5 text-white text-center space-y-4">
             <div class="flex flex-row justify-between w-full items-center">
-                <p class="break-words text-black">Cierre Postulaciones</p>
-                <div>
-                    <app-button-cargar-documentos />
+                <p class="break-words text-black">Acta Cierre Postulaciones</p>
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoActaPostulaciones($event)"
+                        (archivo)="recibirArchivoActaPostulaciones($event)" #postulacionesButton />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaPostulaciones()" [disabled]="!existeDocumentoActaCierrePostulaciones">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
             <div class="flex flex-row justify-between w-full items-center">
                 <p class="break-words text-black">Acta Reforma </p>
-                <div>
-                    <app-button-cargar-documentos />
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoActaReforma($event)"
+                        (archivo)="recibirArchivoActaReforma($event)" #reformaButton />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaReforma()" [disabled]="!existeDocumentoActaReforma">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
             <div class="flex flex-row justify-between w-full items-center">
                 <p class="break-words text-black flex justify-start">Acta Revisoría Fiscal </p>
-                <div>
-                    <app-button-cargar-documentos />
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoActaRevisoriaFiscal($event)"
+                        (archivo)="recibirArchivoActaRevisoriaFiscal($event)" #revisoriafiscalButton />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaRevisoriaFiscal()" [disabled]="!existeDocumentoActaRevisoriaFiscal">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
@@ -43,22 +77,40 @@
         <div class=" p-5 text-white text-center space-y-4">
             <div class="flex flex-row justify-between w-full items-center">
                 <p class="break-words text-black">Acta Poderes</p>
-                <div>
-                    <app-button-cargar-documentos />
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoActaPoderes($event)"
+                        (archivo)="recibirArchivoActaPoderes($event)" />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaPoderes()" [disabled]="!existeDocumentoActaPoderes">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
             <div class="flex flex-row justify-between w-full items-center">
-                <p class="break-words text-black">Escrutinio </p>
-                <div>
-                    <app-button-cargar-documentos />
+                <p class="break-words text-black">Acta Escrutinio </p>
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoActaEscrutinio($event)"
+                        (archivo)="recibirArchivoActaEscrutinio($event)" #escrutinioButton />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaEscrutinio()" [disabled]="!existeDocumentoActaEscrutinio">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
             <div class="flex flex-row justify-between w-full items-center">
                 <p class="break-words text-black flex justify-start">Otro Anexo </p>
-                <div>
-                    <app-button-cargar-documentos />
+                <div class="flex flex-row space-x-2">
+                    <app-button-cargar-documentos [nombreBoton]="''" [formatosAceptados]="'.docx,.doc,.pdf'"
+                        (contieneArchivo)="contieneArchivoOtrosAnexos($event)"
+                        (archivo)="recibirArchivoOtroAnexo($event)" #otroAnexoButton />
+                    <button mat-mini-fab color="primary" aria-label=" button send" class="w-12"
+                        (click)="enviarActaOtroAnexo()" [disabled]="!existeDocumentoOtroAnexo">
+                        <mat-icon svgIcon="feather:send"></mat-icon>
+                    </button>
                 </div>
             </div>
             <mat-divider />
@@ -66,10 +118,12 @@
     </div>
 
     <!-- seccion de parametrizacion  -->
-    <div class="ml-0.5  text-2xl font-extrabold text-secondary flex flex-col flex-auto items-start justify-center mt-5 ">
+    <div
+        class="ml-0.5  text-2xl font-extrabold text-secondary flex flex-col flex-auto items-start justify-center mt-5 ">
         <span class="flex justify-start">Parametrización</span>
-        </div>
-    <form class="grid grid-cols-2 gap-4 bg-card py-4 shadow rounded mt-2" action="" [formGroup]="formulario" (ngSubmit)="enviarFormularioParametrizacion()">
+    </div>
+    <form class="grid grid-cols-2 gap-4 bg-card py-4 shadow rounded mt-2" action="" [formGroup]="formulario"
+        (ngSubmit)="enviarFormularioParametrizacion()">
 
         <div class="p-5 py-3">
             <mat-form-field class="w-full mr-2 ">
@@ -103,7 +157,7 @@
         <!-- seccion dos -->
         <div class="p-5 py-3">
             <mat-form-field class="w-full mr-2 ">
-                <mat-label class="font-extrabold"> Valor Nominal Por Accion:</mat-label>
+                <mat-label class="font-extrabold"> Valor Nominal Por Acción:</mat-label>
                 <mat-icon svgIcon="feather:hash"></mat-icon>
                 <input formControlName="valNomAccion" matInput type="number">
                 <mat-error class="mb-2">Este campo es numérico y obligatorio </mat-error>
@@ -115,7 +169,7 @@
                 <mat-error class="mb-2">Este campo es numérico y obligatorio </mat-error>
             </mat-form-field>
             <mat-form-field class="w-full mr-2 ">
-                <mat-label class="font-extrabold"> Dividentos por Participación:</mat-label>
+                <mat-label class="font-extrabold"> Dividendos Por Participación:</mat-label>
                 <mat-icon svgIcon="feather:hash"></mat-icon>
                 <input formControlName="divParticipacion" matInput type="number">
                 <mat-error class="mb-2">Este campo es numérico y obligatorio </mat-error>

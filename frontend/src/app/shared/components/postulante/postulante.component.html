@@ -10,7 +10,7 @@
                     <div class="w-100">
                         <app-input-autocomplete [labelInput]="'Accionista'"
                             (accionista)="obtenerDatosAccionista($event)"
-                            (errorFormulario)="errorFormularioDatosAccionista($event)" />
+                            (errorFormulario)="errorFormularioDatosAccionista($event)" [asociados]="modoListarPersonas" />
                         <mat-error *ngIf="existenDatosAccionista">
                             No existen datos para la busqueda.
                         </mat-error>

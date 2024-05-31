@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject, QueryList, TemplateRef, Vie
 
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FuseLoadingService } from '@fuse/services/loading';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { fuseAnimations } from '@fuse/animations';
@@ -66,9 +65,11 @@ export class PostulacionesComponent {
     contieneDatosPrimerPostulaneJD: boolean = false;
     contieneDatosSegundoPostulantJD: boolean = false;
 
-    // Variables junta directiva
-    contieneDatospostulaneRF: any;
-    postulanteRevisorFiscal: any;
+    // Variables revisor fiscal
+    primerPostulanteRevisorFiscal: any;
+    segundoPostulanteRevisorFiscal: any;
+    contieneDatosPrimerPostulaneRF: any;
+    contieneDatosSegundoPostulaneRF: any;
 
     // dialogo
     dialogRef: MatDialogRef<any>;
@@ -115,11 +116,19 @@ export class PostulacionesComponent {
     }
 
     // Sección Recibir componentes hijos (app-postulante) REVISOR FISCAL
-    postulanteRFiscal(datosPostulante) {
-        this.postulanteRevisorFiscal = datosPostulante
+    primerpostulanteRFiscal(datosPostulante) {
+        console.log('💻🔥 120, postulaciones.component.ts: ', datosPostulante.value);
+        this.primerPostulanteRevisorFiscal = datosPostulante
     }
-    existenDatosPostulanteRF(validacion) {
-        this.contieneDatospostulaneRF = validacion
+    segundopostulanteRFiscal(datosPostulante) {
+        console.log('💻🔥 124, postulaciones.component.ts: ', datosPostulante.value);
+        this.segundoPostulanteRevisorFiscal = datosPostulante
+    }
+    existenDatosPrimerPostulanteRF(validacion) {
+        this.contieneDatosPrimerPostulaneRF = validacion
+    }
+    existenDatosSegundoPostulanteRF(validacion) {
+        this.contieneDatosSegundoPostulaneRF= validacion
     }
 
     // ======  VALIDACIONES HTML  ======== //
@@ -136,7 +145,7 @@ export class PostulacionesComponent {
         return !!(this.postulantePresidente?.valid) && !!(this.contieneDatospostulantePresidente)
     }
     validacionRevisorFiscal(): boolean {
-        return !!(this.postulanteRevisorFiscal?.valid) && !!(this.contieneDatospostulaneRF)
+        return !!(this.primerPostulanteRevisorFiscal?.valid && this.segundoPostulanteRevisorFiscal?.valid) && !!(this.contieneDatosPrimerPostulaneRF && this.contieneDatosSegundoPostulaneRF)
     }
 
     // ======  METODOS DE ENVIO ======== //
@@ -166,8 +175,22 @@ export class PostulacionesComponent {
     }
 
     enviarPostulacionRevisoriaFiscal() {
+        const { tipoAccionista: tipoAccionistaPrimerPostulante, documentoIdentidad: documentoAccionistaPrimerPostulante } = this.primerPostulanteRevisorFiscal?.value
+        const { tipoAccionista: tipoAccionistaSegundoPostulante, documentoIdentidad: documentoAccionistaSegundoPostulante } = this.segundoPostulanteRevisorFiscal?.value
+        if (tipoAccionistaPrimerPostulante === tipoAccionistaSegundoPostulante) {
+            this.mensajeAlertas = `Por favor, ten en cuenta que solo debe haber un postulante <span class="text-accent font-bold">PRINCIPAL</span> y
+            uno <span class="text-primary font-bold">SUPLENTE</span>.`
+            this.abrirDialogo();
+            return
+        }
+        if (documentoAccionistaPrimerPostulante === documentoAccionistaSegundoPostulante) {
+            this.mensajeAlertas = `Por favor, ten en cuenta que deben ser <span class="font-bold">diferente</span> el postulante <span class="text-accent font-bold">PRINCIPAL</span> del <span class="text-primary font-bold">SUPLENTE</span>.`
+            this.abrirDialogo();
+            return
+        }
         let postulacion = {
-            idPrincipal: this.postulanteRevisorFiscal?.value.documentoIdentidad,
+            idPrincipal: this.primerPostulanteRevisorFiscal?.value.documentoIdentidad,
+            idSuplente: this.segundoPostulanteRevisorFiscal?.value.documentoIdentidad
         }
         const data = {
             idComite: 5,

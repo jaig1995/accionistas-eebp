@@ -75,15 +75,17 @@ export class CreacionPlantillasComponent implements OnInit {
         idTema: ['', Validators.required],
         tipoPregunta: ['',],
         pregunta: ['', Validators.required],
-        tipoRespuesta: ['',],
+        tipoRespuesta: ['',Validators.required],
         opcionesRespuesta: this.fb.array([]),
     });
+    consecutivoEncuestaActual: any;
     // Fin formularios
 
     constructor(public dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) { }
 
     ngOnInit(): void {
-        this.obtenerConsecutivoAsamblea()
+        this.obtenerConsecutivoAsamblea();
+        this.obtenerIdEncuestaActual();
 
     }
 
@@ -155,7 +157,7 @@ export class CreacionPlantillasComponent implements OnInit {
 
     filtrarCaracteres(event: Event) {
         const input = event.target as HTMLTextAreaElement;
-        const valorSinCaracteresProhibidos = input.value.replace(/\?/g, '');
+        const valorSinCaracteresProhibidos = input.value.replace(/[¿?]/g, '');
         this.asignacionPregunta.get('pregunta')?.setValue(valorSinCaracteresProhibidos, { emitEvent: false });
     }
 
@@ -174,6 +176,18 @@ export class CreacionPlantillasComponent implements OnInit {
         }
     }
 
+    obtenerIdEncuestaActual() {
+        this.asambleaService.obtenerIdEncuesta().subscribe({
+            next: (data) => {
+                this.consecutivoEncuestaActual = data.ultimoConsecutivo
+                console.log('💻🔥 180, creacionPlantillas.component.ts: ', this.consecutivoEncuestaActual);
+            },
+            error: (error) => {
+                console.log('💻🔥 185, creacionPlantillas.component.ts: ', error);
+            }
+        })
+    }
+
     eliminarOpcion(index: number) {
         this.respuestasOpcionMultiple.splice(index, 1);
     }
@@ -184,13 +198,14 @@ export class CreacionPlantillasComponent implements OnInit {
         const { idTema, tipoRespuesta, pregunta } = this.asignacionPregunta.value;
         const respuestas = this.respuestasOpcionMultiple
         const pruebas = {
-            idEncuesta: this.consecutivoAsamblea,
+            idEncuesta: this.consecutivoEncuestaActual,
             idTema: idTema,
             pregunta: pregunta,
             tipoPregunta: tipoRespuesta,
             opcionesRespuesta: tipoRespuesta === 'unica' ? ['si', 'no'] : respuestas
         };
         this.preguntasAsamblea = pruebas;
+        console.log('💻🔥 194, creacionPlantillas.component.ts: ', this.preguntasAsamblea);
         this.enviarPreguntas(this.preguntasAsamblea)
     }
     // Fin seccion agregar
@@ -252,6 +267,7 @@ export class CreacionPlantillasComponent implements OnInit {
             if (!result) return
             this.enviarPeticionEncuesta(this.formularioPreguntas.value)
         });
+        this.esEditableTemasAsamblea = true
     }
 
     cerrarDialogo() {

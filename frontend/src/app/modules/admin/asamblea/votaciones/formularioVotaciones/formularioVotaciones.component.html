@@ -1,18 +1,24 @@
 <form [formGroup]="respuestasAsamblea" class="w-full card-header  grid gap-8 bg-gradient-to-br  ">
 
-
+    <div class="example-action-buttons">
+        <!-- <button mat-button (click)="expandAll()">Expand All</button>
+        <button mat-button (click)="collapseAll()">Collapse All</button> -->
+    </div>
     <!-- SECCIÓN PREGUNTAS JUNTA DIRECTIVA -->
     <section formArrayName="juntaDirectiva" class="rounded-lg text-black shadow-2xl"
         *ngIf="mostrarSeccionJuntaDirectiva">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
+        <mat-accordion >
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckJuntaDirectivas.valid"  [disabled]="validacionCheckJuntaDirectivas.valid">
                 <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Sección Junta Directiva <span> <mat-icon *ngIf="validacionCheckJuntaDirectivas.valid"
                                     svgIcon="mat_solid:check_circle"
-                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1" #tooltip="matTooltip"  matTooltip="Esta sección ya fue finalizada"  matTooltipPosition="above" ></mat-icon>
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"
+                                    #tooltip="matTooltip" matTooltip="Esta sección ya fue finalizada"
+                                    matTooltipPosition="above"></mat-icon>
                             </span>
                         </h1>
                     </mat-panel-title>
@@ -41,15 +47,18 @@
 
     <section formArrayName="reformaEstatutos" class="bg-gray-300 rounded-md text-black"
         *ngIf="mostrarSeccionReformaEstatutos">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
-                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+        <mat-accordion #accordionReformaEstatutos>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckReformaEstatutos.valid" [disabled]="validacionCheckReformaEstatutos.valid">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 " >
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Reforma Estatutos <span> <mat-icon *ngIf="validacionCheckReformaEstatutos.valid"
                                     svgIcon="mat_solid:check_circle"
-                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1" #tooltip="matTooltip"  matTooltip="Esta sección ya fue finalizada"  matTooltipPosition="above"></mat-icon>
+                                    class="fill-primary hover:fill-white flex items-start justify-center ml-1"
+                                    #tooltip="matTooltip" matTooltip="Esta sección ya fue finalizada"
+                                    matTooltipPosition="above"></mat-icon>
                             </span>
                         </h1>
                     </mat-panel-title>
@@ -80,14 +89,15 @@
     </section>
 
 
-    <!-- SECCION PREGUNTAS REFORMA ESTATUTOS -->
+    <!-- SECCION PREGUNTAS DISTRIBUCION DE UTILIDADES-->
     <section formArrayName="distribucionUtilidades" *ngIf="mostrarSeccionDistribucionUtilidades">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
-                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+        <mat-accordion #accordionDistribucionUtilidades>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckDistribucionUtilidades.valid" [disabled]="validacionCheckDistribucionUtilidades.valid">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 " >
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Distribución y Utilidades <span> <mat-icon
                                     *ngIf="validacionCheckDistribucionUtilidades.valid" svgIcon="mat_solid:check_circle"
                                     class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
@@ -120,12 +130,13 @@
 
     <!-- SECCION PREGUNTAS REVISORIA FISCAL -->
     <section formArrayName="revisoriaFiscal" *ngIf="mostrarSeccionrevisoriaFiscal">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
-                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+        <mat-accordion #accordionRevisoriaFiscal>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckRevisoriaFiscal.valid" [disabled]="validacionCheckRevisoriaFiscal.valid">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 " >
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Revisoria Fiscal <span> <mat-icon *ngIf="validacionCheckRevisoriaFiscal.valid"
                                     svgIcon="mat_solid:check_circle"
                                     class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
@@ -156,14 +167,15 @@
     </section>
 
 
-     <!-- SECCION PREGUNTAS ESTADOS FINANCIEROS -->
-    <section formArrayName="estadosFinancieros" *ngIf="mostrarSeccionEstadosFinancieros">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
-                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+    <!-- SECCION PREGUNTAS ESTADOS FINANCIEROS -->
+    <section formArrayName="estadosFinancieros" *ngIf="mostrarSeccionEstadosFinancieros" >
+        <mat-accordion #accordionEstadosFinancieros>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckEstadosFinanciero.valid" [disabled]="validacionCheckEstadosFinanciero.valid">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 " >
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Estados Financieros <span> <mat-icon *ngIf="validacionCheckEstadosFinanciero.valid"
                                     svgIcon="mat_solid:check_circle"
                                     class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>
@@ -194,14 +206,15 @@
     </section>
 
 
-     <!-- SECCION PREGUNTAS PROPOSICIONES Y VARIOS -->
-    <section formArrayName="proposicionesVarios"  *ngIf="mostrarSeccionProposicionesVarios">
-        <mat-accordion>
-            <mat-expansion-panel hideToggle (click)="cambiarClase()">
-                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 ">
+    <!-- SECCION PREGUNTAS PROPOSICIONES Y VARIOS -->
+    <section formArrayName="proposicionesVarios" *ngIf="mostrarSeccionProposicionesVarios">
+        <mat-accordion #accordionProposicionesVarios>
+            <mat-expansion-panel hideToggle (click)="cambiarClase()" [expanded]="!validacionCheckProposicionesVarios.valid" [disabled]="validacionCheckProposicionesVarios.valid">
+                <mat-expansion-panel-header class=" bg-accent  hover:bg-accent opacity-75 " >
                     <mat-panel-title
                         class="  justify-center flex hover:bg-gradient-to-r hover:from-green-50/5 hover:via-green-700/50 hover:to-transparent">
-                        <h1 class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
+                        <h1
+                            class="text-white text-3xl xsm:text-xl xsm:text-center font-extrabold h-11 flex items-center justify-center">
                             Proposiciones y Varios <span> <mat-icon *ngIf="validacionCheckProposicionesVarios.valid"
                                     svgIcon="mat_solid:check_circle"
                                     class="fill-primary hover:fill-white flex items-start justify-center ml-1"></mat-icon>

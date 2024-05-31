@@ -24,22 +24,22 @@ export class ControlTitulosService {
             map(response => (
                 {
 
-                codUsuario: response.codUsuario,
-                nomPri: response.nomPri,
-                nomSeg: response.nomSeg,
-                apePri: response.apePri,
-                apeSeg: response.apeSeg,
-                esAccionista: response.esAccionista,
-                titulos: response.titulos.map(titulo => ({
-                    folio:titulo.folio,
-                    editarTitulo:titulo,
-                    estadoTitulo:titulo.estadoTitulo.descEstado,
-                    conseTitulo: titulo.conseTitulo,
-                    canAccTit: titulo.canAccTit,
-                    valAccTit: titulo.valAccTit,
-                }))
+                    codUsuario: response.codUsuario,
+                    nomPri: response.nomPri,
+                    nomSeg: response.nomSeg,
+                    apePri: response.apePri,
+                    apeSeg: response.apeSeg,
+                    esAccionista: response.esAccionista,
+                    titulos: response.titulos.map(titulo => ({
+                        folio: titulo.folio,
+                        editarTitulo: titulo,
+                        estadoTitulo: titulo.estadoTitulo.descEstado,
+                        conseTitulo: titulo.conseTitulo,
+                        canAccTit: titulo.canAccTit,
+                        valAccTit: titulo.valAccTit,
+                    }))
 
-            }
+                }
             ))
         );
     }
@@ -127,25 +127,58 @@ export class ControlTitulosService {
 
     obtenerAccionistas(): Observable<any[]> {
         return this.http.get<any[]>(`${this._baseUrl}/api/accionistas`).pipe(
-          map(accionistas => {
-            return accionistas.map(accionista => ({
-              idPer: accionista.codUsuario ,
-              Nombres: accionista.codUsuario + '-'+accionista.nomPri + ' ' + accionista.apePri,
-            }));
-          })
+            map(accionistas => {
+                console.log('💻🔥 132, controlTitulos.service.ts: ', accionistas);
+                return accionistas.map(accionista => (
+                    {
+                    idPer: accionista.codUsuario,
+                    Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
+                }));
+            })
         );
-      }
+    }
 
+
+    //devuelve todos
+    obtenerAccionistasPersonas(): Observable<any[]> {
+        return this.http.get<any[]>(`${this._baseUrl}/api/accionistas`).pipe(
+            map(accionistas => {
+                const esAccionistaN = accionistas.filter(usuario => usuario.esAccionista === "N");
+                return esAccionistaN.map(accionista => (
+                    {
+                    idPer: accionista.codUsuario,
+                    Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
+                }));
+            })
+        );
+    }
+
+
+    obtenerPersonasNoEmpleados(): Observable<any[]> {
+        return this.http.get<any[]>(`${this._baseUrl}/api/accionista/apoderados`).pipe(
+            map(accionistas => {
+                console.log('💻🔥 132, controlTitulos.service.ts: ', accionistas);
+                return accionistas.map(accionista => (
+                    {
+                    idPer: accionista.codAccionista,
+                    Nombres: accionista.codAccionista + '-' + accionista.nomAccionista,
+                }));
+            })
+        );
+    }
+
+
+    //accionistas
     obtenerAccionistasHabilitados(): Observable<any[]> {
         return this.http.get<any[]>(`${this._baseUrl}/api/accionista`).pipe(
-          map(accionistas => {
-            return accionistas.map(accionista => ({
-              idPer: accionista.codAccionista ,
-              Nombres: accionista.codAccionista + '-'+accionista.nomAccionista ,
-            }));
-          })
+            map(accionistas => {
+                return accionistas.map(accionista => ({
+                    idPer: accionista.codAccionista,
+                    Nombres: accionista.codAccionista + '-' + accionista.nomAccionista,
+                }));
+            })
         );
-      }
+    }
 
 
 

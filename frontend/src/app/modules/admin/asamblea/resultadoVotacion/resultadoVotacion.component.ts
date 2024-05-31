@@ -20,23 +20,39 @@ export class ResultadoVotacionComponent implements OnInit {
     //inyeccion de dependencias
     private _asambleaService = inject(AsambleaService);
 
-    resultadosVotacion:any
+    resultadosVotacion: any
     pantallaDeCarga: boolean = true;
+    consecutivoEncuestaActual: any;
 
     ngOnInit(): void {
-        this.obtenerResultados()
-        // this.resultadosVotacion = data
+            this.obtenerIdEncuestaActual()
     }
 
-    obtenerResultados() {
-        this._asambleaService.obtenerResultadosVotaciones(15).subscribe({
-            next:(data)=>{
+
+
+    obtenerIdEncuestaActual() {
+        this._asambleaService.obtenerIdEncuesta().subscribe({
+            next: (data) => {
+                this.consecutivoEncuestaActual = data.ultimoConsecutivo
+                this.obtenerResultados(parseInt(this.consecutivoEncuestaActual))
+                console.log('💻🔥 180, creacionPlantillas.component.ts: ', this.consecutivoEncuestaActual);
+            },
+            error: (error) => {
+                console.log('💻🔥 185, creacionPlantillas.component.ts: ', error);
+            }
+        })
+    }
+
+
+    obtenerResultados(id) {
+        this._asambleaService.obtenerResultadosVotaciones(id).subscribe({
+            next: (data) => {
                 this.resultadosVotacion = data;
             },
-            error:(error)=>{
+            error: (error) => {
                 console.log(error)
             },
-            complete:()=>{
+            complete: () => {
                 this.pantallaDeCarga = false
             }
         })

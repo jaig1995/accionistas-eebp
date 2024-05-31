@@ -57,7 +57,7 @@ export class CompraPublicacionModalComponent implements OnInit {
         public dialogRef: MatDialogRef<CompraPublicacionModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private controlTitulosService: ControlTitulosService,
-        ) {
+    ) {
         this.sumaTotal = data.arrayTitulos.reduce((total, transaccion) => total + transaccion.numAcciones, 0);
         this.miFormulario = this.fb.group({
             nombre: ['', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)]],
@@ -121,7 +121,7 @@ export class CompraPublicacionModalComponent implements OnInit {
     }
 
     submit() {
-        this.isLoading= false;
+        this.isLoading = false;
         let titulos = this.data.arrayTitulos.map(data => {
             return {
                 conseTrans: data.conseTrans,
@@ -145,18 +145,18 @@ export class CompraPublicacionModalComponent implements OnInit {
         }
         this.controlTitulosService.comprarTitulo(transaccion).subscribe({
             next: (data) => {
-              this.consecutivoArchivo = data.conseTrans;
-              const conseTrans = this.consecutivoArchivo;
-              let nombreArchivo = `transaccion_${conseTrans}_formatoCompraVenta`;
-              this.cambiarNombreArchivo(nombreArchivo);
-              this.controlTitulosService.enviarFormatoVenta(this.archivoSeleccionado).subscribe();
-              this.dialogRef.close({ success: true });
+                this.consecutivoArchivo = data.conseTrans;
+                const conseTrans = this.consecutivoArchivo;
+                let nombreArchivo = `transaccion_${conseTrans}_formatoCompraVenta`;
+                this.cambiarNombreArchivo(nombreArchivo);
+                this.controlTitulosService.enviarFormatoVenta(this.archivoSeleccionado).subscribe();
+                this.dialogRef.close({ success: true });
 
             },
             error: (error) => {
                 this.dialogRef.close({ success: false });
             }
-          });
+        });
     }
 
 
