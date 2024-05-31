@@ -33,6 +33,7 @@ export class InputAutocompleteComponent implements OnInit {
     @Output() accionista = new EventEmitter<AccionistaInputAutoComplete>();
     @Output() valorInput = new EventEmitter<string>();
     @Output() errorFormulario = new EventEmitter<boolean>();
+    @Input() asociados: boolean | null ;
 
     //variables comunicacion desde el PADRE (nombre del label)
     @Input() labelInput: string;
@@ -43,7 +44,7 @@ export class InputAutocompleteComponent implements OnInit {
 
     //formulario para ingresar datos accionista a buscar
     buscarAccionista = new FormControl('', [Validators.required]);
-
+5
     ngOnInit(): void {
         this.obtenerAccionistas();
         this.filtroPoderdante();
@@ -59,9 +60,23 @@ export class InputAutocompleteComponent implements OnInit {
      * Los datos obtenidos se asignan a la propiedad accionistas del componente.
      */
     obtenerAccionistas() {
-        this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
-            this.accionistas = data;
-        });
+
+        // true para listar accionistas
+        // false para listar no accionistas
+        // null para listar solo personas
+        if(this.asociados === true){
+            this.controlTitulosService.obtenerAccionistasHabilitados().subscribe(data => {
+                this.accionistas = data;
+            });
+        }else if(this.asociados === false){
+            this.controlTitulosService.obtenerAccionistasPersonas().subscribe(data => {
+                this.accionistas = data;
+            });
+        }else if(this.asociados === null){
+            this.controlTitulosService.obtenerPersonasNoEmpleados().subscribe(data => {
+                this.accionistas = data;
+            });
+        }
     }
 
 

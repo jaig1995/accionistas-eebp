@@ -94,6 +94,9 @@ export class AsambleaService {
         return this.http.get<PlantillaPreguntas>(`${this._baseUrl}/api/encuesta/resumen/${consecutivoAsamblea}`)
     }
 
+    obtenerIdEncuesta() {
+        return this.http.get<any>(`${this._baseUrl}/api/encuesta/consecutivo`)
+    }
     //Seccion votaciones
 
     obtenerFormularioAccionista(datosVotante) {
@@ -153,12 +156,25 @@ export class AsambleaService {
         return this.http.post<any>(`${this._baseUrl}/api/votacion-plancha`, datosVotacion)
     }
 
-    obtenerResultadosPostulantes(){
+    obtenerResultadosPostulantes() {
         return this.http.get<any>(`${this._baseUrl}/api/votacion-plancha/votos`)
     }
 
 
-    validacionVoto(idUsuario){
+    validacionVoto(idUsuario) {
         return this.http.get<any>(`${this._baseUrl}/api/votacion-plancha/${idUsuario}`)
     }
+
+
+    //cierre asamblea
+    enviarFormatosCierreAsamblea(archivo: any): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', archivo);
+        return this.http.post<any>(`${this._baseUrl}/api/transaccion/uploadFile`, formData);
+    }
+
+    enviarDatosUtilidades(datos){
+        return this.http.post<any>(`${this._baseUrl}/api/utilidades/agregar`, datos)
+    }
+
 }

@@ -20,6 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { utils, writeFileXLSX } from 'xlsx';
+import { ServicesConfig } from 'app/services.config';
 @Component({
     selector: 'app-registro-poderes',
     standalone: true,
@@ -68,6 +69,8 @@ export class RegistroPoderesComponent implements AfterViewInit {
     //nombre y validacion archivo
     nombreArchivo: string
 
+    private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
+
     //Componentes Hijos
     @ViewChild(ButtonCargarDocumentosComponent) buttonCargarDocumentosComponent: ButtonCargarDocumentosComponent;
 
@@ -98,6 +101,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
     cargarDatos() {
         this.asambleaService.obtenerRegistradosPoderes().subscribe({
             next: (data) => {
+                console.log('💻🔥 101, registroPoderes.component.ts: ', data);
                 this.dataSource = new MatTableDataSource<any>(data)
                 this.dataSource.paginator = this.paginator
             },

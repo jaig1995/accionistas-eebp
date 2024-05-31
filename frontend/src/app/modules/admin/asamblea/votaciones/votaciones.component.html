@@ -1,25 +1,20 @@
 <fuse-loading-bar></fuse-loading-bar>
 <div class="w-full h-auto" *ngIf="!pantallaDeCarga">
-    <div class="flex-auto">
 
-    </div>
     <mat-tab-group [selectedIndex]="modoSeleccionado">
         <!-- seccion uno -->
         <mat-tab label="Individual" [disabled]="bloque">
             <div class="w-full h-auto">
                 <!-- ALERTA FUSE EXPLICACIÓN -->
-                <!-- <div class="animated-box my-4">
-                    <fuse-alert [appearance]="'soft'" [dismissible]="true" [dismissed]="false" [name]="''"
-                        [type]="'success'">
-                        "La función de <b>votación individual </b> te permite visualizar a cada uno de tus
-                        representantes y responder de manera individual a los respectivos formularios de cada
-                        asociado."
 
-                    </fuse-alert>
-                </div> -->
+                <div class="w-full flex justify-end px-10 mb-4">
+                    <div class="flex flex-row space-x-4 ">
+                        <p class="font-semibold text-primary">Recargar Formulario</p>
+                        <mat-icon svgIcon="feather:rotate-ccw" class="text-accent cursor-pointer" (click)="recargarFormulario()"></mat-icon>
+                    </div>
+                </div>
 
                 <mat-accordion class="flex flex-col justify-between" multi>
-
                     <!-- panel de datos apoderado -->
                     <mat-expansion-panel *ngFor="let item of datosVotoApoderado" class="">
                         <mat-expansion-panel-header class="flex flex-row justify-between w-full">
@@ -51,7 +46,7 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="w-full mb-4">
-                            <app-formulario-votaciones [datosVotante]="item"  />
+                            <app-formulario-votaciones [datosVotante]="item" />
                         </div>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -69,7 +64,7 @@
                 </fuse-alert>
             </div> -->
             <div class="w-full h-auto" *ngFor="let item of datosVotoApoderado ">
-                    <app-formulario-votaciones [datosVotante]="item" [poderDantes]="datosVotoPoderdante"  />
+                <app-formulario-votaciones [datosVotante]="item" [poderDantes]="datosVotoPoderdante" />
             </div>
         </mat-tab>
 

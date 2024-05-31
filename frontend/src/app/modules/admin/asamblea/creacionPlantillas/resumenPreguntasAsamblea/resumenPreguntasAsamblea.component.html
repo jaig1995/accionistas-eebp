@@ -23,13 +23,13 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="juntaDirectiva">
 
-                                <div *ngFor="let pregunta of juntaDirectivaPreguntas.controls" class="mt-5 rounded-lg">
+                                <div *ngFor="let pregunta of juntaDirectivaPreguntas.controls ; let i= index" class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta" class="w-full  mb-5 rounded-lg  flex flex-col">
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1}}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 
@@ -79,7 +79,7 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="reformaEstatutos">
 
-                                <div *ngFor="let pregunta of reformaEstatutosPreguntas.controls"
+                                <div *ngFor="let pregunta of reformaEstatutosPreguntas.controls ; let i= index"
                                     class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta"
@@ -87,7 +87,7 @@
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1}}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 
@@ -134,7 +134,7 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="distribucionUtilidades">
 
-                                <div *ngFor="let pregunta of distribucionUtilidadesPreguntas.controls"
+                                <div *ngFor="let pregunta of distribucionUtilidadesPreguntas.controls ; let i= index"
                                     class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta"
@@ -142,7 +142,7 @@
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1}}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 
@@ -188,14 +188,14 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="revisoriaFiscal">
 
-                                <div *ngFor="let pregunta of revisoriaFiscalPreguntas.controls" class="mt-5 rounded-lg">
+                                <div *ngFor="let pregunta of revisoriaFiscalPreguntas.controls ; let i= index" class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta"
                                         class="w-full  bg-slate-50 mb-5 rounded-lg  flex flex-col">
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1 }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 
@@ -241,7 +241,7 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="estadosFinancieros">
 
-                                <div *ngFor="let pregunta of estadosFinancierosPreguntas.controls"
+                                <div *ngFor="let pregunta of estadosFinancierosPreguntas.controls ; let i= index"
                                     class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta"
@@ -249,7 +249,7 @@
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1 }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 
@@ -295,7 +295,7 @@
                             <!-- formulario dinamico  -->
                             <div formArrayName="proposicionesVarios">
 
-                                <div *ngFor="let pregunta of proposicionesVariosPreguntas.controls"
+                                <div *ngFor="let pregunta of proposicionesVariosPreguntas.controls ; let i= index"
                                     class="mt-5 rounded-lg">
 
                                     <div [formGroup]="pregunta"
@@ -303,7 +303,7 @@
                                         <div class="flex flex-row ">
                                             <p
                                                 class="w-full font-semibold text-2xl text-center p-3 bg-accent-100 rounded-tl-lg">
-                                                Pregunta No.{{ pregunta.value.id }}</p>
+                                                Pregunta No.{{ i+1 }}</p>
                                             <div
                                                 class="bg-accent-100 items-center flex justify-center rounded-tr-lg px-2">
 

@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsambleaService } from '../../asamblea.service';
-import { PlantillaPreguntas } from '../../creacionPlantillas/interfaces/asamblea.interface';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { SignosPipe } from 'app/shared/pipes/signos.pipe';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
@@ -46,8 +45,10 @@ export class FormularioVotacionesComponent implements OnInit {
     @Input() poderDantes: any;
     consecutivoAsamblea: any;
 
+
     //bandera de inicializacion
     private formInitialized = false;
+
 
 
     ngOnInit(): void {
@@ -66,7 +67,7 @@ export class FormularioVotacionesComponent implements OnInit {
                 if (this.formInitialized) {
                     this.enviarFormularioVotaciones(formulario);
 
-                }else{
+                } else {
                     this.formInitialized = true;
                 }
             });
@@ -111,8 +112,12 @@ export class FormularioVotacionesComponent implements OnInit {
                     this.insertarPreguntasFormularioAsamblea(data?.revisoriaFiscal, 'revisoriaFiscal');
                     this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                     this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
-                    this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
                     this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
+                    if(this.datosVotante?.validacion === 'SI'){
+                        this.insertarPreguntasFormularioAsamblea([], 'estadosFinancieros');
+                    }else{
+                        this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
+                    }
                 },
                 error: (error) => {
                     this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
@@ -122,11 +127,15 @@ export class FormularioVotacionesComponent implements OnInit {
                                 {
                                     next: (data) => {
                                         this.insertarPreguntasFormularioAsamblea(data.juntaDirectiva, 'juntaDirectiva');
-                                        this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                                         this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
                                         this.insertarPreguntasFormularioAsamblea(data.revisoriaFiscal, 'revisoriaFiscal');
-                                        this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
+                                        this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                                         this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
+                                        if(this.datosVotante?.validacion === 'SI'){
+                                            this.insertarPreguntasFormularioAsamblea([], 'estadosFinancieros');
+                                        }else{
+                                            this.insertarPreguntasFormularioAsamblea(data.estadosFinancieros, 'estadosFinancieros');
+                                        }
                                         const { value: formulario } = this.respuestasAsamblea;
                                         this.asambleaService.inicializarFormularioAccionista(formulario);
                                     }
@@ -135,6 +144,7 @@ export class FormularioVotacionesComponent implements OnInit {
                         },
                         error: (error) => {
                             this.consecutivoAsamblea = ''
+                            console.log('💻🔥 140, formularioVotaciones.component.ts: ', error);
                         }
                     })
 
@@ -261,5 +271,8 @@ export class FormularioVotacionesComponent implements OnInit {
             this.claseActual = '';
         }
     }
+
+
+
 }
 

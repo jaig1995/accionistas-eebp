@@ -9,7 +9,7 @@
 
       <div class="w-80">
         <app-input-autocomplete [labelInput]="'Filtro General'" (accionista)="obtenerAccionista($event)"
-            (valorInput)="applyFilter($event)"/>
+            (valorInput)="applyFilter($event)" [asociados]="true" />
       </div><br>
 
     <table mat-table [dataSource]="datos" class="mat-elevation-z2">

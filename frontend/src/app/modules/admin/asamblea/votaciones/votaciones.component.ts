@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { FormularioVotacionesComponent } from './formularioVotaciones/formularioVotaciones.component';
 import { fuseAnimations } from '@fuse/animations';
@@ -29,12 +29,18 @@ import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
     changeDetection: ChangeDetectionStrategy.Default,
 })
 export class VotacionesComponent implements OnInit, AfterViewInit {
-    pantallaDeCarga: boolean= true;
+    pantallaDeCarga: boolean = true;
 
-
+    @ViewChild(FormularioVotacionesComponent) formularioVotacionesComponent: FormularioVotacionesComponent
     ngAfterViewInit(): void {
         // this.obetenerDatosVotaciones()
     }
+    private _cdr = inject(ChangeDetectorRef);
+
+    recargarFormulario() {
+        this.obetenerDatosVotaciones()
+    }
+
     //inyeccion de dependencias
     private _dialog = inject(MatDialog)
     private _asambleaService = inject(AsambleaService)
@@ -57,29 +63,28 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
 
     obetenerDatosVotaciones() {
 
-        const {id:documentoVotante} = JSON.parse(this.decryptToken());
+        const { id: documentoVotante } = JSON.parse(this.decryptToken());
         this._asambleaService.obtenerpoderDantes(documentoVotante).subscribe({
             next: (data) => {
                 if (data) {
-
                     this.datosVotoPoderdante = data.poderDantes
                     this.datosVotoApoderado = data.apoderado;
-                    if ( this.datosVotoPoderdante.length === 0) {
+                    if (this.datosVotoPoderdante.length === 0 || data.validacionBloque === 'SI') {
                         this.individual = true;
                         this.modoSeleccionado = 0
                     } else {
                         let modoSeleccionadoVotar = localStorage.getItem('mode')
 
-                        if(modoSeleccionadoVotar !== null){
+                        if (modoSeleccionadoVotar !== null) {
 
-                            if(modoSeleccionadoVotar === 'individual'){
+                            if (modoSeleccionadoVotar === 'individual') {
                                 this.individual = true;
                                 this.modoSeleccionado = 0
-                            }else{
+                            } else {
                                 this.bloque = true;
                                 this.modoSeleccionado = 1
                             }
-                        }else{
+                        } else {
                             this.openModal()
 
 
@@ -94,7 +99,7 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
             error: (error) => {
                 console.log(error)
             },
-            complete:() =>{
+            complete: () => {
                 this.pantallaDeCarga = false
             },
         })
@@ -126,11 +131,11 @@ export class VotacionesComponent implements OnInit, AfterViewInit {
                 this.bloque = true;
                 this.modoSeleccionado = 1
                 localStorage.setItem('mode', 'bloque')
-            } else if(result === false) {
+            } else if (result === false) {
                 this.individual = true;
                 this.modoSeleccionado = 0
                 localStorage.setItem('mode', 'individual')
-            }else if(result === null){
+            } else if (result === null) {
                 localStorage.removeItem('mode')
             }
 

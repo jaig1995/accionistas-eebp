@@ -35,6 +35,7 @@ export class PostulanteComponent implements OnInit {
 
     //variables de entrada al componente
     @Input() modoUnSoloPostulante = false
+    @Input() modoListarPersonas = false
 
     //Variables Imagenes
     imagenCargada: boolean = false;
@@ -49,7 +50,7 @@ export class PostulanteComponent implements OnInit {
     validacionDatosAccionista: boolean = false;
 
     //validacion existen datos de accionista
-    existenDatosAccionista:boolean = false;
+    existenDatosAccionista: boolean = false;
 
 
     ngOnInit(): void {
@@ -112,6 +113,7 @@ export class PostulanteComponent implements OnInit {
         this.sharedComponentsService.obtenerInformacionAccionista(codigoDelAccionista)
             .subscribe({
                 next: (data: Accionista) => {
+                    console.log('💻🔥 114, postulante.component.ts: ', data);
                     this.InformacionDelPostulante = data
                     this.datosPostulante.patchValue({
                         nombresApellidos: data.nomPri,
@@ -140,7 +142,7 @@ export class PostulanteComponent implements OnInit {
      * Método utilizado para borrar los formularios.
      * tanto el componente hijo como el formulario del padre.
      */
-    borrarFormulario(){
+    borrarFormulario() {
         this.datosPostulante.reset()
         this.inputAutocompleteComponent.borrarFormulario()
     }

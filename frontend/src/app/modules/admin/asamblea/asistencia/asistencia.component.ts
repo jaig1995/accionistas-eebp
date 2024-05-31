@@ -48,7 +48,7 @@ export class AsistenciaComponent implements OnInit {
 
     //validacione
     showSuccesAlert = false;
-    showFailedAlert = false;s
+    showFailedAlert = false;
     loading: boolean;
     showAlert: any;
     asistente: Invitado;

@@ -25,7 +25,7 @@
              <!-- fitro general -->
              <div class="w-80 mb-1">
                 <app-input-autocomplete [labelInput]="'Filtro General'" (accionista)="obtenerAccionista($event)"
-                    (valorInput)="applyFilter($event)"/>
+                    (valorInput)="applyFilter($event)" [asociados]="true" />
             </div>
 
             <div>

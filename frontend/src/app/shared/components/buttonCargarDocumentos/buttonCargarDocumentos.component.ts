@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,9 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
         MatIconModule
     ],
     templateUrl: 'buttonCargarDocumentos.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
 })
-export class ButtonCargarDocumentosComponent {
+export class ButtonCargarDocumentosComponent implements OnInit {
 
     @Output() archivo: EventEmitter<any> = new EventEmitter();
     @Output() contieneArchivo: EventEmitter<boolean> = new EventEmitter(false);
@@ -27,6 +27,9 @@ export class ButtonCargarDocumentosComponent {
     error: string | null = null;
     readonly maxFileSize: number = 2 * 1024 * 1024;
 
+    ngOnInit(): void {
+        // console.log('💻🔥 31, buttonCargarDocumentos.component.ts: ', this.archivo);
+    }
 
 
     archivoSelecionado(event: any) {
