@@ -59,7 +59,7 @@ export class GestionTitulosComponent implements OnInit {
 
 
     // tabla
-    displayedColumns: string[] = ['select', 'conseTitulo', 'folio','canAccTit', 'valor', 'actions'];
+    displayedColumns: string[] = ['select', 'conseTitulo', 'folio', 'canAccTit', 'valor', 'actions'];
     transacciones: any[] = [];
 
 
@@ -80,11 +80,11 @@ export class GestionTitulosComponent implements OnInit {
     miFormulario: FormGroup;
 
 
-    constructor(private fb: FormBuilder,private controlTitulosService: ControlTitulosService, private dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) {
+    constructor(private fb: FormBuilder, private controlTitulosService: ControlTitulosService, private dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) {
         this.miFormulario = this.fb.group({
             nombre: ['', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)]],
         });
-     }
+    }
 
 
     ngOnInit(): void {
@@ -101,17 +101,17 @@ export class GestionTitulosComponent implements OnInit {
             map(value => this._filterAccionistas(value))
         );
 
-        }
+    }
 
 
-        private _filterAccionistas(value: string): any[] {
-            const filterValue = value;
-            return this.accionistas.filter(accionista => accionista.Nombres.includes(filterValue));
-        }
+    private _filterAccionistas(value: string): any[] {
+        const filterValue = value;
+        return this.accionistas.filter(accionista => accionista.Nombres.includes(filterValue));
+    }
 
-        displayAccionista(accionista: any): string {
-            return accionista && accionista.Nombres ? accionista.Nombres : '';
-        }
+    displayAccionista(accionista: any): string {
+        return accionista && accionista.Nombres ? accionista.Nombres : '';
+    }
 
     /**
     * Muestra una alerta EXITOSA en la interfaz de usuario.
@@ -147,9 +147,9 @@ export class GestionTitulosComponent implements OnInit {
         let num = ''
         const selectedAccionista = this.miFormulario.value.nombre;
         if (typeof (selectedAccionista) === 'object') {
-             num = this.miFormulario.value.nombre.idPer
+            num = this.miFormulario.value.nombre.idPer
         } else {
-             num = this.miFormulario.value.nombre
+            num = this.miFormulario.value.nombre
         }
         this.inicializarDatos(num)
     }
@@ -442,5 +442,25 @@ export class GestionTitulosComponent implements OnInit {
             }
         });
     }
+
+
+    descargarTitulo(datos: any) {
+        this.controlTitulosService.descargarTitulo(datos.conseTitulo).subscribe({
+            next: (data) => {
+                const url = window.URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Titulo_${datos.conseTitulo}.pdf`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                console.error('Error al descargar el archivo:', error);
+            }
+        })
+    }
+
+
+
 
 }

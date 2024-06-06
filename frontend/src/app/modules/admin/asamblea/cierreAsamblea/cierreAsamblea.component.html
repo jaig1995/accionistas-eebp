@@ -148,11 +148,27 @@
                 <mat-label class=" font-extrabold mt-2">Tipo de
                     Asamblea</mat-label>
                 <mat-select formControlName="pagoUtilidad">
-                    <mat-option [value]=30>Un Pago</mat-option>
-                    <mat-option [value]=70>Dos Pagos</mat-option>
+                    <mat-option [value]=1>Un Pago</mat-option>
+                    <mat-option [value]=2>Dos Pagos</mat-option>
+                    <mat-option [value]=3>Tres Pagos</mat-option>
                 </mat-select>
                 <mat-error class="mb-2">Este campo es obligatorio</mat-error>
             </mat-form-field>
+
+            <div formArrayName="numPagos" class="flex flex-row space-x-3 justify-center items-center">
+                <div *ngFor="let control of numPagos.controls; let i = index">
+                    <mat-form-field>
+                        <input matInput [formControlName]="i" placeholder="pago {{ i + 1 }}" type="number">
+                        <mat-icon svgIcon="feather:percent"></mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="flex flex-row justify-center">
+
+                <mat-error class="mb-2"  *ngIf="numPagos.errors?.sumExcedida">Maximo permitido de 100%</mat-error>
+                <!-- <mat-error class="mb-2"  *ngIf="camposDinamicos.errors?.sumNoIgualA100">Debe ser del 100%</mat-error> -->
+            </div>
+
         </div>
         <!-- seccion dos -->
         <div class="p-5 py-3">

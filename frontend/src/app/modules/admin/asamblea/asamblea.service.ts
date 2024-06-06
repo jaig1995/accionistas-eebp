@@ -177,4 +177,24 @@ export class AsambleaService {
         return this.http.post<any>(`${this._baseUrl}/api/utilidades/agregar`, datos)
     }
 
+    //reportes y formatos
+    obtenerFormatosTitulos(){
+        return this.http.get<any>(`${this._baseUrl}/api/titulos/reportes`)
+    }
+
+    obtenerReportesPorAsamblea(id){
+        return this.http.get<any>(`${this._baseUrl}/api/asamblea/reportes/${id}`)
+    }
+
+    obtenerFormatosAsamblea(){
+        return this.http.get<any>(`${this._baseUrl}/api/asamblea/formatos`)
+
+    }
+
+    //todo: logica para el blob de accionista
+    obtenerCertificadoAccionista(codAccionista){
+        const url = `${this._baseUrl}/api/asamblea/certificado/${codAccionista}`;
+        return this.http.get(url, { responseType: 'blob' });
+    }
+
 }
