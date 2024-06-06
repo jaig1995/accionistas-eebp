@@ -131,9 +131,9 @@ export class ControlTitulosService {
                 console.log('💻🔥 132, controlTitulos.service.ts: ', accionistas);
                 return accionistas.map(accionista => (
                     {
-                    idPer: accionista.codUsuario,
-                    Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
-                }));
+                        idPer: accionista.codUsuario,
+                        Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
+                    }));
             })
         );
     }
@@ -146,9 +146,9 @@ export class ControlTitulosService {
                 const esAccionistaN = accionistas.filter(usuario => usuario.esAccionista === "N");
                 return esAccionistaN.map(accionista => (
                     {
-                    idPer: accionista.codUsuario,
-                    Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
-                }));
+                        idPer: accionista.codUsuario,
+                        Nombres: accionista.codUsuario + '-' + accionista.nomPri + ' ' + accionista.apePri,
+                    }));
             })
         );
     }
@@ -160,9 +160,9 @@ export class ControlTitulosService {
                 console.log('💻🔥 132, controlTitulos.service.ts: ', accionistas);
                 return accionistas.map(accionista => (
                     {
-                    idPer: accionista.codAccionista,
-                    Nombres: accionista.codAccionista + '-' + accionista.nomAccionista,
-                }));
+                        idPer: accionista.codAccionista,
+                        Nombres: accionista.codAccionista + '-' + accionista.nomAccionista,
+                    }));
             })
         );
     }
@@ -181,5 +181,10 @@ export class ControlTitulosService {
     }
 
 
+
+    descargarTitulo(idTitulo: string): Observable<Blob> {
+        const url = `${this._baseUrl}/api/titulos/formatoTituloAcciones/${idTitulo}`;
+        return this.http.get(url, { responseType: 'blob' });
+    }
 
 }

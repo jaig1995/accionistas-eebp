@@ -134,6 +134,9 @@
                         (click)="editarModal(row)">Editar<mat-icon class="custom-button-editar"
                             svgIcon="heroicons_outline:pencil"></mat-icon>
                     </a>
+                    <a mat-button *ngIf="transacciones.length === 0"
+                        (click)="descargarTitulo(row)">Descargar<mat-icon svgIcon="feather:download"></mat-icon>
+                    </a>
                 </td>
             </ng-container>
 

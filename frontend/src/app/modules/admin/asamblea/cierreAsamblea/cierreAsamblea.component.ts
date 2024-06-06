@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef, QueryList, ViewChildren } from '@angular/core';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCargarDocumentos/buttonCargarDocumentos.component';
@@ -50,31 +50,79 @@ export class CierreAsambleaComponent implements OnInit {
     archivoOtroAnexo: any;
 
     // Nombres documentos actas de cierre
-    actaCierrePostulaciones = 'actacierrepostulaciones_';
-    actaReforma = 'actareforma_';
-    actaRevisoriaFiscal = 'actarevisoriafiscal_';
-    actaPoderes = 'actapoderes_';
-    actaEscrutinio = 'actaescrutinio_';
-    otrosAnexos = 'actaotrosanexos_';
-
+    actaCierrePostulaciones = 'actaCierrePostulaciones';
+    actaReforma = 'actaReforma';
+    actaRevisoriaFiscal = 'actaRevisoriaFiscal';
+    actaPoderes = 'actaPoderes';
+    actaEscrutinio = 'actaEscrutinio';
+    otrosAnexos = 'actaOtrosAnexos';
 
     //alertas
     showSuccesAlert = false;
     showFailedAlert = false;
 
-    formulario = this.fb.group({
-        numAccMercado: ['', [Validators.required, this.numberValidator]],
-        numAccUtilidades: ['', [Validators.required, this.numberValidator]],
-        participacionAccion: ['', [Validators.required, this.numberValidator]],
-        pagoUtilidad: ['', Validators.required],
-        valNomAccion: ['', [Validators.required, this.numberValidator]],
-        valIntrinseco: ['', [Validators.required, this.numberValidator]],
-        divParticipacion: ['', [Validators.required, this.numberValidator]],
-    });
+    //
+    formulario: FormGroup;
+    excedeValor: boolean = false;
+
+
+
+    sumValidator(control: FormArray): { [key: string]: boolean } | null {
+        const valores = control.controls.map(c => c.value);
+        const suma = valores.reduce((acc, cur) => acc + cur, 0);
+
+        if (suma > 100) {
+            return { sumExcedida: true };
+        }
+
+        if (valores.some(v => v < 0)) {
+            return { valoresNegativos: true };
+        }
+        if (suma !== 100) {
+            return { sumNoIgualA100: true };
+        }
+
+        return null;
+    }
 
     ngOnInit(): void {
+
+        this.formulario = this.fb.group({
+            numAccMercado: ['', [Validators.required, this.numberValidator]],
+            numAccUtilidades: ['', [Validators.required, this.numberValidator]],
+            participacionAccion: ['', [Validators.required, this.numberValidator]],
+            pagoUtilidad: ['', Validators.required],
+            numPagos: this.fb.array([], [this.sumValidator]),
+            valNomAccion: ['', [Validators.required, this.numberValidator]],
+            valIntrinseco: ['', [Validators.required, this.numberValidator]],
+            divParticipacion: ['', [Validators.required, this.numberValidator]],
+        });
+
+        this.formulario.get('pagoUtilidad').valueChanges.subscribe(value => {
+            this.actualizarCamposDinamicos(value);
+        });
+
         this.obtenerConsecutivoAsamblea();
     }
+
+
+    get numPagos(): FormArray {
+        return this.formulario.get('numPagos') as FormArray;
+    }
+
+
+
+    actualizarCamposDinamicos(value: number) {
+        console.log('💻🔥 99, cierreAsamblea.component.ts: ', value);
+        while (this.numPagos.length) {
+            this.numPagos.removeAt(0);
+        }
+        for (let i = 0; i < value; i++) {
+            this.numPagos.push(this.fb.control('', Validators.required));
+        }
+    }
+
+
 
     obtenerConsecutivoAsamblea() {
         this._asambleaService.obtenerConsecutivoAsamblea().subscribe({
@@ -97,9 +145,27 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarFormularioParametrizacion() {
+
         const { value } = this.formulario
-        this.enviarDatosUtilidades(value)
-        console.log('💻🔥 102, cierreAsamblea.component.ts: ', value);
+        //array con valores dinamicos
+        const inputArray = value.numPagos
+        const sumLimit = 100;
+        const sumExceeds100 = inputArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) > sumLimit;
+        if (sumExceeds100) {
+            return
+        }
+        const dynamicObject: { [key: string]: string } = {};
+        for (let i = 0; i < inputArray.length; i++) {
+            const propertyName = `pago${i + 1}`;
+            const propertyValue = inputArray[i];
+            dynamicObject[propertyName] = propertyValue;
+        }
+        const Utilidades = {
+            ...value,
+            numPagos: dynamicObject
+        }
+        console.log('💻🔥 102, cierreAsamblea.component.ts: ', Utilidades);
+        this.enviarDatosUtilidades(Utilidades)
     }
 
     // SECCIÓN RECIBIR DESDE EL COMPONENTE ARCHIVO Y VALIDACIONES
@@ -114,7 +180,7 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarActaPostulaciones() {
-        let nombreArchivo = `${this.actaCierrePostulaciones}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.actaCierrePostulaciones}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[0]; // Primera instancia
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoActaCierrePostulaciones)
@@ -131,9 +197,10 @@ export class CierreAsambleaComponent implements OnInit {
         console.log('💻🔥 78, cierreAsamblea.component.ts: ', archivo);
         this.archivoActaReforma = archivo;
     }
+    // asamblea_<consecutivoAsamblea>_actaCierre
 
     enviarActaReforma() {
-        let nombreArchivo = `${this.actaReforma}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.actaReforma}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[1]; // Segunda instancia
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoActaReforma)
@@ -152,7 +219,7 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarActaRevisoriaFiscal() {
-        let nombreArchivo = `${this.actaRevisoriaFiscal}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.actaRevisoriaFiscal}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[2];
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoActaRevisoriaFiscal)
@@ -170,7 +237,7 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarActaPoderes() {
-        let nombreArchivo = `${this.actaPoderes}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.actaPoderes}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[3];
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoActaPoderes)
@@ -188,7 +255,7 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarActaEscrutinio() {
-        let nombreArchivo = `${this.actaEscrutinio}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.actaEscrutinio}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[4];
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoActaEscrutinio)
@@ -206,7 +273,7 @@ export class CierreAsambleaComponent implements OnInit {
     }
 
     enviarActaOtroAnexo() {
-        let nombreArchivo = `${this.otrosAnexos}${this.consecutivoAsamblea}`;
+        let nombreArchivo = `asamblea_${this.consecutivoAsamblea}_${this.otrosAnexos}`;
         const componente = this.buttonCargarDocumentosComponents.toArray()[5];
         componente.enviarArchivo(nombreArchivo);
         this.enviarArchivos(this.archivoOtroAnexo)
@@ -235,7 +302,7 @@ export class CierreAsambleaComponent implements OnInit {
                 console.log('💻🔥 232, cierreAsamblea.component.ts: ', data);
             },
             error: (error) => {
-                console.log('💻🔥 235, cierreAsamblea.component.ts: ', error);
+                // console.log('💻🔥 235, cierreAsamblea.component.ts: ', error);
                 this.mostrarAlertaFallida()
             }
         })

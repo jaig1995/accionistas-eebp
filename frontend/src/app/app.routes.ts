@@ -116,6 +116,9 @@ export const appRoutes: Route[] = [
             { path: 'asamblea/resultados', loadComponent: () => import('app/modules/admin/asamblea/resultadoVotacion/resultadoVotacion.component').then(c => c.ResultadoVotacionComponent), title: "Resultados de la Votación" },
             { path: 'asamblea/cierre', loadComponent: () => import('app/modules/admin/asamblea/cierreAsamblea/cierreAsamblea.component').then(c => c.CierreAsambleaComponent), title: "Cierre de Asamblea" },
             { path: 'asamblea/votaciones-postulantes', loadComponent: () => import('app/modules/admin/asamblea/votacionPostulantes/votacionPostulantes.component').then(c => c.VotacionPostulantesComponent), title: "Votación Postulantes" },
+            //Reportes
+            { path: 'reportes', loadComponent: () => import('app/modules/admin/reportes/reportes/reportes.component').then(c => c.ReportesComponent), title: "Reportes Asamblea" },
+
         ]
     }
 ];
