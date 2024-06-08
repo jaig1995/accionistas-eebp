@@ -191,10 +191,19 @@ export class AsambleaService {
 
     }
 
-    //todo: logica para el blob de accionista
+    obtenerUtLidades(){
+        return this.http.get<any>(`${this._baseUrl}/api/utilidades/obtener-utilidades`)
+
+    }
+
     obtenerCertificadoAccionista(codAccionista){
         const url = `${this._baseUrl}/api/asamblea/certificado/${codAccionista}`;
         return this.http.get(url, { responseType: 'blob' });
     }
 
+
+    obtenerReporteDividendo(anio){
+        const url = `${this._baseUrl}/api/utilidades/financiero/${anio}`;
+        return this.http.get(url, { responseType: 'blob' });
+    }
 }

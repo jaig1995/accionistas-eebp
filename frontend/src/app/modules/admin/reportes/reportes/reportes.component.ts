@@ -8,6 +8,7 @@ import { AccionistaInputAutoComplete } from 'app/shared/components/interfaces/ac
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { AsambleaService } from '../../asamblea/asamblea.service';
 import { ServicesConfig } from 'app/services.config';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-reportes',
@@ -18,6 +19,7 @@ import { ServicesConfig } from 'app/services.config';
         FuseLoadingBarComponent,
         FuseAlertComponent,
         InputAutocompleteComponent,
+        ReactiveFormsModule
     ],
     templateUrl: 'reportes.component.html',
     changeDetection: ChangeDetectionStrategy.Default,
@@ -27,6 +29,7 @@ export class ReportesComponent implements OnInit {
 
     //inyeccion de dependencias
     private _asambleaService = inject(AsambleaService);
+    private fb = inject(FormBuilder);
 
     // variable de entorno
     private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
@@ -68,6 +71,10 @@ export class ReportesComponent implements OnInit {
     formatoActaPoderes: string;
     formatoActaEscutinio: string;
 
+    //array de los anos de asamblea para reportes
+    anioSeleccionado;
+    pruebasAnios = []
+
 
     onSelectionChange(selectedNumber: number) {
         this.seleccionAsamblea = selectedNumber;
@@ -80,6 +87,8 @@ export class ReportesComponent implements OnInit {
         this.obtenerReportesTitulos()
         this.obtenerAsambleasListado()
         this.obtenerFormatosAsamblea()
+        this.obtenerUtilidades()
+        this.anioSeleccionado = this.fb.control('', [Validators.required]);
     }
 
 
@@ -182,7 +191,7 @@ export class ReportesComponent implements OnInit {
     }
 
 
-    //todo: aqui para logica certificado accionista
+
     obtenerCertificadoAccionista() {
         let codAccionista = this.poderdante.idPer
         if (!codAccionista) return
@@ -202,6 +211,44 @@ export class ReportesComponent implements OnInit {
         })
     }
 
+
+    obtenerReporteDivididendo() {
+        console.log('💻🔥 212, reportes.component.ts: ', this.anioSeleccionado.value);
+        let anioSeleccionado = this.anioSeleccionado.value
+        if (!anioSeleccionado) return
+        this._asambleaService.obtenerReporteDividendo(anioSeleccionado).subscribe({
+            next: (data) => {
+                const url = window.URL.createObjectURL(data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Reporte_Dividendos_${anioSeleccionado}.zip`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            },
+            error: (error) => {
+                this.mostrarAlertaFallida()
+                console.error('Error al descargar el archivo:', error);
+            }
+        })
+    }
+
+
+    obtenerUtilidades() {
+        this._asambleaService.obtenerUtLidades().subscribe({
+            next: (data) => {
+                const aniosArray = data.map(objeto => {
+                    const fecha = new Date(objeto.fecUtilidad);
+                    const anio = fecha.getFullYear();
+                    return anio;
+                });
+
+                this.pruebasAnios = aniosArray
+            },
+            error: (error) => {
+                console.error('error al obtener Utilidades', error);
+            }
+        })
+    }
 
     //alertas
     mostrarAlertaExitosa(): void {
