@@ -124,24 +124,24 @@ export class AsistenciaComponent implements OnInit {
     buscarAccionista() {
         // if(!this.asistente || this.valorInput) return;
 
-        if(!this.asistente){
+        if (!this.asistente) {
             const valor = this.valorInput
             this.enviarPeticion(valor)
-        }else{
+        } else {
             const { idPer } = this.asistente
             this.enviarPeticion(idPer)
         }
     }
 
-    enviarPeticion(data){
-        this._asambleaService.registrarAsistente({idePer : data, huella:null}).subscribe({
-            next:(data)=>{
+    enviarPeticion(data) {
+        this._asambleaService.registrarAsistente({ idePer: data, huella: null }).subscribe({
+            next: (data) => {
                 this.mostrarAlertaExitosa()
                 this.obtenerConsecutivoAsamblea()
                 this.cargarDatos();
                 this.obtenerDatosAsamblea()
             },
-            error(){
+            error() {
                 this.mostrarAlertafallida()
             }
         })
@@ -155,10 +155,10 @@ export class AsistenciaComponent implements OnInit {
         row.asistencia = !row.asistencia;
         const data = {
             idAsistente: row.idAsistente,
-            consecutivo: this.consecutivoAsamblea ,
+            consecutivo: this.consecutivoAsamblea,
             asistencia: row.asistencia,
             idePer: row.codUsuario,
-            huella:null
+            huella: null
         }
         this.obtenerDatosAsamblea()
         console.log('💻🔥 165, asistencia.component.ts: ', data);
@@ -181,17 +181,17 @@ export class AsistenciaComponent implements OnInit {
 
     obtenerHuella() {
         this._accionistasService.peticionGetHuella().subscribe(
-          (response) => {
-            const base64Data = response.fingerprint.message;
-            this.message = base64Data;
-            this.base64 = base64Data;
-            // this.accionistasForm.get('huella').setValue(this.base64);
-          },
-          (error) => {
-            console.error('Error en la petición:', error);
-          }
+            (response) => {
+                const base64Data = response.fingerprint.message;
+                this.message = base64Data;
+                this.base64 = base64Data;
+                // this.accionistasForm.get('huella').setValue(this.base64);
+            },
+            (error) => {
+                console.error('Error en la petición:', error);
+            }
         );
-      }
+    }
 
 
     generarExcel() {
@@ -208,5 +208,12 @@ export class AsistenciaComponent implements OnInit {
         //exportamos el libro excel
         writeFileXLSX(wb, `Asistencia_listado_${this.consecutivoAsamblea}.xlsx`, { compression: true });
 
+    }
+
+
+    applyFilter(event: Event) {
+        console.log('💻🔥 215, asistencia.component.ts: ', event);
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 }

@@ -71,9 +71,7 @@ export class ReportesComponent implements OnInit {
     formatoActaPoderes: string;
     formatoActaEscutinio: string;
 
-    //array de los anos de asamblea para reportes
-    anioSeleccionado;
-    pruebasAnios = []
+
 
 
     onSelectionChange(selectedNumber: number) {
@@ -87,8 +85,6 @@ export class ReportesComponent implements OnInit {
         this.obtenerReportesTitulos()
         this.obtenerAsambleasListado()
         this.obtenerFormatosAsamblea()
-        this.obtenerUtilidades()
-        this.anioSeleccionado = this.fb.control('', [Validators.required]);
     }
 
 
@@ -212,43 +208,8 @@ export class ReportesComponent implements OnInit {
     }
 
 
-    obtenerReporteDivididendo() {
-        console.log('💻🔥 212, reportes.component.ts: ', this.anioSeleccionado.value);
-        let anioSeleccionado = this.anioSeleccionado.value
-        if (!anioSeleccionado) return
-        this._asambleaService.obtenerReporteDividendo(anioSeleccionado).subscribe({
-            next: (data) => {
-                const url = window.URL.createObjectURL(data);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Reporte_Dividendos_${anioSeleccionado}.zip`;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            },
-            error: (error) => {
-                this.mostrarAlertaFallida()
-                console.error('Error al descargar el archivo:', error);
-            }
-        })
-    }
 
 
-    obtenerUtilidades() {
-        this._asambleaService.obtenerUtLidades().subscribe({
-            next: (data) => {
-                const aniosArray = data.map(objeto => {
-                    const fecha = new Date(objeto.fecUtilidad);
-                    const anio = fecha.getFullYear();
-                    return anio;
-                });
-
-                this.pruebasAnios = aniosArray
-            },
-            error: (error) => {
-                console.error('error al obtener Utilidades', error);
-            }
-        })
-    }
 
     //alertas
     mostrarAlertaExitosa(): void {

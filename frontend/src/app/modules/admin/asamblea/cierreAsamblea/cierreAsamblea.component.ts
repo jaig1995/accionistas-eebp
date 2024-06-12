@@ -62,64 +62,10 @@ export class CierreAsambleaComponent implements OnInit {
     showFailedAlert = false;
 
     //
-    formulario: FormGroup;
-    excedeValor: boolean = false;
 
-
-
-    sumValidator(control: FormArray): { [key: string]: boolean } | null {
-        const valores = control.controls.map(c => c.value);
-        const suma = valores.reduce((acc, cur) => acc + cur, 0);
-
-        if (suma > 100) {
-            return { sumExcedida: true };
-        }
-
-        if (valores.some(v => v < 0)) {
-            return { valoresNegativos: true };
-        }
-        if (suma !== 100) {
-            return { sumNoIgualA100: true };
-        }
-
-        return null;
-    }
 
     ngOnInit(): void {
-
-        this.formulario = this.fb.group({
-            numAccMercado: ['', [Validators.required, this.numberValidator]],
-            numAccUtilidades: ['', [Validators.required, this.numberValidator]],
-            participacionAccion: ['', [Validators.required, this.numberValidator]],
-            pagoUtilidad: ['', Validators.required],
-            numPagos: this.fb.array([], [this.sumValidator]),
-            valNomAccion: ['', [Validators.required, this.numberValidator]],
-            valIntrinseco: ['', [Validators.required, this.numberValidator]],
-            divParticipacion: ['', [Validators.required, this.numberValidator]],
-        });
-
-        this.formulario.get('pagoUtilidad').valueChanges.subscribe(value => {
-            this.actualizarCamposDinamicos(value);
-        });
-
         this.obtenerConsecutivoAsamblea();
-    }
-
-
-    get numPagos(): FormArray {
-        return this.formulario.get('numPagos') as FormArray;
-    }
-
-
-
-    actualizarCamposDinamicos(value: number) {
-        console.log('💻🔥 99, cierreAsamblea.component.ts: ', value);
-        while (this.numPagos.length) {
-            this.numPagos.removeAt(0);
-        }
-        for (let i = 0; i < value; i++) {
-            this.numPagos.push(this.fb.control('', Validators.required));
-        }
     }
 
 
@@ -136,37 +82,6 @@ export class CierreAsambleaComponent implements OnInit {
         });
     }
 
-    numberValidator(control: AbstractControl): ValidationErrors | null {
-        const value = control.value;
-        if (value === null || value === undefined || value === '') {
-            return null; // No validar valores vacíos para permitir que el validador required los capture
-        }
-        return isNaN(value) ? { notANumber: true } : null;
-    }
-
-    enviarFormularioParametrizacion() {
-
-        const { value } = this.formulario
-        //array con valores dinamicos
-        const inputArray = value.numPagos
-        const sumLimit = 100;
-        const sumExceeds100 = inputArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0) > sumLimit;
-        if (sumExceeds100) {
-            return
-        }
-        const dynamicObject: { [key: string]: string } = {};
-        for (let i = 0; i < inputArray.length; i++) {
-            const propertyName = `pago${i + 1}`;
-            const propertyValue = inputArray[i];
-            dynamicObject[propertyName] = propertyValue;
-        }
-        const Utilidades = {
-            ...value,
-            numPagos: dynamicObject
-        }
-        console.log('💻🔥 102, cierreAsamblea.component.ts: ', Utilidades);
-        this.enviarDatosUtilidades(Utilidades)
-    }
 
     // SECCIÓN RECIBIR DESDE EL COMPONENTE ARCHIVO Y VALIDACIONES
 
