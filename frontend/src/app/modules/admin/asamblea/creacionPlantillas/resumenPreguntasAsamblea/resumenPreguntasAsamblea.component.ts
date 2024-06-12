@@ -21,6 +21,8 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     private asambleaService = inject(AsambleaService)
     private fb = inject(FormBuilder)
 
+
+
     //variable formulario
     preguntasGenerales: FormGroup;
 
@@ -30,11 +32,16 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
     pantallaDeCarga: boolean;
 
     ngOnInit(): void {
+        this.obtenerDatosResumen()
+
+
+    }
+
+    obtenerDatosResumen(){
         this.obtenerConsecutivoAsamblea()
         this.cargarDatosFormulario()
         this.inicializarFormulario()
     }
-
 
     /////////////////////////////////////////////////////
     // SECCION FORMULARIO
@@ -108,9 +115,11 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
         this.pantallaDeCarga = true
         this.asambleaService.obtenerConsecutivoAsamblea().subscribe({
             next:(data)=>{
+                console.log('💻🔥 111, resumenPreguntasAsamblea.component.ts: ', data);
                 this.consecutivoAsamblea = data.ultimoConsecutivo
                 this.asambleaService.obtenerPreguntasAsamblea2(this.consecutivoAsamblea).subscribe({
                     next: (data: PlantillaPreguntas) => {
+                        console.log('💻🔥 115, resumenPreguntasAsamblea.component.ts: ', data);
                         this.cargarDatosCategoria(data.juntaDirectiva, 'juntaDirectiva');
                         this.cargarDatosCategoria(data.reformaEstatutos, 'reformaEstatutos');
                         this.cargarDatosCategoria(data.distribucionUtilidades, 'distribucionUtilidades');
@@ -168,7 +177,6 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
             [contexto]: id
         }
 
-        // TODO:llamado a refrescar todo el formulario
         this.cargarDatosFormulario()
         //
         this.botonActivo = true

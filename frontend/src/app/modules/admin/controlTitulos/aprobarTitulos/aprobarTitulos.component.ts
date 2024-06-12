@@ -40,7 +40,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
     //Tabla
     datosTabla: AprobarTitulos[];
-    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO','ACCIONES' ,'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
+    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'ACCIONES', 'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
     dataSource: any;
 
     private _fuseConfirmationService;
@@ -125,7 +125,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
                         };
                     });
                     this.dataSource = new MatTableDataSource<any>(this.tablaConAcciones);
-                    console.log("Desde inicializarDatos",this.datosTabla)
+                    console.log("Desde inicializarDatos", this.datosTabla)
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                     this.loading = false;
@@ -245,6 +245,11 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
         );
     }
 
+
+    toggleCheckbox(element: any) {
+        // Cambia el estado de la casilla de verificación
+        element.intencionCompra = !element.intencionCompra;
+    }
 
 
     aprobar(aprobar) {

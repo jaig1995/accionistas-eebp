@@ -107,7 +107,7 @@
                 <th mat-header-cell *matHeaderCellDef> INTENCIÓN </th>
                 <td mat-cell *matCellDef="let element" class="text-center">
                     <mat-checkbox [(ngModel)]="element.intencionCompra"
-                        [disabled]="element.tipoTransaccion?.desTran !== 'venta' ">
+                        [disabled]="element.tipoTransaccion?.desTran !== 'venta' " (click)="toggleCheckbox(element)">
                     </mat-checkbox>
                 </td>
             </ng-container>

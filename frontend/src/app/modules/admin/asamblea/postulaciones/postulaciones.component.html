@@ -6,23 +6,6 @@
 
     <mat-tab-group>
 
-        <!-- comite Escrutinio -->
-        <mat-tab label="Comité Escrutinio">
-            <div
-                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
-                {{ 'comité Escrutinio' | titlecase }}</div>
-
-            <app-postulante (datosDelPostulante)="postulanteCE($event)" (campoVacio)="existenDatosCE($event)"
-                [modoUnSoloPostulante]="true" [modoListarPersonas]="true"/>
-
-            <div class="flex flex-row justify-end ">
-                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
-                    [disabled]="!validacionCE() || botonActivo" (click)="enviarPostulacionComiteEscrutinio()">
-                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
-                        class="text-lg">&nbsp;Postular</span></button>
-            </div>
-        </mat-tab>
-
         <!-- Presidente -->
         <mat-tab label="Presidente">
             <div
@@ -30,7 +13,7 @@
                 {{ 'presidente' | titlecase }}</div>
 
             <app-postulante (datosDelPostulante)="postulantePR($event)" (campoVacio)="existenDatosPresidente($event)"
-                [modoUnSoloPostulante]="true" [modoListarPersonas]="true"/>
+                [modoUnSoloPostulante]="true" [modoListarPersonas]="true" />
 
             <div class="flex flex-row justify-end ">
                 <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
@@ -40,6 +23,24 @@
             </div>
         </mat-tab>
 
+        <!-- comite Escrutinio -->
+        <mat-tab label="Comité Escrutinio">
+            <div
+                class="ml-0.5 mb-5 text-4xl font-extrabold text-secondary flex flex-col flex-auto items-center justify-center">
+                {{ 'comité Escrutinio' | titlecase }}</div>
+
+            <app-postulante (datosDelPostulante)="postulanteCE($event)" (campoVacio)="existenDatosCE($event)"
+                [modoUnSoloPostulante]="true" [modoListarPersonas]="true" />
+
+            <div class="flex flex-row justify-end ">
+                <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
+                    [disabled]="!validacionCE() || botonActivo" (click)="enviarPostulacionComiteEscrutinio()">
+                    <mat-icon svgIcon="heroicons_solid:cursor-arrow-rays"></mat-icon> <span
+                        class="text-lg">&nbsp;Postular</span></button>
+            </div>
+        </mat-tab>
+
+
         <!-- Aporbacion acta -->
         <mat-tab label="Aprobador Acta">
             <div
@@ -47,7 +48,7 @@
                 {{ 'aprobador acta' | titlecase }}</div>
 
             <app-postulante (datosDelPostulante)="postulanteAA($event)" (campoVacio)="existenDatosAA($event)"
-                [modoUnSoloPostulante]="true" [modoListarPersonas]="true"/>
+                [modoUnSoloPostulante]="true" [modoListarPersonas]="true" />
 
             <div class="flex flex-row justify-end ">
                 <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
@@ -67,7 +68,7 @@
                 <app-postulante (datosDelPostulante)="primerPostulanteJDirectiva($event)"
                     (campoVacio)="existenDatosPrimerPostulanteJD($event)" [modoListarPersonas]="true" />
                 <app-postulante (datosDelPostulante)="segundoPostulanteJDirectiva($event)"
-                    (campoVacio)="existenDatosSegundoPostulanteJD($event)"  [modoListarPersonas]="true"/>
+                    (campoVacio)="existenDatosSegundoPostulanteJD($event)" [modoListarPersonas]="true" />
                 <div class="flex flex-row justify-end ">
                     <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
                         [disabled]="!validacionJuntaDirectiva() || botonActivo"
@@ -91,7 +92,7 @@
                 <app-postulante (datosDelPostulante)="primerpostulanteRFiscal($event)"
                     (campoVacio)="existenDatosPrimerPostulanteRF($event)" [modoListarPersonas]="false" />
                 <app-postulante (datosDelPostulante)="segundopostulanteRFiscal($event)"
-                    (campoVacio)="existenDatosSegundoPostulanteRF($event)"  [modoListarPersonas]="false"/>
+                    (campoVacio)="existenDatosSegundoPostulanteRF($event)" [modoListarPersonas]="false" />
                 <div class="flex flex-row justify-end ">
                     <button mat-flat-button color="primary" class="w-72 h-20 -mt-5"
                         [disabled]="!validacionRevisorFiscal() || botonActivo"
@@ -121,7 +122,8 @@
 
 
 <!-- alertas -->
-<div class="flex justify-end fixed top-7 right-9 mt-13 w-full {{(showSuccesAlert || showFailedAlert) ? 'z-50' : ''}} animated-box">
+<div
+    class="flex justify-end fixed top-7 right-9 mt-13 w-full {{(showSuccesAlert || showFailedAlert) ? 'z-50' : ''}} animated-box">
 
     <div class="w-100 mb-4 ">
 

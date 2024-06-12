@@ -3,6 +3,7 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { FinancieroComponent } from './modules/admin/financiero/financiero.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -118,6 +119,8 @@ export const appRoutes: Route[] = [
             { path: 'asamblea/votaciones-postulantes', loadComponent: () => import('app/modules/admin/asamblea/votacionPostulantes/votacionPostulantes.component').then(c => c.VotacionPostulantesComponent), title: "Votación Postulantes" },
             //Reportes
             { path: 'reportes', loadComponent: () => import('app/modules/admin/reportes/reportes/reportes.component').then(c => c.ReportesComponent), title: "Reportes Asamblea" },
+            //Financiero
+            { path: 'financiero', loadComponent: () => import('app/modules/admin/financiero/financiero.component').then(c => c.FinancieroComponent), title: "Reportes Asamblea" },
 
         ]
     }

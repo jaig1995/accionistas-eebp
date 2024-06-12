@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { ResumenPreguntasAsambleaComponent } from './resumenPreguntasAsamblea/resumenPreguntasAsamblea.component';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { PlantillaPreguntas } from './interfaces/asamblea.interface';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { fuseAnimations } from '@fuse/animations';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-creacion-plantillas',
@@ -34,6 +35,10 @@ export class CreacionPlantillasComponent implements OnInit {
     // Inyeccion de dependencias
     private fb = inject(FormBuilder)
     private asambleaService = inject(AsambleaService)
+    private router = inject(Router);
+
+    //componentes hijos
+    @ViewChild(ResumenPreguntasAsambleaComponent) resumenPreguntasAsambleaComponent!: ResumenPreguntasAsambleaComponent;
 
     //stepper
     @ViewChild('stepper') stepper!: MatStepper;
@@ -55,8 +60,9 @@ export class CreacionPlantillasComponent implements OnInit {
     // dialogo
     dialogRef: MatDialogRef<any>;
 
-    //cons asamblea
+    //consecutivos asamblea, encuesta
     consecutivoAsamblea: any;
+    consecutivoEncuestaActual: any;
 
     // asamblea arrays
     preguntasAsamblea: any;
@@ -75,18 +81,19 @@ export class CreacionPlantillasComponent implements OnInit {
         idTema: ['', Validators.required],
         tipoPregunta: ['',],
         pregunta: ['', Validators.required],
-        tipoRespuesta: ['',Validators.required],
+        tipoRespuesta: ['', Validators.required],
         opcionesRespuesta: this.fb.array([]),
     });
-    consecutivoEncuestaActual: any;
+
     // Fin formularios
 
     constructor(public dialog: MatDialog, private _fuseLoadingService: FuseLoadingService) { }
 
+
+
     ngOnInit(): void {
         this.obtenerConsecutivoAsamblea();
         this.obtenerIdEncuestaActual();
-
     }
 
     //peticiones HTTP
@@ -95,7 +102,7 @@ export class CreacionPlantillasComponent implements OnInit {
         this.asambleaService.obtenerDatosEncuesta(this.consecutivoAsamblea).subscribe(
             {
                 next: (data: any) => {
-                    //TODO: aqui empezar a modificar datos asamblea
+
                     //habilitar seccion escoge los temas a tratar checkbox
                     this.esEditableTemasAsamblea = true
 
@@ -192,9 +199,9 @@ export class CreacionPlantillasComponent implements OnInit {
         this.respuestasOpcionMultiple.splice(index, 1);
     }
 
+    //todo: desde aqui logica no lista asamblea
     // Método para agregar una nueva pregunta al FormArray
     agregarPregunta() {
-        console.log('💻🔥 178, creacionPlantillas.component.ts: ', this.consecutivoAsamblea);
         const { idTema, tipoRespuesta, pregunta } = this.asignacionPregunta.value;
         const respuestas = this.respuestasOpcionMultiple
         const pruebas = {
@@ -214,6 +221,7 @@ export class CreacionPlantillasComponent implements OnInit {
         this.asambleaService.enviarPreguntasAsamblea(preguntas).subscribe({
             next: (data) => {
                 this.mostrarAlertaExitosa()
+                this.resumenPreguntasAsambleaComponent.obtenerDatosResumen()
             },
             error: (error) => {
                 this.mostrarAlertaFallida()
@@ -234,6 +242,8 @@ export class CreacionPlantillasComponent implements OnInit {
     // Enviar Preguntas al BackEnd
     guardarPreguntas() {
         this.agregarPregunta()
+        this.asignacionPregunta.reset()
+        this.respuestasOpcionMultiple = []
     }
 
     //modificador y seleccionador de opciones del del escoger los temas a tratar
@@ -266,8 +276,13 @@ export class CreacionPlantillasComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) return
             this.enviarPeticionEncuesta(this.formularioPreguntas.value)
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/asamblea/crear-plantillas']);
+            });
+
         });
         this.esEditableTemasAsamblea = true
+
     }
 
     cerrarDialogo() {
