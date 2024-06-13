@@ -57,6 +57,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
     existeDocumento: boolean = false;
     loading: boolean;
     archivoImagen: any;
+    mensajeError : string = "¡Transacción no exitosa!";
 
     //formulario
     crearAsamblea = this.formBuilder.group({
@@ -161,6 +162,7 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
                             this.CargarDatos();
                         },
                         error: (data) => {
+                            console.log('💻🔥 164, crearAsamblea.component.ts: ', data);
                             this.botonActivo = false
                             this.mostrarAlertaFallida()
                         },
@@ -173,6 +175,8 @@ export default class CrearAsambleaComponent implements OnInit, AfterViewInit {
             },
             error: (data) => {
                 this.botonActivo = false
+                this.mostrarAlertaFallida();
+                this.mensajeError="Solo puede crearse una asamblea ORDINARIA por año"
             }
         })
     }

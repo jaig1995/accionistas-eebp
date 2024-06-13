@@ -275,6 +275,20 @@
                             </a>
                         </div>
                     </div>
+
+                    <mat-divider class="w-full my-3" />
+                    <!-- formato Acta Escrutinio-->
+                    <div class="flex flex-row w-full justify-center items-center pb-2">
+                        <div class="w-1/2 flex justify-center">
+                            <p class="text-lg">Descargar Comprobantes</p>
+                        </div>
+                        <div class="w-1/2 flex justify-center">
+                            <a mat-mini-fab color="accent" aria-label=" button send" class="w-12"
+                                [href]="reportesOtroAnexo" target="_blank" [disabled]="!seleccionAsamblea">
+                                <mat-icon svgIcon="feather:download"></mat-icon>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

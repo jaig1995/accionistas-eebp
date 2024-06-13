@@ -6,6 +6,9 @@ import { AsambleaService } from '../asamblea/asamblea.service';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent } from '@fuse/components/alert';
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
+import { Invitado } from '../asamblea/creacionPlantillas/interfaces/asamblea.interface';
+import { forEach } from 'lodash';
 
 @Component({
     selector: 'app-financiero',
@@ -15,7 +18,8 @@ import { FuseAlertComponent } from '@fuse/components/alert';
         AngularMaterialModules,
         ReactiveFormsModule,
         FuseLoadingBarComponent,
-        FuseAlertComponent
+        FuseAlertComponent,
+        InputAutocompleteComponent
     ],
     templateUrl: `financiero.component.html`,
     changeDetection: ChangeDetectionStrategy.Default,
@@ -30,6 +34,9 @@ export class FinancieroComponent implements OnInit {
 
     formulario: FormGroup;
 
+    asistente: Invitado;
+    valorInput: string;
+
     //alertas
     showSuccesAlert = false;
     showFailedAlert = false;
@@ -38,9 +45,12 @@ export class FinancieroComponent implements OnInit {
     //array de los anos de asamblea para reportes
     anioSeleccionado;
     pruebasAnios = []
+    asambleas: any[];
 
     ngOnInit(): void {
+        console.log('💻🔥 49, financiero.component.ts: ', );
 
+        this.obtenerAsambleasl()
         this.formulario = this.fb.group({
             numAccMercado: ['', [Validators.required, this.numberValidator]],
             numAccUtilidades: ['', [Validators.required, this.numberValidator]],
@@ -195,6 +205,33 @@ export class FinancieroComponent implements OnInit {
                 console.error('error al obtener Utilidades', error);
             }
         })
+    }
+
+    obtenerAsambleasl() {
+        this._asambleaService.obtenerAsambleas().subscribe({
+            next: (data) => {
+                const consecutivoAsamblea = data.map(objeto => {
+                    return objeto.consecutivo
+
+                });
+
+                console.log('💻🔥 220, financiero.component.ts: ', consecutivoAsamblea);
+                this.asambleas = consecutivoAsamblea
+            },
+            error: (error) => {
+                console.error('error al obtener Utilidades', error);
+            }
+        })
+    }
+
+
+
+    obtenerPoderdante(valor: Invitado) {
+        this.asistente = valor;
+        console.log('💻🔥 208, financiero.component.ts: ', valor);
+    }
+    obtenerValorInput(valor: string) {
+        this.valorInput = valor
     }
 
     //alertas

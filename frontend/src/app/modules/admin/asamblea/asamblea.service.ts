@@ -67,6 +67,11 @@ export class AsambleaService {
         return this.http.get<any[]>(`${this._baseUrl}/api/asamblea/obtener-asitentes-asamblea`)
     }
 
+    actualizarAsistencia(data) {
+        return this.http.put<any[]>(`${this._baseUrl}/api/asamblea/actualizar-asistente-asamblea`, data)
+    }
+
+
     registrarAsistente(data) {
         return this.http.post<any[]>(`${this._baseUrl}/api/asamblea/registrar-asistente-asamblea`, data)
     }

@@ -93,7 +93,7 @@ export class CreacionPlantillasComponent implements OnInit {
 
     ngOnInit(): void {
         this.obtenerConsecutivoAsamblea();
-        this.obtenerIdEncuestaActual();
+
     }
 
     //peticiones HTTP
@@ -145,6 +145,10 @@ export class CreacionPlantillasComponent implements OnInit {
             },
             error: (error) => {
                 this.mostrarAlertaFallida()
+            },
+            complete: () => {
+                this.obtenerIdEncuestaActual()
+                console.log('💻🔥 150, creacionPlantillas.component.ts: ','hereee');
             }
         })
     }
@@ -222,6 +226,7 @@ export class CreacionPlantillasComponent implements OnInit {
             next: (data) => {
                 this.mostrarAlertaExitosa()
                 this.resumenPreguntasAsambleaComponent.obtenerDatosResumen()
+
             },
             error: (error) => {
                 this.mostrarAlertaFallida()
@@ -258,17 +263,6 @@ export class CreacionPlantillasComponent implements OnInit {
         this.formularioPreguntas.get('idsTemas').patchValue(idsSeleccionados);
     }
 
-    // validaciones Formularios
-    // algunaOpcionSeleccionada(): boolean {
-    //     console.log(this.contextoPreguntas.length > 0)
-    //     return this.contextoPreguntas.length > 0;
-    // }
-
-    // estaTipoAsambleaSeleccionada(): boolean {
-    //   console.log(this.formularioPreguntas.get('tipoAsamblea').valid)
-    //     return this.formularioPreguntas.get('tipoAsamblea').valid;
-    // }
-    // FIN validaciones
 
     //Seccion Abrir dialogo
     abrirDialogo(template: TemplateRef<any>): void {
@@ -276,9 +270,7 @@ export class CreacionPlantillasComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) return
             this.enviarPeticionEncuesta(this.formularioPreguntas.value)
-            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                this.router.navigate(['/asamblea/crear-plantillas']);
-            });
+
 
         });
         this.esEditableTemasAsamblea = true
