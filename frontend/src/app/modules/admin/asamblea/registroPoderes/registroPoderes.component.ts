@@ -204,7 +204,8 @@ export class RegistroPoderesComponent implements AfterViewInit {
                         {
                             next: (data) => {
                                 this.mostrarAlertaExitosa();
-                                this.botonActivo = false
+                                this.botonActivo = false;
+                                this.cargarDatos();
                             },
                             error: (data) => {
                                 this.mostrarAlertaFallida()

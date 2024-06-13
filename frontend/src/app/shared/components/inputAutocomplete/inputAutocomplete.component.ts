@@ -4,7 +4,6 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
 
-
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { ControlTitulosService } from 'app/modules/admin/controlTitulos/controlTitulos.service';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
@@ -44,7 +43,7 @@ export class InputAutocompleteComponent implements OnInit {
 
     //formulario para ingresar datos accionista a buscar
     buscarAccionista = new FormControl('', [Validators.required]);
-5
+
     ngOnInit(): void {
         this.obtenerAccionistas();
         this.filtroPoderdante();

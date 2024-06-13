@@ -21,7 +21,7 @@
             <div class="fixed  top-5 right-9 mt-5 w-80 z-50 animated-box" *ngIf="showFailedAlert">
                 <fuse-alert [type]="'warn'" [appearance]="'outline'" class="animated-box-content" @shake>
                     <span fuseAlertTitle>Información</span>
-                    ¡Transacción no exitosa!
+                    {{mensajeError}}
                 </fuse-alert>
             </div>
         </div>

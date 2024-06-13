@@ -30,9 +30,11 @@ import { PlanchaPostulanteComponent } from 'app/shared/components/planchaPostula
 })
 export class PostulacionesComponent {
 
+
     //inyeccion de dependencias
     private asambleaService = inject(AsambleaService);
     private dialog = inject(MatDialog);
+    @ViewChild(ResumenPostulacionesComponent) resumenPostulacionesComponent: ResumenPostulacionesComponent;
 
     //variables componentes hijos
     @ViewChildren(PostulanteComponent) postulanteComponents: QueryList<PostulanteComponent>;
@@ -172,6 +174,7 @@ export class PostulacionesComponent {
             ...postulacion
         }
         this.enviarPostulacion(data)
+        this.resumenPostulacionesComponent.obtenerPostulantes();
     }
 
     enviarPostulacionRevisoriaFiscal() {
@@ -197,6 +200,7 @@ export class PostulacionesComponent {
             ...postulacion
         }
         this.enviarPostulacion(data)
+        this.resumenPostulacionesComponent.obtenerPostulantes();
     }
 
     enviarPostulacionComiteEscrutinio() {
@@ -209,6 +213,7 @@ export class PostulacionesComponent {
             ...postulacion
         }
         this.enviarPostulacion(data)
+        this.resumenPostulacionesComponent.obtenerPostulantes();
     }
 
     enviarPostulacionPresidente() {
@@ -222,6 +227,7 @@ export class PostulacionesComponent {
             ...postulacion
         }
         this.enviarPostulacion(data)
+        this.resumenPostulacionesComponent.obtenerPostulantes();
     }
 
     enviarPostulacionAprobadorActa() {
@@ -234,6 +240,7 @@ export class PostulacionesComponent {
             ...postulacion
         }
         this.enviarPostulacion(data)
+        this.resumenPostulacionesComponent.obtenerPostulantes();
     }
 
 // ======  PETICIONES HTTP  ======== //
@@ -254,6 +261,7 @@ export class PostulacionesComponent {
             complete: () => {
                 this.botonActivo = false
                 console.log(this.botonActivo)
+                this.resumenPostulacionesComponent.obtenerPostulantes();
             }
         })
     }

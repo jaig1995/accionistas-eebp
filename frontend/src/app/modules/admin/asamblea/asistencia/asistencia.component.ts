@@ -46,13 +46,14 @@ export class AsistenciaComponent implements OnInit {
     displayedColumns: string[] = ['NUMERO', 'ASISTENCIA', 'ACCIONES', 'IDENTIFICACION', 'NOMBRES', 'APELLIDOS', 'TELEFONO', 'CORREO'];
     dataSource: any = []
 
-    //validacione
+    //validaciones y alertas
     showSuccesAlert = false;
     showFailedAlert = false;
     loading: boolean;
     showAlert: any;
     asistente: Invitado;
-    valorInput: string
+    valorInput: string;
+    mensajeError:string = "¡Transacción no exitosa!";
 
     //validaciones por medio de huella Digital
     message: any;
@@ -141,8 +142,10 @@ export class AsistenciaComponent implements OnInit {
                 this.cargarDatos();
                 this.obtenerDatosAsamblea()
             },
-            error() {
-                this.mostrarAlertafallida()
+            error:(error)=> {
+                this.mostrarAlertaFallida()
+                this.mensajeError = "La persona ya se encuentra registrada."
+
             }
         })
     }
@@ -160,8 +163,23 @@ export class AsistenciaComponent implements OnInit {
             idePer: row.codUsuario,
             huella: null
         }
+        this.actualizarAsistencia(data)
         this.obtenerDatosAsamblea()
+
         console.log('💻🔥 165, asistencia.component.ts: ', data);
+    }
+
+    actualizarAsistencia(data){
+        this._asambleaService.actualizarAsistencia(data).subscribe(
+            {
+                next:(data) => {
+                    console.log('💻🔥 176, asistencia.component.ts: ', data);
+                },
+                error:(data) => {
+                    console.log('💻🔥 179, asistencia.component.ts: ', data);
+                }
+            }
+        )
     }
 
     mostrarAlertaExitosa(): void {
