@@ -59,15 +59,15 @@ import { EsAccionistas } from '../modificaraccionista/modificaraccionista.model'
     }
 
     peticionGetHuella(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/fingerprint');
+      return this.http.get<any>( 'http://localhost:9090/fingerprint');
     }
 
     peticionGetFirma(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/sigplus/start');
+      return this.http.get<any>( 'http://localhost:9090/sigplus/start');
     }
 
     peticionGetFirmaCaptura(): Observable<any> {
-      return this.http.get<any>( 'http://192.168.100.15:9090/sigplus/stop');
+      return this.http.get<any>( 'http://localhost:9090/sigplus/stop');
     }
 
     enviarFotografia(formDataFotografia: FormData): Observable<FormData> {
