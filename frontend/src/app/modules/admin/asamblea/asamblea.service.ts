@@ -178,37 +178,46 @@ export class AsambleaService {
         return this.http.post<any>(`${this._baseUrl}/api/transaccion/uploadFile`, formData);
     }
 
-    enviarDatosUtilidades(datos){
+
+    enviarDatosUtilidades(datos) {
         return this.http.post<any>(`${this._baseUrl}/api/utilidades/agregar`, datos)
     }
 
     //reportes y formatos
-    obtenerFormatosTitulos(){
+    obtenerFormatosTitulos() {
         return this.http.get<any>(`${this._baseUrl}/api/titulos/reportes`)
     }
 
-    obtenerReportesPorAsamblea(id){
+    obtenerReportesPorAsamblea(id) {
         return this.http.get<any>(`${this._baseUrl}/api/asamblea/reportes/${id}`)
     }
 
-    obtenerFormatosAsamblea(){
+    obtenerFormatosAsamblea() {
         return this.http.get<any>(`${this._baseUrl}/api/asamblea/formatos`)
 
     }
 
-    obtenerUtLidades(){
+    obtenerUtLidades() {
         return this.http.get<any>(`${this._baseUrl}/api/utilidades/obtener-utilidades`)
-
     }
 
-    obtenerCertificadoAccionista(codAccionista){
+    obtenerCertificadoAccionista(codAccionista) {
         const url = `${this._baseUrl}/api/asamblea/certificado/${codAccionista}`;
         return this.http.get(url, { responseType: 'blob' });
     }
 
 
-    obtenerReporteDividendo(anio){
+    obtenerReporteDividendo(anio) {
         const url = `${this._baseUrl}/api/utilidades/financiero/${anio}`;
         return this.http.get(url, { responseType: 'blob' });
+    }
+
+    //financiero
+    enviarFechaDeCorte(fechadeCorte) {
+        return this.http.post<any>(`${this._baseUrl}/api/utilidades/realizar-corte`, fechadeCorte);
+    }
+
+    obtenerFechaDeCorte() {
+        return this.http.get<any>(`${this._baseUrl}/api/utilidades/fechas-corte`)
     }
 }

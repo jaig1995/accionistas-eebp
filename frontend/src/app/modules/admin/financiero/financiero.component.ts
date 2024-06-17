@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { AsambleaService } from '../asamblea/asamblea.service';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
@@ -9,6 +9,8 @@ import { FuseAlertComponent } from '@fuse/components/alert';
 import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 import { Invitado } from '../asamblea/creacionPlantillas/interfaces/asamblea.interface';
 import { forEach } from 'lodash';
+import { DateTime } from 'luxon';
+import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCargarDocumentos/buttonCargarDocumentos.component';
 
 @Component({
     selector: 'app-financiero',
@@ -19,16 +21,23 @@ import { forEach } from 'lodash';
         ReactiveFormsModule,
         FuseLoadingBarComponent,
         FuseAlertComponent,
-        InputAutocompleteComponent
+        InputAutocompleteComponent,
+        ButtonCargarDocumentosComponent
     ],
     templateUrl: `financiero.component.html`,
     changeDetection: ChangeDetectionStrategy.Default,
     animations: fuseAnimations,
 })
 export class FinancieroComponent implements OnInit {
+
     private _cdr = inject(ChangeDetectorRef);
     private fb = inject(FormBuilder);
     private _asambleaService = inject(AsambleaService);
+
+    //componentenes hijos
+    @ViewChild(ButtonCargarDocumentosComponent) buttonCargarDocumentosComponent: ButtonCargarDocumentosComponent;
+    @ViewChild(InputAutocompleteComponent) inputAutocompleteComponent: InputAutocompleteComponent;
+
 
     consecutivoAsamblea: any;
 
@@ -44,11 +53,20 @@ export class FinancieroComponent implements OnInit {
 
     //array de los anos de asamblea para reportes
     anioSeleccionado;
+    asambleaSeleccionada;
     pruebasAnios = []
     asambleas: any[];
 
+    //documentos cargue
+    existeDocumento: boolean = false;
+    archivoComprobantes: any;
+
+    //fecha asamblea
+    fechaDeCorte = new FormControl('', Validators.required)
+    nombreArchivoComprobantes: string;
+
     ngOnInit(): void {
-        console.log('💻🔥 49, financiero.component.ts: ', );
+        console.log('💻🔥 49, financiero.component.ts: ',);
 
         this.obtenerAsambleasl()
         this.formulario = this.fb.group({
@@ -68,6 +86,7 @@ export class FinancieroComponent implements OnInit {
 
         this.obtenerConsecutivoAsamblea();
         this.anioSeleccionado = this.fb.control('', [Validators.required]);
+        this.asambleaSeleccionada = this.fb.control('', [Validators.required]);
         this.obtenerUtilidades()
     }
 
@@ -84,16 +103,63 @@ export class FinancieroComponent implements OnInit {
         return validNumberRegex.test(value) ? null : { notANumber: true };
     }
 
+
+    enviarFecha() {
+        const fechaCorte = new Date(this.fechaDeCorte.value);
+        const fechaFormateada = DateTime.fromJSDate(fechaCorte).toFormat('yyyy-MM-dd');
+        const objFechaCorte = {
+            fechaCorte: fechaFormateada
+        }
+
+        this.enviarFechaDeCorte(objFechaCorte)
+    }
+
+    enviarFechaDeCorte(data) {
+        this._asambleaService.enviarFechaDeCorte(data).subscribe({
+            next: (data) => {
+                this.mostrarAlertaExitosa()
+            },
+            error: (error) => {
+                this.mostrarAlertaFallida()
+                console.error('Fallo peticion', error)
+            }
+        })
+    }
+
     obtenerConsecutivoAsamblea() {
         this._asambleaService.obtenerConsecutivoAsamblea().subscribe({
             next: (data) => {
-                console.log('💻🔥 64, cierreAsamblea.component.ts: ', data);
                 this.consecutivoAsamblea = data.ultimoConsecutivo;
             },
             error: (error) => {
                 this.consecutivoAsamblea = '';
             }
         });
+    }
+
+
+
+    contieneArchivo(valor: boolean) {
+        this.existeDocumento = valor
+    }
+
+    recibirArchivo(archivo) {
+        this.archivoComprobantes = archivo
+    }
+
+
+    enviarComprobante() {
+        this._asambleaService.enviarArchivo(this.archivoComprobantes).subscribe({
+            next: (data) => {
+                console.log('💻🔥 153, financiero.component.ts: ', data);
+                this.mostrarAlertaExitosa()
+            },
+            error: (error) => {
+                console.error('no se pudo enviar el archivo')
+                this.mostrarAlertaFallida()
+            }
+        })
+
     }
 
 
@@ -116,7 +182,6 @@ export class FinancieroComponent implements OnInit {
     }
 
     actualizarCamposDinamicos(value: number) {
-        console.log('💻🔥 99, cierreAsamblea.component.ts: ', value);
         while (this.numPagos.length) {
             this.numPagos.removeAt(0);
         }
@@ -150,7 +215,6 @@ export class FinancieroComponent implements OnInit {
             ...value,
             numPagos: dynamicObject
         }
-        console.log('💻🔥 102, cierreAsamblea.component.ts: ', Utilidades);
         this.enviarDatosUtilidades(Utilidades)
     }
 
@@ -158,10 +222,8 @@ export class FinancieroComponent implements OnInit {
         this._asambleaService.enviarDatosUtilidades(data).subscribe({
             next: (data) => {
                 this.mostrarAlertaExitosa()
-                console.log('💻🔥 232, cierreAsamblea.component.ts: ', data);
             },
             error: (error) => {
-                // console.log('💻🔥 235, cierreAsamblea.component.ts: ', error);
                 this.mostrarAlertaFallida()
             }
         })
@@ -170,15 +232,17 @@ export class FinancieroComponent implements OnInit {
 
 
     obtenerReporteDivididendo() {
-        console.log('💻🔥 212, reportes.component.ts: ', this.anioSeleccionado.value);
         let anioSeleccionado = this.anioSeleccionado.value
+        console.log('💻🔥 196, financiero.component.ts: ', anioSeleccionado);
+        let fecha = new Date(anioSeleccionado.fechaCorte);
+        let anio = fecha.getFullYear();
         if (!anioSeleccionado) return
-        this._asambleaService.obtenerReporteDividendo(anioSeleccionado).subscribe({
+        this._asambleaService.obtenerReporteDividendo(anio).subscribe({
             next: (data) => {
                 const url = window.URL.createObjectURL(data);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `Reporte_Dividendos_${anioSeleccionado}.zip`;
+                a.download = `Reporte_Dividendos_${fecha}.zip`;
                 a.click();
                 window.URL.revokeObjectURL(url);
             },
@@ -190,18 +254,17 @@ export class FinancieroComponent implements OnInit {
     }
 
 
-    obtenerUtilidades() {
-        this._asambleaService.obtenerUtLidades().subscribe({
-            next: (data) => {
-                const aniosArray = data.map(objeto => {
-                    const fecha = new Date(objeto.fecUtilidad);
-                    const anio = fecha.getFullYear();
-                    return anio;
-                });
 
-                this.pruebasAnios = aniosArray
+    obtenerUtilidades() {
+        this._asambleaService.obtenerFechaDeCorte().subscribe({
+            next: (data) => {
+                console.log('💻🔥 235, financiero.component.ts: ', data);
+
+                this.pruebasAnios = data.fechasDeCorte
+                console.log('💻🔥 244, financiero.component.ts: ', this.pruebasAnios);
             },
             error: (error) => {
+                this.mostrarAlertaFallida()
                 console.error('error al obtener Utilidades', error);
             }
         })
@@ -223,6 +286,20 @@ export class FinancieroComponent implements OnInit {
             }
         })
     }
+
+
+    enviarDocumentoComprobantes() {
+
+        this.nombreArchivoComprobantes = `comprobante_${this.asambleaSeleccionada.value}_${this.asistente.idPer}`
+        this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivoComprobantes)
+        this.enviarComprobante()
+        this.asambleaSeleccionada.reset()
+        this.asistente = null
+        this.existeDocumento = null
+        this.inputAutocompleteComponent.borrarFormulario()
+    }
+
+
 
 
 
