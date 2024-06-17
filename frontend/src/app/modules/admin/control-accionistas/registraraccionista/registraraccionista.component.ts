@@ -171,7 +171,10 @@ export class RegistraraccionistaComponent implements OnInit{
       this.accionistasService.enviarDatosRegistro(formDataAccionista).subscribe(
         (response) => {
 
+          
+          
           for (const selectedFile of this.selectedFileMultiple) {
+
             const formDataArchivo = new FormData();
             formDataArchivo.append("file", selectedFile, "raccionista_" + formDataAccionista.codUsuario + "_" + selectedFile.name); 
       

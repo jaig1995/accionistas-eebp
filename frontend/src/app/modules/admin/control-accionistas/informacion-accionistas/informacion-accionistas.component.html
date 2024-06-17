@@ -12,7 +12,7 @@
             (valorInput)="applyFilter($event)"  [asociados]="true" />
       </div><br>
 
-    <table mat-table [dataSource]="datos" matSort class="mat-elevation-z2">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
 
       <ng-container matColumnDef="avatar">
         <th mat-header-cell *matHeaderCellDef>FOTOGRAFIA</th>

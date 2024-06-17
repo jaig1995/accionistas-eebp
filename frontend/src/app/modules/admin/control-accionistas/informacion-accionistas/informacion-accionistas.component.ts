@@ -26,19 +26,19 @@ export class InformacionAccionistasComponent implements OnInit
 {
   @ViewChild(MatSort) sort: MatSort;
   private _baseUrl: string = ServicesConfig.apiUrl;
-  datos: MatTableDataSource<infoAccionistas>;
+  dataSource: MatTableDataSource<infoAccionistas>;
   displayedColumns: string[] = [ 'avatar', 'accionista', 'codUsuario', 'nomPri', 'modificarFormatos',  'pdf_datos', 'pdf_autorizacion', 'pdf_declaracion','actualizar'];
 
   accionistaAutoComplete: any;
-  dataSource: any;
+  //dataSource: any;
 
   constructor(private userDatos: InformacionAccionistasService) {}
 
   ngOnInit() {
     this.userDatos.obtenerUsuarios().subscribe(
       (datos: infoAccionistas[]) => {
-        this.datos = new MatTableDataSource<infoAccionistas>(datos);
-        this.datos.sort = this.sort;
+        this.dataSource = new MatTableDataSource<infoAccionistas>(datos);
+        this.dataSource.sort = this.sort;
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -47,8 +47,8 @@ export class InformacionAccionistasComponent implements OnInit
   }
 
   ngAfterViewInit() {
-    if (this.datos) {
-      this.datos.sort = this.sort;
+    if (this.dataSource) {
+      this.dataSource.sort = this.sort;
     }
   }
 

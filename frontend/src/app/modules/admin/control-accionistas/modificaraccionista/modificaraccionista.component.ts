@@ -87,7 +87,7 @@ export class ModificaraccionistaComponent implements OnInit {
       'file': new FormControl('')
     });
 
-    this.accionistasService.obtenerAccionistas().subscribe((datos: EsAccionistas[]) => {
+    this.accionistasService.obtenerAccionistasAprobadosRechazados().subscribe((datos: EsAccionistas[]) => {
       const datosFiltrados = datos.filter(item => item.codAccionista);
       this.datosAutocompletado = datosFiltrados;
       this.opcionesFiltradas = this.registroForm.get('codUsuario').valueChanges.pipe(
