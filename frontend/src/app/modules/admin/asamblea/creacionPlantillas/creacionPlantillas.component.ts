@@ -97,7 +97,7 @@ export class CreacionPlantillasComponent implements OnInit {
     }
 
     //peticiones HTTP
-    async obtenerDatosEncuesta() {
+    obtenerDatosEncuesta() {
         this.temasAsamblea = TemasAsamblea
         this.asambleaService.obtenerDatosEncuesta(this.consecutivoAsamblea).subscribe(
             {
@@ -112,6 +112,7 @@ export class CreacionPlantillasComponent implements OnInit {
 
                     // Recibir los datos
                     const datosEncuesta = data[0]
+                    console.log('💻🔥 115, creacionPlantillas.component.ts: ', datosEncuesta);
 
 
                     const pr = this.temasAsamblea.filter(item => {
@@ -131,7 +132,10 @@ export class CreacionPlantillasComponent implements OnInit {
                 },
                 error: (error) => {
                     this.pasoActual = 0;
-                    this.temasAsamblea = TemasAsamblea
+                    this.temasAsamblea.forEach(tema => {
+                        tema.selected = false;
+                    });
+
                 }
             }
         )
@@ -148,7 +152,7 @@ export class CreacionPlantillasComponent implements OnInit {
             },
             complete: () => {
                 this.obtenerIdEncuestaActual()
-                console.log('💻🔥 150, creacionPlantillas.component.ts: ','hereee');
+                console.log('💻🔥 150, creacionPlantillas.component.ts: ', 'hereee');
             }
         })
     }
@@ -270,6 +274,7 @@ export class CreacionPlantillasComponent implements OnInit {
         this.dialogRef.afterClosed().subscribe(result => {
             if (!result) return
             this.enviarPeticionEncuesta(this.formularioPreguntas.value)
+            this.temasAsamblea = TemasAsamblea
 
 
         });
