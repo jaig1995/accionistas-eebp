@@ -104,7 +104,9 @@ export const appRoutes: Route[] = [
             // * Titulos
             { path: 'titulo/registro', loadComponent: () => import('app/modules/admin/controlTitulos/titulosGeneral/titulosGeneral.component').then(c => c.TitulosGeneralComponent), title: "Información General de Títulos" },
             { path: 'acciones/transacciones', loadComponent: () => import('app/modules/admin/controlTitulos/gestionTitulos/gestionTitulos.component').then(c => c.GestionTitulosComponent), title: "Gestión de Títulos" },
-            { path: 'acciones/aprobacion', loadComponent: () => import('app/modules/admin/controlTitulos/aprobarTitulos/aprobarTitulos.component').then(c => c.AprobarTitulosComponent), title: "Aprobación de Títulos" },
+            { path: 'acciones/aprobacion-control-interno', loadComponent: () => import('app/modules/admin/controlTitulos/aprobarTitulosControlInterno/aprobarControlInterno.component').then(c => c.AprobarControlInternoComponent), title: "Aprobación Control Interno" },
+            { path: 'acciones/aprobacion-juridica', loadComponent: () => import('app/modules/admin/controlTitulos/aprobarJuridica/aprobarJuridica.component').then(c => c.AprobarJuridicaComponent), title: "Aprobación Juridica" },
+            { path: 'acciones/aprobacion', loadComponent: () => import('app/modules/admin/controlTitulos/aprobarTitulos/aprobarTitulos.component').then(c => c.AprobarTitulosComponent), title: "Aprobación Gerencia" },
             { path: 'acciones/venta', loadComponent: () => import('app/modules/admin/controlTitulos/publicacionVentas/publicacionVentas.component').then(c => c.PublicacionVentasComponent), title: "Publicación de Títulos" },
             // * asamblea
             { path: 'asamblea/registrar-poderes', loadComponent: () => import('app/modules/admin/asamblea/registroPoderes/registroPoderes.component').then(c => c.RegistroPoderesComponent), title: "Registro De Poderes" },

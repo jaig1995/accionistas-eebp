@@ -1,26 +1,23 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-
-import { fuseAnimations } from '@fuse/animations';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AprobarModalComponent } from '../modales/aprobarModal/aprobarModal.component';
-import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
-import { RechazarModalComponent } from '../modales/rechazarModal/rechazarModal.component';
 import { ServicesConfig } from 'app/services.config';
-import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
 import { ControlTitulosService } from '../controlTitulos.service';
+import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
+import { AprobarModalComponent } from '../modales/aprobarModal/aprobarModal.component';
+import { RechazarModalComponent } from '../modales/rechazarModal/rechazarModal.component';
+
 @Component({
-    selector: 'app-aprobar-titulos',
+    selector: 'app-aprobar-control-interno',
     standalone: true,
-    animations: fuseAnimations,
     imports: [
         CommonModule,
         FuseAlertComponent,
@@ -28,10 +25,10 @@ import { ControlTitulosService } from '../controlTitulos.service';
         InputAutocompleteComponent,
         AngularMaterialModules
     ],
-    templateUrl: 'aprobarTitulos.component.html',
-    encapsulation: ViewEncapsulation.None,
+    templateUrl:'aprobarControlInterno.component.html',
+    changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AprobarTitulosComponent implements OnInit, AfterViewInit {
+export class AprobarControlInternoComponent implements OnInit, AfterViewInit {
 
     // variable de entorno
     private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
@@ -105,10 +102,10 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
     inicializarDatos(): void {
         try {
             this.loading = true;
-            this.controlTitulosService.obtenerTransaccionesJuridica().subscribe({
+            this.controlTitulosService.obtenerTransacciones().subscribe({
                 next: (transacciones) => {
 
-                    const titulosEnTramite = transacciones
+                    const titulosEnTramite = transacciones.filter((data) => data.estadoTransaccion?.descEstado === 'En tramite')
                     this.datosTabla = titulosEnTramite.map(data => {
                         return {
                             ...data,
@@ -251,6 +248,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
 
     aprobar(aprobar, tipo) {
+        console.log('💻🔥 251, aprobarControlInterno.component.ts: ', tipo);
         const { tipoTransaccionN, ...element } = aprobar
         const dialogRef = this.dialog.open(AprobarModalComponent, {
             width: '450px',
@@ -296,6 +294,3 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
 
 }
-
-
-

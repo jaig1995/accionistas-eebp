@@ -49,6 +49,7 @@ export class AprobarModalComponent {
 
 
     ngOnInit(): void {
+        console.log('💻🔥 52, aprobarModal.component.ts: ', this.data.tipo);
         const { titulo, codigo } = this.data
         this.idPersona = codigo
         const formArray = this.formBuilder.array(this.data.titulo.map(objeto => this.crearFormulario(objeto)));
@@ -85,14 +86,14 @@ export class AprobarModalComponent {
     onSubmit() {
         this.isLoad= true;
         let element = this.data.element
+        let tipo = this.data.tipo
 
         const { estadoTransaccion, files, ...rest } = element;
         const aprobacion = {
             ...rest,
-            "estadoTransaccion": {
-                "ideEstado": 2
-            }
+            estadoTransaccion: tipo
         }
+        console.log('💻🔥 96, aprobarModal.component.ts: ', aprobacion);
         this.controlTitulosService.aprobarTransaccion(aprobacion).subscribe({
             next:(data)=>{
                 this.isLoad= false;
