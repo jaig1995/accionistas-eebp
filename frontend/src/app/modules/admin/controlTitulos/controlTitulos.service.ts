@@ -66,6 +66,14 @@ export class ControlTitulosService {
     }
 
 
+    obtenerTransaccionesControlInterno(): Observable<AprobarTitulos[]> {
+        return this.http.get<AprobarTitulos[]>(`${this._baseUrl}/api/transaccion/aprobado-controlInterno`);
+    }
+    obtenerTransaccionesJuridica(): Observable<AprobarTitulos[]> {
+        return this.http.get<AprobarTitulos[]>(`${this._baseUrl}/api/transaccion/aprobado-juridica`);
+    }
+
+
     aprobarTransaccion(transaccion: any): Observable<DocumentoTransaccion[]> {
         return this.http.post<DocumentoTransaccion[]>(`${this._baseUrl}/api/transaccion`, transaccion);
     }

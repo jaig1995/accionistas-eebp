@@ -1,26 +1,24 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-
-import { fuseAnimations } from '@fuse/animations';
-import { FuseAlertComponent } from '@fuse/components/alert';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { AprobarModalComponent } from '../modales/aprobarModal/aprobarModal.component';
-import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
-import { RechazarModalComponent } from '../modales/rechazarModal/rechazarModal.component';
 import { ServicesConfig } from 'app/services.config';
-import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
-import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
 import { ControlTitulosService } from '../controlTitulos.service';
+import { AprobarTitulos } from '../interfaces/aprobarTitulos.interface';
+import { AprobarModalComponent } from '../modales/aprobarModal/aprobarModal.component';
+import { RechazarModalComponent } from '../modales/rechazarModal/rechazarModal.component';
+import { FuseAlertComponent } from '@fuse/components/alert';
+import { InputAutocompleteComponent } from 'app/shared/components/inputAutocomplete/inputAutocomplete.component';
+import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMaterial';
+import { fuseAnimations } from '@fuse/animations';
+
 @Component({
-    selector: 'app-aprobar-titulos',
+    selector: 'app-aprobar-juridica',
     standalone: true,
-    animations: fuseAnimations,
     imports: [
         CommonModule,
         FuseAlertComponent,
@@ -28,10 +26,11 @@ import { ControlTitulosService } from '../controlTitulos.service';
         InputAutocompleteComponent,
         AngularMaterialModules
     ],
-    templateUrl: 'aprobarTitulos.component.html',
+    templateUrl: 'aprobarJuridica.component.html',
+    animations: fuseAnimations,
     encapsulation: ViewEncapsulation.None,
 })
-export class AprobarTitulosComponent implements OnInit, AfterViewInit {
+export class AprobarJuridicaComponent implements OnInit, AfterViewInit{
 
     // variable de entorno
     private apiUrlDocumentos: string = ServicesConfig.apiUrlDocumentos;
@@ -105,7 +104,7 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
     inicializarDatos(): void {
         try {
             this.loading = true;
-            this.controlTitulosService.obtenerTransaccionesJuridica().subscribe({
+            this.controlTitulosService.obtenerTransaccionesControlInterno().subscribe({
                 next: (transacciones) => {
 
                     const titulosEnTramite = transacciones
@@ -294,8 +293,4 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
         });
     }
 
-
 }
-
-
-
