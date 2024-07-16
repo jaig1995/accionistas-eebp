@@ -52,21 +52,41 @@
         </td>
       </ng-container>
 
-    <ng-container matColumnDef="pdf_autorizacion">
-      <th mat-header-cell *matHeaderCellDef> AUTORIZACIÓN DE DATOS </th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;">
-        <a href="{{_baseUrl}}/api/accionistas/pdfAutorizacion/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
-        <a class="sm:ml-4" href="accionistas/actualizar/autorizacion/{{element.codUsuario}}"  title="Actualizar formato"><mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon></a>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="pdf_declaracion">
-      <th mat-header-cell *matHeaderCellDef> DECLARACIÓN DE INGRESOS </th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;">
-        <a href="{{_baseUrl}}/api/accionistas/pdfDeclaracion/{{element.codUsuario}}" target="_blank" title="Descargar formato" ><mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon></a>
-        <a class="sm:ml-4" href="accionistas/actualizar/declaracion/{{element.codUsuario}}" title="Actualizar formato" ><mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon></a>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="pdf_autorizacion">
+        <th mat-header-cell *matHeaderCellDef> AUTORIZACIÓN DE DATOS </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <ng-container *ngIf="element.esAccionista !== 'N'; else disabledIcon">
+            <a href="{{_baseUrl}}/api/accionistas/pdfAutorizacion/{{element.codUsuario}}" target="_blank" title="Descargar formato">
+              <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon>
+            </a>
+            <a class="sm:ml-4" href="accionistas/actualizar/autorizacion/{{element.codUsuario}}" title="Actualizar formato">
+              <mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon>
+            </a>
+          </ng-container>
+          <ng-template #disabledIcon>
+            <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn" class="opacity-50"></mat-icon>
+            <mat-icon svgIcon="mat_solid:update" color="accent" class="opacity-50 sm:ml-4"></mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="pdf_declaracion">
+        <th mat-header-cell *matHeaderCellDef> DECLARACIÓN DE INGRESOS </th>
+        <td mat-cell *matCellDef="let element" style="text-align: center;">
+          <ng-container *ngIf="element.esAccionista !== 'N'; else disabledIcon">
+            <a href="{{_baseUrl}}/api/accionistas/pdfDeclaracion/{{element.codUsuario}}" target="_blank" title="Descargar formato">
+              <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn"></mat-icon>
+            </a>
+            <a class="sm:ml-4" href="accionistas/actualizar/declaracion/{{element.codUsuario}}" title="Actualizar formato">
+              <mat-icon svgIcon="mat_solid:update" color="accent"></mat-icon>
+            </a>
+          </ng-container>
+          <ng-template #disabledIcon>
+            <mat-icon svgIcon="mat_solid:picture_as_pdf" color="warn" class="opacity-50"></mat-icon>
+            <mat-icon svgIcon="mat_solid:update" color="accent" class="opacity-50 sm:ml-4"></mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
 
       <ng-container matColumnDef="actualizar">
         <th mat-header-cell *matHeaderCellDef>  </th>
