@@ -61,6 +61,12 @@ export class ControlTitulosService {
         return this.http.post<any>(`${this._baseUrl}/api/transaccion/uploadFile`, formData);
     }
 
+    enviarFormatosAprobados(archivo: any): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', archivo);
+        return this.http.post<any>(`${this._baseUrl}/api/transaccion/uploadFile`, formData);
+    }
+
     obtenerTransacciones(): Observable<AprobarTitulos[]> {
         return this.http.get<AprobarTitulos[]>(`${this._baseUrl}/api/transaccion`);
     }
