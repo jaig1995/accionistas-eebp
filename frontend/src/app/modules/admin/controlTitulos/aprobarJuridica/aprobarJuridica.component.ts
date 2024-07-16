@@ -37,7 +37,7 @@ export class AprobarJuridicaComponent implements OnInit, AfterViewInit{
 
     //Tabla
     datosTabla: AprobarTitulos[];
-    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'ACCIONES', 'INTENCION', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
+    displayedColumns: string[] = ['TIPO', 'IDENTIFICACION', 'CONSECUTIVO', 'ACCIONES', 'ESTADO', 'DOCUMENTO', 'TRANSACCION',];
     dataSource: any;
 
     private _fuseConfirmationService;
@@ -250,13 +250,15 @@ export class AprobarJuridicaComponent implements OnInit, AfterViewInit{
 
 
     aprobar(aprobar, tipo) {
+        const nombreArchivo = "controlJuridico"
         const { tipoTransaccionN, ...element } = aprobar
         const dialogRef = this.dialog.open(AprobarModalComponent, {
             width: '450px',
             height: '300px',
             data: {
                 element,
-                tipo
+                tipo,
+                nombreArchivo
             },
         });
         dialogRef.afterClosed().subscribe((result) => {

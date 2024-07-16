@@ -251,13 +251,15 @@ export class AprobarTitulosComponent implements OnInit, AfterViewInit {
 
 
     aprobar(aprobar, tipo) {
+        const nombreArchivo = "controlGerencia"
         const { tipoTransaccionN, ...element } = aprobar
         const dialogRef = this.dialog.open(AprobarModalComponent, {
             width: '450px',
             height: '300px',
             data: {
                 element,
-                tipo
+                tipo,
+                nombreArchivo
             },
         });
         dialogRef.afterClosed().subscribe((result) => {

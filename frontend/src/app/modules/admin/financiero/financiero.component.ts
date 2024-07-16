@@ -11,6 +11,7 @@ import { Invitado } from '../asamblea/creacionPlantillas/interfaces/asamblea.int
 import { forEach } from 'lodash';
 import { DateTime } from 'luxon';
 import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCargarDocumentos/buttonCargarDocumentos.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
     selector: 'app-financiero',
@@ -22,7 +23,8 @@ import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCar
         FuseLoadingBarComponent,
         FuseAlertComponent,
         InputAutocompleteComponent,
-        ButtonCargarDocumentosComponent
+        ButtonCargarDocumentosComponent,
+        MatDatepickerModule
     ],
     templateUrl: `financiero.component.html`,
     changeDetection: ChangeDetectionStrategy.Default,
@@ -39,7 +41,9 @@ export class FinancieroComponent implements OnInit {
     @ViewChild(InputAutocompleteComponent) inputAutocompleteComponent: InputAutocompleteComponent;
 
 
+
     consecutivoAsamblea: any;
+    today = new Date();
 
     formulario: FormGroup;
 
@@ -62,8 +66,9 @@ export class FinancieroComponent implements OnInit {
     archivoComprobantes: any;
 
     //fecha asamblea
-    fechaDeCorte = new FormControl('', Validators.required)
+    fechaDeCorte = new FormControl(null, Validators.required)
     nombreArchivoComprobantes: string;
+
 
     ngOnInit(): void {
         console.log('💻🔥 49, financiero.component.ts: ',);
@@ -112,6 +117,7 @@ export class FinancieroComponent implements OnInit {
         }
 
         this.enviarFechaDeCorte(objFechaCorte)
+        this.fechaDeCorte.reset()
     }
 
     enviarFechaDeCorte(data) {
@@ -140,6 +146,7 @@ export class FinancieroComponent implements OnInit {
 
 
     contieneArchivo(valor: boolean) {
+        console.log('💻🔥 149, financiero.component.ts: ', valor);
         this.existeDocumento = valor
     }
 
@@ -157,6 +164,12 @@ export class FinancieroComponent implements OnInit {
             error: (error) => {
                 console.error('no se pudo enviar el archivo')
                 this.mostrarAlertaFallida()
+            },
+            complete:()=>{
+                this.asambleaSeleccionada.reset()
+                this.asistente = undefined
+                this.buttonCargarDocumentosComponent.reset()
+                this.inputAutocompleteComponent.borrarFormulario()
             }
         })
 
@@ -225,6 +238,15 @@ export class FinancieroComponent implements OnInit {
             },
             error: (error) => {
                 this.mostrarAlertaFallida()
+            },
+            complete: () => {
+                this.formulario.reset()
+                this.formulario.markAsPristine();
+                this.formulario.markAsUntouched();
+
+                Object.keys(this.formulario.controls).forEach(key => {
+                    this.formulario.get(key).setErrors(null);
+                });
             }
         })
     }
@@ -249,6 +271,9 @@ export class FinancieroComponent implements OnInit {
             error: (error) => {
                 this.mostrarAlertaFallida()
                 console.error('Error al descargar el archivo:', error);
+            },
+            complete:() =>{
+                this.anioSeleccionado.reset()
             }
         })
     }
@@ -289,14 +314,10 @@ export class FinancieroComponent implements OnInit {
 
 
     enviarDocumentoComprobantes() {
-
         this.nombreArchivoComprobantes = `comprobante_${this.asambleaSeleccionada.value}_${this.asistente.idPer}`
         this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivoComprobantes)
         this.enviarComprobante()
-        this.asambleaSeleccionada.reset()
-        this.asistente = null
-        this.existeDocumento = null
-        this.inputAutocompleteComponent.borrarFormulario()
+
     }
 
 

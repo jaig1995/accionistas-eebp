@@ -32,23 +32,53 @@
 
     <!-- Tabla con registros -->
 
+        <!-- modulo seleccionador de fecha -->
+        <p class="my-2 text-xl text-gray-500 font-semibold mt-5">Cierre de Acciones</p>
+        <div class="flex-auto pt-5 bg-card shadow rounded overflow-hidden  mb-3 py-4 ">
+            <div class="flex ">
+
+                <div class="flex flex-col w-full justify-center space-y-4 py-2 px-10 items-center">
+                    <div class="w-full flex flex-row justify-between">
+
+                        <div class="w-100 mr-5">
+                            <!-- Fecha Asamblea-->
+                            <div class="mr-5">
+                                <mat-form-field class="w-50">
+                                    <mat-label>Fecha de corte</mat-label>
+                                    <input matInput [formControl]="fechaDeCorte" [matDatepicker]="Date" [min]="today" [max]="today" readonly>
+                                    <mat-datepicker-toggle matIconSuffix [for]="Date"></mat-datepicker-toggle>
+                                    <mat-datepicker #Date [startAt]="today" [startAt]="today"></mat-datepicker>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button mat-fab [color]="'accent'" (click)="enviarFecha()" [disabled]="fechaDeCorte.invalid"><mat-icon
+                                    svgIcon="feather:send"></mat-icon></button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
     <!-- seccion de parametrizacion  -->
-    <div
-        class="ml-0.5  text-2xl font-extrabold text-secondary flex flex-col flex-auto items-start justify-center mt-5 ">
-        <span class="flex justify-start">Parametrización</span>
-    </div>
+    <p class="my-2 text-xl text-gray-500 font-semibold mt-5">Parametrización</p>
     <form class="grid grid-cols-2 gap-4 bg-card py-4 shadow rounded mt-2" action="" [formGroup]="formulario"
         (ngSubmit)="enviarFormularioParametrizacion()">
 
         <div class="p-5 py-3">
             <mat-form-field class="w-full mr-2 ">
-                <mat-label class="font-extrabold"> Acciones En El Mercado:</mat-label>
+                <mat-label class="font-extrabold"> Número de Acciones en el Mercado:</mat-label>
                 <mat-icon svgIcon="feather:hash"></mat-icon>
                 <input formControlName="numAccMercado" matInput type="text">
                 <mat-error class="mb-2">Este campo es numérico y obligatorio</mat-error>
             </mat-form-field>
             <mat-form-field class="w-full mr-2 ">
-                <mat-label class="font-extrabold"> Acciones Utilidades:</mat-label>
+                <mat-label class="font-extrabold"> Número de Acciones con derecho a utilidades:</mat-label>
                 <mat-icon svgIcon="feather:hash"></mat-icon>
                 <input formControlName="numAccUtilidades" matInput type="text">
                 <mat-error class="mb-2">Este campo es numérico y obligatorio </mat-error>
@@ -117,38 +147,7 @@
 
     </form>
 
-    <!-- modulo seleccionador de fecha -->
-    <p class="my-2 text-xl text-gray-500 font-semibold mt-5">Cierre de Acciones</p>
-    <div class="flex-auto pt-5 bg-card shadow rounded overflow-hidden  mb-3 py-4 ">
-        <div class="flex ">
 
-            <div class="flex flex-col w-full justify-center space-y-4 py-2 px-10 items-center">
-                <div class="w-full flex flex-row justify-between">
-
-                    <div class="w-100 mr-5">
-                        <!-- Fecha Asamblea-->
-                        <div class="mr-5">
-                            <mat-form-field class="w-50">
-                                <mat-label>Fecha de corte</mat-label>
-                                <input matInput [formControl]="fechaDeCorte" [matDatepicker]="Date" readonly>
-                                <mat-datepicker-toggle matIconSuffix [for]="Date"></mat-datepicker-toggle>
-                                <mat-datepicker #Date></mat-datepicker>
-                            </mat-form-field>
-
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <button mat-fab [color]="'accent'" (click)="enviarFecha()"><mat-icon
-                                svgIcon="feather:send"></mat-icon></button>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
 
     <!-- modulo dividendos -->
     <p class="my-2 text-xl text-gray-500 font-semibold mt-10">Reportes Dividendos</p>
@@ -207,8 +206,7 @@
                             <app-button-cargar-documentos [nombreBoton]="'Cargar Documento'"
                                 [formatosAceptados]="" (contieneArchivo)="contieneArchivo($event)"
                                 (archivo)="recibirArchivo($event)" />
-
-                                <button mat-fab [color]="'accent'" [disabled]="!this.asistente || this.asambleaSeleccionada.invalid || !this.existeDocumento"
+                                <button mat-fab [color]="'accent'" [disabled]="!this.asistente || this.asambleaSeleccionada.invalid|| this.existeDocumento !== true"
                                 (click)="enviarDocumentoComprobantes()"><mat-icon
                                     svgIcon="feather:send"></mat-icon></button>
                         </div>

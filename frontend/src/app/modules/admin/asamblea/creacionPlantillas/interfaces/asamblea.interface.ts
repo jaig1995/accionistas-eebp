@@ -9,6 +9,6 @@ export interface PlantillaPreguntas {
 }
 
 
-export interface Invitado{
-    idPer: string, Nombres:string
- }
+export interface Invitado {
+    idPer: string, Nombres: string
+}

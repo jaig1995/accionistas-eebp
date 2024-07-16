@@ -41,27 +41,22 @@ export class AprobarModalComponent {
     showSuccesAlert = false;
     showFailedAlert = false;
 
+    archivoSeleccionado: File | null = null;
+
 
     constructor(public dialogRef: MatDialogRef<VentaModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private formBuilder: FormBuilder, private controlTitulosService: ControlTitulosService) { }
 
-
-
     ngOnInit(): void {
-        console.log('💻🔥 52, aprobarModal.component.ts: ', this.data.tipo);
+        console.log('💻🔥 52, aprobarModal.component.ts: ', this.data.nombreArchivo);
         const { titulo, codigo } = this.data
         this.idPersona = codigo
-        const formArray = this.formBuilder.array(this.data.titulo.map(objeto => this.crearFormulario(objeto)));
+        const formArray = titulo ? this.formBuilder.array(titulo.map(objeto => this.crearFormulario(objeto))) : this.formBuilder.array([]);
         this.formulario = this.formBuilder.group({
             titulos: formArray
         });
     }
-
-
-
-
-
 
     /**
      * Crea un FormGroup para un objeto dado.
@@ -93,11 +88,22 @@ export class AprobarModalComponent {
             ...rest,
             estadoTransaccion: tipo
         }
-        console.log('💻🔥 96, aprobarModal.component.ts: ', aprobacion);
+        const nombreArchivo = `transaccion_${element.conseTrans}_${this.data.nombreArchivo}`
+        this.cambiarNombreArchivo(nombreArchivo)
+        console.log('💻🔥 93, aprobarModal.component.ts: ', this.archivoSeleccionado);
         this.controlTitulosService.aprobarTransaccion(aprobacion).subscribe({
             next:(data)=>{
                 this.isLoad= false;
-                this.dialogRef.close({ success: true })
+
+                this.controlTitulosService.enviarFormatosAprobados(this.archivoSeleccionado).subscribe({
+                    next:(data)=>{
+                        console.log('Enviado Con exito ', data);
+                        this.dialogRef.close({ success: true })
+                    },
+                    error:(err)=>{
+                        console.error("No se pudo completar el envio del archivo" , err);
+                    }
+                })
             },
             error:(error)=>{
                 this.isLoad= false;
@@ -120,7 +126,7 @@ export class AprobarModalComponent {
         const fechaFormateada = `${year}-${month}-${day}`;
         return fechaFormateada;
     }
-    archivoSeleccionado: File | null = null;
+
 
     /**
      * Maneja el evento de selección de archivo.
@@ -147,6 +153,7 @@ export class AprobarModalComponent {
 
 
     cambiarNombreArchivo(nuevoNombre: string) {
+        console.log('💻🔥 150, aprobarModal.component.ts: ', this.archivoSeleccionado);
         if (!this.archivoSeleccionado) {
             console.error('No se ha seleccionado ningún archivo.');
             return;

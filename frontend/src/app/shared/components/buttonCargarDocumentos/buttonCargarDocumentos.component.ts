@@ -46,6 +46,16 @@ export class ButtonCargarDocumentosComponent implements OnInit {
         }
     }
 
+    emitirContieneArchivo(valor: boolean) {
+        this.contieneArchivo.emit(valor);
+    }
+
+    reset() {
+        this.archivoSeleccionado = null;
+        this.error = null;
+        this.contieneArchivo.emit(false);
+    }
+
     enviarArchivo(nuevoNombre: string) {
         if (!this.archivoSeleccionado) return;
 
