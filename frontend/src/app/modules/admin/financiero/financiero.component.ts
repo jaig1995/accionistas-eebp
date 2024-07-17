@@ -12,6 +12,7 @@ import { forEach } from 'lodash';
 import { DateTime } from 'luxon';
 import { ButtonCargarDocumentosComponent } from 'app/shared/components/buttonCargarDocumentos/buttonCargarDocumentos.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { Acciones } from './financiero.interface';
 
 @Component({
     selector: 'app-financiero',
@@ -68,6 +69,8 @@ export class FinancieroComponent implements OnInit {
     //fecha asamblea
     fechaDeCorte = new FormControl(null, Validators.required)
     nombreArchivoComprobantes: string;
+    numeroDeAccionesEnElMercado: any;
+    numeroDeAccionesConDerechoAUtilidades: number;
 
 
     ngOnInit(): void {
@@ -75,8 +78,8 @@ export class FinancieroComponent implements OnInit {
 
         this.obtenerAsambleasl()
         this.formulario = this.fb.group({
-            numAccMercado: ['', [Validators.required, this.numberValidator]],
-            numAccUtilidades: ['', [Validators.required, this.numberValidator]],
+            numAccMercado: [{value: this.numeroDeAccionesEnElMercado, disabled: true}, [Validators.required, this.numberValidator]],
+            numAccUtilidades: [{value: this.numeroDeAccionesConDerechoAUtilidades, disabled: true}, [Validators.required, this.numberValidator]],
             participacionAccion: ['', [Validators.required, this.numberValidator]],
             pagoUtilidad: ['', Validators.required],
             numPagos: this.fb.array([], [this.sumValidator]),
@@ -93,6 +96,26 @@ export class FinancieroComponent implements OnInit {
         this.anioSeleccionado = this.fb.control('', [Validators.required]);
         this.asambleaSeleccionada = this.fb.control('', [Validators.required]);
         this.obtenerUtilidades()
+
+        this.obtenerResultadoAcciones()
+    }
+
+
+    obtenerResultadoAcciones() {
+        this._asambleaService.obtenerResultadoAcciones().subscribe({
+            next: (data: Acciones) => {
+                console.log('💻🔥 102, financiero.component.ts: ', data);
+                this.numeroDeAccionesEnElMercado = data.numeroDeAccionesEnElMercado
+                this.numeroDeAccionesConDerechoAUtilidades = data.numeroDeAccionesConDerechoAUtilidades
+                this.formulario.patchValue({
+                    numAccMercado: this.numeroDeAccionesEnElMercado,
+                    numAccUtilidades: this.numeroDeAccionesConDerechoAUtilidades
+                });
+            },
+            error: () => {
+                console.error("no se pudo obtener resultado Acciones");
+            }
+        })
     }
 
 
@@ -165,7 +188,7 @@ export class FinancieroComponent implements OnInit {
                 console.error('no se pudo enviar el archivo')
                 this.mostrarAlertaFallida()
             },
-            complete:()=>{
+            complete: () => {
                 this.asambleaSeleccionada.reset()
                 this.asistente = undefined
                 this.buttonCargarDocumentosComponent.reset()
@@ -226,6 +249,8 @@ export class FinancieroComponent implements OnInit {
         }
         const Utilidades = {
             ...value,
+            numAccMercado: this.numeroDeAccionesEnElMercado.toString(),
+            numAccUtilidades: this.numeroDeAccionesConDerechoAUtilidades.toString(),
             numPagos: dynamicObject
         }
         this.enviarDatosUtilidades(Utilidades)
@@ -235,6 +260,7 @@ export class FinancieroComponent implements OnInit {
         this._asambleaService.enviarDatosUtilidades(data).subscribe({
             next: (data) => {
                 this.mostrarAlertaExitosa()
+                this.obtenerResultadoAcciones()
             },
             error: (error) => {
                 this.mostrarAlertaFallida()
@@ -272,7 +298,7 @@ export class FinancieroComponent implements OnInit {
                 this.mostrarAlertaFallida()
                 console.error('Error al descargar el archivo:', error);
             },
-            complete:() =>{
+            complete: () => {
                 this.anioSeleccionado.reset()
             }
         })
