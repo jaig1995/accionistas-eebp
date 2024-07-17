@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { ServicesConfig } from 'app/services.config';
 import { Observable, tap } from 'rxjs';
 import { PlantillaPreguntas } from './creacionPlantillas/interfaces/asamblea.interface';
+import { Acciones } from '../financiero/financiero.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -220,4 +221,11 @@ export class AsambleaService {
     obtenerFechaDeCorte() {
         return this.http.get<any>(`${this._baseUrl}/api/utilidades/fechas-corte`)
     }
+
+
+    obtenerResultadoAcciones():Observable<Acciones> {
+        return this.http.get<Acciones>(`${this._baseUrl}/api/titulos/resultado-acciones`)
+    }
+
+
 }
