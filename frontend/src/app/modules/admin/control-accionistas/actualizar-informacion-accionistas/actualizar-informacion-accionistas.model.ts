@@ -1,5 +1,6 @@
 export interface Actualizar {
     tipDocumento: string;
+    razonSocial: string;
     nomPri: string;
     nomSeg: string;
     apePri: string;
