@@ -235,6 +235,9 @@ export class ActualizarinfopersonaComponent implements OnInit{
       (datos: Actualizar) => {
         console.log(datos);
         this.datosActualizar = datos;
+
+        // Actualizar la visibilidad antes de establecer los valores
+        this.updateRazonSocialVisibility(datos.tipDocumento);
        
         this.accionistasForm.patchValue({
           tipDocumento: datos.tipDocumento,
@@ -464,10 +467,14 @@ export class ActualizarinfopersonaComponent implements OnInit{
       );
     }
   }
-
-  onSelectChange(event: MatSelectChange) {
+  onSelectChange(event: any) {
     const selectedValue = event.value;
-    this.showAdditionalField = selectedValue === 'NIT';
+    this.updateRazonSocialVisibility(selectedValue);
+  }
+
+  private updateRazonSocialVisibility(tipDocumento: string) {
+    this.showAdditionalField = tipDocumento === 'NIT';
+    // Forzar la detección de cambios
     this.cdRef.detectChanges();
   }
 
