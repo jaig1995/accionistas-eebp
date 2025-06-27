@@ -64,7 +64,7 @@ export class CompraPublicacionModalComponent implements OnInit {
         });
 
         this.numeroAcciones = this.fb.group({
-            cantAcciones: ['', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/), this.maxNumberValidator(this.sumaTotal)]]
+            cantAcciones: ['', this.maxNumberValidator(this.sumaTotal)]
         });
     }
 
@@ -128,11 +128,16 @@ export class CompraPublicacionModalComponent implements OnInit {
                 conseTitulo: data.conseTitulo,
                 numAcciones: data.numAcciones
             }
-        }
-        )
+        });
 
         let tomadores = this.tomadores.value;
-        let numeroAcciones = this.numeroAcciones.value
+        let numeroAcciones = this.numeroAcciones.value;
+        
+        // Si cantAcciones está vacío, usar la suma total de acciones
+        if (!numeroAcciones.cantAcciones || numeroAcciones.cantAcciones === '') {
+            numeroAcciones.cantAcciones = this.sumaTotal;
+        }
+        
         let arrayTomadores = tomadores.map(nombre => {
             return { "idePer": nombre };
         });
@@ -141,8 +146,8 @@ export class CompraPublicacionModalComponent implements OnInit {
             ...numeroAcciones,
             titulos,
             tomadores: arrayTomadores
-
         }
+        
         this.controlTitulosService.comprarTitulo(transaccion).subscribe({
             next: (data) => {
                 this.consecutivoArchivo = data.conseTrans;
@@ -151,7 +156,6 @@ export class CompraPublicacionModalComponent implements OnInit {
                 this.cambiarNombreArchivo(nombreArchivo);
                 this.controlTitulosService.enviarFormatoVenta(this.archivoSeleccionado).subscribe();
                 this.dialogRef.close({ success: true });
-
             },
             error: (error) => {
                 this.dialogRef.close({ success: false });
