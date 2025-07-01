@@ -133,7 +133,7 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                 );
                 this.loading = false
                 //mostrar solo titulos activos filtro en Front-end por estado diferentes de anulado
-                let titulosActivos = titulosPorTransaccion.filter(activo => activo.descEstadoTitulo !== 'anulado')
+                let titulosActivos = titulosPorTransaccion.filter(activo => activo.descEstadoTitulo !== 'activo')
                 //asignación a tabla de material
                 this.datosTabla = titulosActivos
                 this.dataSource = new MatTableDataSource<any>(this.datosTabla);
