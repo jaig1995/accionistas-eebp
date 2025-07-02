@@ -108,8 +108,13 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
         try {
             this.loading = true;
             this.controlTitulosService.obtenerTransaccionesAprobadas().subscribe(titulos => {
-                //titulosPorTransaccion contiene todos los titulos estructurados a la tabla de material sin filtrar
-                const titulosPorTransaccion = titulos.flatMap(obj => {
+                // Filtrar PRIMERO solo las transacciones con estado "Aprobado"
+                const transaccionesAprobadas = titulos.filter(transaccion => 
+                    transaccion.estadoTransaccion.descEstado === 'Aprobado'
+                );
+                
+                // LUEGO mapear los títulos de las transacciones aprobadas
+                const titulosPorTransaccion = transaccionesAprobadas.flatMap(obj => {
                     if (obj.transaccionTitulo.length === 0) {
                         return [];
                     } else {
@@ -123,26 +128,24 @@ export class PublicacionVentasComponent implements OnInit, AfterViewInit {
                             conseTitulo: titulo.conseTitulo,
                             numAcciones: titulo.numAcciones,
                             descEstadoTitulo: titulo.descEstado,
-                            selected: false //se agrega para el seleccionador en html
+                            selected: false
                         }));
                     }
-
-
-                }
-
-                );
-                this.loading = false
-                //mostrar solo titulos activos filtro en Front-end por estado diferentes de anulado
-                let titulosActivos = titulosPorTransaccion.filter(activo => activo.descEstadoTitulo !== 'activo')
-                //asignación a tabla de material
-                this.datosTabla = titulosActivos
+                });
+                
+                this.loading = false;
+                
+                // Asignar directamente los títulos filtrados (ya solo son de transacciones aprobadas)
+                this.datosTabla = titulosPorTransaccion;
                 this.dataSource = new MatTableDataSource<any>(this.datosTabla);
-                //inicialización de paginador
+                
+                // Inicialización de paginador
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
             });
         } catch (error) {
             this.datosTabla = [];
+            this.loading = false;
         }
     }
 
