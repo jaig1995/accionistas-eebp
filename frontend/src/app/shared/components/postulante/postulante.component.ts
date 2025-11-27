@@ -114,9 +114,15 @@ export class PostulanteComponent implements OnInit {
             .subscribe({
                 next: (data: Accionista) => {
                     console.log('💻🔥 114, postulante.component.ts: ', data);
+                    const nombreCompleto = 
+                        `${data.nomPri || ''} ${data.nomSeg || ''} ${data.apePri || ''} ${data.apeSeg || ''}`
+                        // Usamos trim() para eliminar cualquier espacio extra al inicio o final
+                        .trim()
+                        // Reemplazamos espacios dobles (si uno de los nombres estaba vacío)
+                        .replace(/\s\s+/g, ' ');
                     this.InformacionDelPostulante = data
                     this.datosPostulante.patchValue({
-                        nombresApellidos: data.nomPri,
+                        nombresApellidos: nombreCompleto,
                         telefono: data.celPersona,
                         documentoIdentidad: data.codUsuario,
                         correoElectronico: data.correoPersona
