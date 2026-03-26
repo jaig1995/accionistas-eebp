@@ -5,7 +5,7 @@ export interface PlantillaPreguntas {
     distribucionUtilidades: any[];
     revisoriaFiscal: any[];
     estadosFinancieros: any[];
-    proposicionesVarios: any[];
+    proposicionesYVarios: any[];
 }
 
 

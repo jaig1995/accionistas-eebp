@@ -112,7 +112,7 @@ export class FormularioVotacionesComponent implements OnInit {
                     this.insertarPreguntasFormularioAsamblea(data?.revisoriaFiscal, 'revisoriaFiscal');
                     this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
                     this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
-                    this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
+                    this.insertarPreguntasFormularioAsamblea(data.proposicionesYVarios, 'proposicionesVarios');
                     if(this.datosVotante?.validacion === 'SI'){
                         this.insertarPreguntasFormularioAsamblea([], 'estadosFinancieros');
                     }else{
@@ -130,7 +130,7 @@ export class FormularioVotacionesComponent implements OnInit {
                                         this.insertarPreguntasFormularioAsamblea(data.distribucionUtilidades, 'distribucionUtilidades');
                                         this.insertarPreguntasFormularioAsamblea(data.revisoriaFiscal, 'revisoriaFiscal');
                                         this.insertarPreguntasFormularioAsamblea(data.reformaEstatutos, 'reformaEstatutos');
-                                        this.insertarPreguntasFormularioAsamblea(data.proposicionesVarios, 'proposicionesVarios');
+                                        this.insertarPreguntasFormularioAsamblea(data.proposicionesYVarios, 'proposicionesVarios');
                                         if(this.datosVotante?.validacion === 'SI'){
                                             this.insertarPreguntasFormularioAsamblea([], 'estadosFinancieros');
                                         }else{

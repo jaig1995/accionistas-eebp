@@ -125,7 +125,7 @@ export class ResumenPreguntasAsambleaComponent implements OnInit {
                         this.cargarDatosCategoria(data.distribucionUtilidades, 'distribucionUtilidades');
                         this.cargarDatosCategoria(data.revisoriaFiscal, 'revisoriaFiscal');
                         this.cargarDatosCategoria(data.estadosFinancieros, 'estadosFinancieros');
-                        this.cargarDatosCategoria(data.proposicionesVarios, 'proposicionesVarios');
+                        this.cargarDatosCategoria(data.proposicionesYVarios, 'proposicionesVarios');
                         this.botonActivo = false
                     },
                     error: (error) => {
