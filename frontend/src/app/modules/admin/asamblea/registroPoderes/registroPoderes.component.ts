@@ -230,6 +230,13 @@ export class RegistroPoderesComponent implements AfterViewInit {
         )
     }
 
+    abrirDocumento(idPoderdante: string): void {
+        if (idPoderdante) {
+            const url = `${this.apiUrlDocumentos}/assets/images/avatars/formatoRegistroPoder_${idPoderdante}.pdf`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+    }
+
     //alerta de dialogo
     abrirDialogo(template: TemplateRef<any>, solicitud): void {
         this.dialogRef = this.dialog.open(template);

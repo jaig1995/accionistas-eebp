@@ -153,9 +153,12 @@
                     <th mat-header-cell *matHeaderCellDef class="text-center"> ACCIONES </th>
                     <td mat-cell *matCellDef="let row" class="text-center">
                         <div class="flex fle-row justify-between">
-                            <a mat-button target="_blank"
-                            [href]="row.files[0]?  apiUrlDocumentos+row.files[0]?.url  : ''"
-                            [color]="'accent'"><mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Documento</a>
+                            <a mat-button 
+                                [color]="'accent'"
+                                (click)="abrirDocumento(row.idPoderdante)"
+                                [disabled]="!row.files[0]">
+                                <mat-icon svgIcon="mat_solid:attach_file"></mat-icon>Documento
+                            </a>
 
                             <button mat-stroked-button color="accent" class="ml-2" (click)="aprobarSolicitud(row)"><span
                                     *ngIf="!botonActivoAcciones">
