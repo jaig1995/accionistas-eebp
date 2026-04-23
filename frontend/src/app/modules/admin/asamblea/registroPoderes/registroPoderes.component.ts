@@ -65,6 +65,7 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     //validaciones
     isValid: boolean;
+    archivoValido: boolean = false;
 
     //nombre y validacion archivo
     nombreArchivo: string
@@ -154,9 +155,19 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     recibirArchivo(archivo) {
         console.log('💻🔥 152, registroPoderes.component.ts: ', archivo);
-        //todo:corregir numero consecutivo
-        this.archivoRegistroPoderantes = archivo
-        console.log(archivo)
+        this.archivoRegistroPoderantes = archivo;
+
+        // Validar aquí cuando el archivo ya llegó
+        const MAX_SIZE = 1 * 1024 * 1024;
+        const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png'];
+
+        if (!archivo || archivo.size > MAX_SIZE || !tiposPermitidos.includes(archivo.type)) {
+            this.archivoValido = false;
+            this.mostrarAlertaFallida();
+            return;
+        }
+
+        this.archivoValido = true;
     }
 
     contieneArchivo(valor: boolean) {
@@ -177,19 +188,45 @@ export class RegistroPoderesComponent implements AfterViewInit {
 
     // enviar el formulario de registro y el archivo
     enviarRegistroPoderes() {
+        if (!this.poderdanteValor || !this.apoderadoValor) return;
 
-
-        if (!this.poderdanteValor || !this.apoderadoValor) return
-        let fecha = DateTime.now().toFormat('dd/MM/yy', { locale: "es" })
-        let hora = DateTime.local().toFormat('hh:mm a');
-        this.nombreArchivo = `formatoRegistroPoder_${this.poderdanteValor}`
-        let registroPoderes = {
-            idPoderdante: this.poderdanteValor,
-            idApoderado: this.apoderadoValor,
-
+        if (!this.existeDocumento) {
+            this.mostrarAlertaFallida();
+            return;
         }
-        this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivo)
-        this.enviarPeticionRegistro(registroPoderes)
+
+        this.nombreArchivo = `formatoRegistroPoder_${this.poderdanteValor}`;
+
+        // Primero emitir el archivo para que llegue a archivoRegistroPoderantes
+        this.buttonCargarDocumentosComponent.enviarArchivo(this.nombreArchivo);
+
+        // Luego en el siguiente ciclo ya existe archivoRegistroPoderantes
+        setTimeout(() => {
+            if (!this.archivoRegistroPoderantes) {
+                this.mostrarAlertaFallida();
+                return;
+            }
+
+            const MAX_SIZE = 1 * 1024 * 1024;
+            const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png'];
+
+            if (this.archivoRegistroPoderantes.size > MAX_SIZE) {
+                this.mostrarAlertaFallida();
+                return;
+            }
+
+            if (!tiposPermitidos.includes(this.archivoRegistroPoderantes.type)) {
+                this.mostrarAlertaFallida();
+                return;
+            }
+
+            const registroPoderes = {
+                idPoderdante: this.poderdanteValor,
+                idApoderado: this.apoderadoValor,
+            }
+
+            this.enviarPeticionRegistro(registroPoderes);
+        }, 0);
     }
 
     //peticiones http

@@ -227,5 +227,14 @@ export class AsambleaService {
         return this.http.get<Acciones>(`${this._baseUrl}/api/titulos/resultado-acciones`)
     }
 
+    //reportes de accionistas y personas 
+    getReporteTitulos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this._baseUrl}/api/reportes/titulos`);
+}
+
+    getReportePersonas(): Observable<any[]> {
+        return this.http.get<any[]>(`${this._baseUrl}/api/reportes/personas`);
+    }
+
 
 }

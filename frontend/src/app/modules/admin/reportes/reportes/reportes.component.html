@@ -319,6 +319,225 @@
         </div>
     </mat-tab>
 
+    <!-- tercer tab -->
+    <!-- tercer tab -->
+    <mat-tab label="Reportes Accionistas">
+        <div class="flex-auto p-6 sm:p-10">
+
+            <!-- Reporte Títulos -->
+            <p class="my-2 text-xl text-gray-500 font-semibold">Reporte de Títulos y Acciones</p>
+            <div class="flex-auto pt-5 bg-card shadow rounded overflow-hidden mb-5">
+
+                <div class="flex justify-between items-center px-6 py-4 flex-wrap gap-3">
+                    <button mat-raised-button color="primary" (click)="obtenerReporteTitulos()">
+                        <mat-icon svgIcon="feather:refresh-cw" class="mr-1"></mat-icon>
+                        Cargar datos
+                    </button>
+
+                    <mat-form-field class="w-60" *ngIf="reporteTitulos.length > 0">
+                        <mat-label>Buscar por documento</mat-label>
+                        <input matInput [(ngModel)]="filtroCodTitulos" (ngModelChange)="filtrarTitulos()" placeholder="Ej: 1001234567">
+                        <button matSuffix mat-icon-button *ngIf="filtroCodTitulos" (click)="limpiarFiltroTitulos()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <button mat-raised-button color="accent" [disabled]="!reporteTitulosFiltrado.length" (click)="exportarExcelTitulos()">
+                        <mat-icon svgIcon="feather:download" class="mr-1"></mat-icon>
+                        Exportar Excel ({{reporteTitulosFiltrado.length}})
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto px-4 pb-4" *ngIf="reporteTitulosFiltrado.length > 0">
+                    <table mat-table [dataSource]="reporteTitulosFiltrado" class="w-full">
+
+                        <ng-container matColumnDef="tipDocumento">
+                            <th mat-header-cell *matHeaderCellDef>Tipo Doc</th>
+                            <td mat-cell *matCellDef="let row">{{row.tipDocumento}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="codUsuario">
+                            <th mat-header-cell *matHeaderCellDef>Documento</th>
+                            <td mat-cell *matCellDef="let row">{{row.codUsuario}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombreCompleto">
+                            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                            <td mat-cell *matCellDef="let row">{{row.nombreCompleto}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="municipioExp">
+                            <th mat-header-cell *matHeaderCellDef>Lugar Exp.</th>
+                            <td mat-cell *matCellDef="let row">{{row.municipioExp}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="aprobado">
+                            <th mat-header-cell *matHeaderCellDef>Estado</th>
+                            <td mat-cell *matCellDef="let row">{{row.aprobado === 'S' ? 'ACTIVO' : 'INACTIVO'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="canAccTit">
+                            <th mat-header-cell *matHeaderCellDef>Cant. Acciones</th>
+                            <td mat-cell *matCellDef="let row">{{row.canAccTit}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="numTitulos">
+                            <th mat-header-cell *matHeaderCellDef>Num. Títulos</th>
+                            <td mat-cell *matCellDef="let row">{{row.numTitulos}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="porcentajeParticipacion">
+                            <th mat-header-cell *matHeaderCellDef>% Participación</th>
+                            <td mat-cell *matCellDef="let row">{{row.porcentajeParticipacion | number:'1.0-3'}}%</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="valAccTit">
+                            <th mat-header-cell *matHeaderCellDef>Valor Nominal</th>
+                            <td mat-cell *matCellDef="let row">{{row.valAccTit | currency:'COP':'symbol':'1.0-0'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="entidadBancaria">
+                            <th mat-header-cell *matHeaderCellDef>Entidad Bancaria</th>
+                            <td mat-cell *matCellDef="let row">{{row.entidadBancaria}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoCuentaBancaria">
+                            <th mat-header-cell *matHeaderCellDef>Tipo Cuenta</th>
+                            <td mat-cell *matCellDef="let row">{{row.tipoCuentaBancaria}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="numCuentaBancaria">
+                            <th mat-header-cell *matHeaderCellDef>Num. Cuenta</th>
+                            <td mat-cell *matCellDef="let row">{{row.numCuentaBancaria}}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="['tipDocumento','codUsuario','nombreCompleto','municipioExp','aprobado','canAccTit','numTitulos','porcentajeParticipacion','valAccTit','entidadBancaria','tipoCuentaBancaria','numCuentaBancaria']"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['tipDocumento','codUsuario','nombreCompleto','municipioExp','aprobado','canAccTit','numTitulos','porcentajeParticipacion','valAccTit','entidadBancaria','tipoCuentaBancaria','numCuentaBancaria'];"></tr>
+                    </table>
+                </div>
+
+                <div *ngIf="loadingTitulos" class="flex justify-center py-6">
+                    <mat-spinner diameter="40"></mat-spinner>
+                </div>
+
+                <div *ngIf="!loadingTitulos && reporteTitulos.length === 0" class="flex justify-center py-6 text-gray-400">
+                    <p>Presiona "Cargar datos" para ver el reporte</p>
+                </div>
+
+                <div *ngIf="!loadingTitulos && reporteTitulos.length > 0 && reporteTitulosFiltrado.length === 0" class="flex justify-center py-6 text-gray-400">
+                    <p>No se encontraron resultados para el documento ingresado</p>
+                </div>
+            </div>
+
+            <!-- Reporte Personas -->
+            <p class="my-2 text-xl text-gray-500 font-semibold mt-5">Reporte de Personas</p>
+            <div class="flex-auto pt-5 bg-card shadow rounded overflow-hidden mb-5">
+
+                <div class="flex justify-between items-center px-6 py-4 flex-wrap gap-3">
+                    <button mat-raised-button color="primary" (click)="obtenerReportePersonas()">
+                        <mat-icon svgIcon="feather:refresh-cw" class="mr-1"></mat-icon>
+                        Cargar datos
+                    </button>
+
+                    <mat-form-field class="w-60" *ngIf="reportePersonas.length > 0">
+                        <mat-label>Buscar por documento</mat-label>
+                        <input matInput [(ngModel)]="filtroCodPersonas" (ngModelChange)="filtrarPersonas()" placeholder="Ej: 1001234567">
+                        <button matSuffix mat-icon-button *ngIf="filtroCodPersonas" (click)="limpiarFiltroPersonas()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <button mat-raised-button color="accent" [disabled]="!reportePersonasFiltrado.data.length" (click)="exportarExcelPersonas()">
+                        <mat-icon svgIcon="feather:download" class="mr-1"></mat-icon>
+                        Exportar Excel ({{reportePersonasFiltrado.data.length}})
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto px-4 pb-4" [hidden]="reportePersonasFiltrado.data.length === 0">
+                    <table mat-table [dataSource]="reportePersonasFiltrado" class="w-full">
+
+                        <ng-container matColumnDef="tipDocumento">
+                            <th mat-header-cell *matHeaderCellDef>Tipo Doc</th>
+                            <td mat-cell *matCellDef="let row">{{row.tipDocumento}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="codUsuario">
+                            <th mat-header-cell *matHeaderCellDef>Documento</th>
+                            <td mat-cell *matCellDef="let row">{{row.codUsuario}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombreCompleto">
+                            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                            <td mat-cell *matCellDef="let row">{{row.nombreCompleto}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="correoPersona">
+                            <th mat-header-cell *matHeaderCellDef>Correo</th>
+                            <td mat-cell *matCellDef="let row">{{row.correoPersona}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="celPersona">
+                            <th mat-header-cell *matHeaderCellDef>Celular</th>
+                            <td mat-cell *matCellDef="let row">{{row.celPersona}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dirDomicilio">
+                            <th mat-header-cell *matHeaderCellDef>Dirección</th>
+                            <td mat-cell *matCellDef="let row">{{row.dirDomicilio}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="municipioDomicilio">
+                            <th mat-header-cell *matHeaderCellDef>Municipio</th>
+                            <td mat-cell *matCellDef="let row">{{row.municipioDomicilio}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="departamentoDomicilio">
+                            <th mat-header-cell *matHeaderCellDef>Departamento</th>
+                            <td mat-cell *matCellDef="let row">{{row.departamentoDomicilio}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fecNacimiento">
+                            <th mat-header-cell *matHeaderCellDef>Fecha Nac.</th>
+                            <td mat-cell *matCellDef="let row">{{row.fecNacimiento | date:'dd/MM/yyyy'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estCivPersona">
+                            <th mat-header-cell *matHeaderCellDef>Estado Civil</th>
+                            <td mat-cell *matCellDef="let row">{{row.estCivPersona}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="profPersona">
+                            <th mat-header-cell *matHeaderCellDef>Profesión</th>
+                            <td mat-cell *matCellDef="let row">{{row.profPersona}}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="['tipDocumento','codUsuario','nombreCompleto','correoPersona','celPersona','dirDomicilio','municipioDomicilio','departamentoDomicilio','fecNacimiento','estCivPersona','profPersona']"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['tipDocumento','codUsuario','nombreCompleto','correoPersona','celPersona','dirDomicilio','municipioDomicilio','departamentoDomicilio','fecNacimiento','estCivPersona','profPersona'];"></tr>
+                    </table>
+
+                    <!-- Paginador -->
+                    <mat-paginator #paginatorPersonas
+                        [pageSizeOptions]="[10, 25, 50]"
+                        [pageSize]="10"
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+
+                <div *ngIf="loadingPersonas" class="flex justify-center py-6">
+                    <mat-spinner diameter="40"></mat-spinner>
+                </div>
+
+                <div *ngIf="!loadingPersonas && reportePersonas.length === 0" class="flex justify-center py-6 text-gray-400">
+                    <p>Presiona "Cargar datos" para ver el reporte</p>
+                </div>
+
+               <div *ngIf="!loadingPersonas && reportePersonas.length > 0 && reportePersonasFiltrado.data.length === 0" class="flex justify-center py-6 text-gray-400">
+                    <p>No se encontraron resultados para el documento ingresado</p>
+                </div>
+            </div>
+
+        </div>
+    </mat-tab>
 </mat-tab-group>
 
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent } from '@fuse/components/alert';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
@@ -9,6 +9,9 @@ import { AngularMaterialModules } from 'app/shared/imports/Material/AngularMater
 import { AsambleaService } from '../../asamblea/asamblea.service';
 import { ServicesConfig } from 'app/services.config';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { utils, writeFileXLSX } from 'xlsx';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-reportes',
@@ -19,7 +22,8 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
         FuseLoadingBarComponent,
         FuseAlertComponent,
         InputAutocompleteComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        FormsModule
     ],
     templateUrl: 'reportes.component.html',
     changeDetection: ChangeDetectionStrategy.Default,
@@ -70,6 +74,27 @@ export class ReportesComponent implements OnInit {
     formatoActaCierreRevisorFiscal: string;
     formatoActaPoderes: string;
     formatoActaEscutinio: string;
+
+    // variables reportes accionistas
+    reporteTitulos: any[] = [];
+    reportePersonas: any[] = [];
+    loadingTitulos: boolean = false;
+    loadingPersonas: boolean = false;
+
+    // filtros reportes
+    filtroCodTitulos: string = '';
+    filtroCodPersonas: string = '';
+    reporteTitulosFiltrado: any[] = [];
+    reportePersonasFiltrado = new MatTableDataSource<any>([]);
+
+    private _paginatorPersonas: MatPaginator;
+
+    @ViewChild('paginatorPersonas') set paginatorPersonas(paginator: MatPaginator) {
+        this._paginatorPersonas = paginator;
+        if (paginator && this.reportePersonasFiltrado) {
+            this.reportePersonasFiltrado.paginator = paginator;
+        }
+    }
 
 
 
@@ -207,6 +232,111 @@ export class ReportesComponent implements OnInit {
         })
     }
 
+    obtenerReporteTitulos() {
+        this.loadingTitulos = true;
+        this._asambleaService.getReporteTitulos().subscribe({
+            next: (data) => {
+                this.reporteTitulos = data;
+                this.reporteTitulosFiltrado = data;
+                this.loadingTitulos = false;
+            },
+            error: (error) => {
+                console.error(error);
+                this.loadingTitulos = false;
+                this.mostrarAlertaFallida();
+            }
+        });
+    }
+
+    obtenerReportePersonas() {
+        this.loadingPersonas = true;
+        this._asambleaService.getReportePersonas().subscribe({
+            next: (data) => {
+                this.reportePersonas = data;
+                this.reportePersonasFiltrado = new MatTableDataSource<any>(data);
+                // el setter del @ViewChild asigna el paginator automáticamente
+                this.loadingPersonas = false;
+            },
+            error: (error) => {
+                console.error(error);
+                this.loadingPersonas = false;
+                this.mostrarAlertaFallida();
+            }
+        });
+    }
+
+    exportarExcelTitulos() {
+        const datos = this.reporteTitulosFiltrado.map(item => ({
+            'Tipo Doc': item.tipDocumento,
+            'Documento': item.codUsuario,
+            'Nombre Completo': item.nombreCompleto,
+            'Lugar Expedición': item.municipioExp,
+            'Estado': item.aprobado === 'S' ? 'ACTIVO' : 'INACTIVO',
+            'Cant. Acciones': item.canAccTit,
+            'Num. Títulos': item.numTitulos,
+            '% Participación': (Math.round(item.porcentajeParticipacion * 1000) / 1000) + '%',
+            'Valor Nominal': item.valAccTit,
+            'Entidad Bancaria': item.entidadBancaria,
+            'Tipo Cuenta': item.tipoCuentaBancaria,
+            'Num. Cuenta': item.numCuentaBancaria
+        }));
+        const ws = utils.json_to_sheet(datos);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, 'Titulos');
+        writeFileXLSX(wb, 'Reporte_Titulos.xlsx', { compression: true });
+    }
+
+    exportarExcelPersonas() {
+        const datos = this.reportePersonasFiltrado.data.map(item => ({
+            'Tipo Doc': item.tipDocumento,
+            'Documento': item.codUsuario,
+            'Nombre Completo': item.nombreCompleto,
+            'Correo': item.correoPersona,
+            'Celular': item.celPersona,
+            'Dirección': item.dirDomicilio,
+            'Municipio': item.municipioDomicilio,
+            'Departamento': item.departamentoDomicilio,
+            'Fecha Nacimiento': item.fecNacimiento,
+            'Estado Civil': item.estCivPersona,
+            'Profesión': item.profPersona
+        }));
+        const ws = utils.json_to_sheet(datos);
+        const wb = utils.book_new();
+        utils.book_append_sheet(wb, ws, 'Personas');
+        writeFileXLSX(wb, 'Reporte_Personas.xlsx', { compression: true });
+    }
+
+    filtrarTitulos() {
+        if (!this.filtroCodTitulos.trim()) {
+            this.reporteTitulosFiltrado = this.reporteTitulos;
+            return;
+        }
+        this.reporteTitulosFiltrado = this.reporteTitulos.filter(item =>
+            item.codUsuario.includes(this.filtroCodTitulos.trim())
+        );
+    }
+
+    filtrarPersonas() {
+        if (!this.filtroCodPersonas.trim()) {
+            this.reportePersonasFiltrado.data = this.reportePersonas;
+        } else {
+            this.reportePersonasFiltrado.data = this.reportePersonas.filter(item =>
+                item.codUsuario?.includes(this.filtroCodPersonas.trim())
+            );
+        }
+        this.reportePersonasFiltrado.paginator = this._paginatorPersonas;
+    }
+
+    limpiarFiltroTitulos() {
+        this.filtroCodTitulos = '';
+        this.reporteTitulosFiltrado = this.reporteTitulos;
+    }
+
+    limpiarFiltroPersonas() {
+        this.filtroCodPersonas = '';
+        this.reportePersonasFiltrado.data = this.reportePersonas;
+        this.reportePersonasFiltrado.paginator = this._paginatorPersonas;
+    }
 
 
 

@@ -9,6 +9,14 @@
 
         </mat-tab>
         <mat-tab label="Resultados">
+
+             <!-- Botón de recargar -->
+            <div class="flex justify-end p-3">
+                <button mat-stroked-button color="primary" (click)="obtenerResultados()">
+                    <mat-icon>refresh</mat-icon>
+                    Recargar
+                </button>
+            </div>
             <mat-expansion-panel class="hover:bg-primary-100" >
                 <mat-expansion-panel-header class="bg-accent  ">
                     <mat-panel-title class="text-white ">
